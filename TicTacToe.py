@@ -12,29 +12,34 @@ class Tictactoe(Tk):
         self.top_frame.grid(row=0)
 
         game_font = 'system'
-        self.s = ttk.Style()
-        self.s.theme_use('classic')
-        self.s.configure('red.Horizontal.TProgressbar', troughcolor='black', background='limegreen', thickness=48)
-        self.progress_value = 0
-        self.progress_maxvalue = 1000
-        self.progress_bar = ttk.Progressbar(self.top_frame, style='red.Horizontal.TProgressbar', length=427)
-        self.progress_bar.grid(row=0, column=0)
-        self.progress_bar['maximum'] = self.progress_maxvalue
+        self.win_counter_x = 0
+        self.win_counter_o = 0
 
-        self.victory_text = StringVar()
-        self.victory_text.set('')
-        self.victory_label = Label(self.top_frame, textvariable=self.victory_text, bg='black', fg='white', font=game_font+' 26 bold')
-        self.victory_label.grid(row=0, column=0)
+        self.win_count_label = Label(self.top_frame, bg='black', fg='white', font=game_font+' 26 bold',
+                                     text='X: ' + str(self.win_counter_x) + '    O: ' + str(self.win_counter_o))
+        self.win_count_label.grid(row=0, columnspan=2)
 
-        self.reset_button = Button(self.top_frame, text='Reset', height=1, width=5, bg='#113111', fg='white', font=game_font+' 26 bold', command=self.reset)
-        self.reset_button.grid(row=0, column=1)
-
-        self.frame = Frame()
+        self.frame = Frame(bg='black')
         self.frame.grid(row=1)
 
         button_height = 0
         button_width = 4
         button_font = game_font+' 64 bold'
+
+        self.s = ttk.Style()
+        self.s.theme_use('classic')
+        self.s.configure('red.Horizontal.TProgressbar', troughcolor='black', background='limegreen', thickness=48)
+        self.progress_value = 0
+        self.progress_maxvalue = 1000
+        self.progress_bar = ttk.Progressbar(self.frame, style='red.Horizontal.TProgressbar', length=520)
+        self.progress_bar.grid(row=3, columnspan=3)
+        self.progress_bar['maximum'] = self.progress_maxvalue
+
+        self.victory_text = StringVar()
+        self.victory_text.set('')
+        self.victory_label = Label(self.frame, textvariable=self.victory_text, bg='black', fg='white',
+                                   font=game_font + ' 26 bold')
+        self.victory_label.grid(row=3, columnspan=3)
 
         self.alter_choice = True
 
@@ -73,6 +78,7 @@ class Tictactoe(Tk):
                                  fg='white', bg='black', font=button_font, command=command)
             self.button.grid(row=row, column=col)
 
+
     def tl(self):
         if self.alter_choice is True:
             self.alter_choice = False
@@ -82,6 +88,9 @@ class Tictactoe(Tk):
             self.ttt_tl.set('X')
         else:
             self.ttt_tl.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def tm(self):
@@ -93,6 +102,9 @@ class Tictactoe(Tk):
             self.ttt_tm.set('X')
         else:
             self.ttt_tm.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def tr(self):
@@ -104,6 +116,9 @@ class Tictactoe(Tk):
             self.ttt_tr.set('X')
         else:
             self.ttt_tr.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def ml(self):
@@ -115,6 +130,9 @@ class Tictactoe(Tk):
             self.ttt_ml.set('X')
         else:
             self.ttt_ml.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def mm(self):
@@ -126,6 +144,9 @@ class Tictactoe(Tk):
             self.ttt_mm.set('X')
         else:
             self.ttt_mm.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def mr(self):
@@ -137,6 +158,9 @@ class Tictactoe(Tk):
             self.ttt_mr.set('X')
         else:
             self.ttt_mr.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def bl(self):
@@ -148,6 +172,9 @@ class Tictactoe(Tk):
             self.ttt_bl.set('X')
         else:
             self.ttt_bl.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def bm(self):
@@ -159,6 +186,9 @@ class Tictactoe(Tk):
             self.ttt_bm.set('X')
         else:
             self.ttt_bm.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def br(self):
@@ -170,49 +200,79 @@ class Tictactoe(Tk):
             self.ttt_br.set('X')
         else:
             self.ttt_br.set('O')
+        self.progress_bar['value'] = 0
+        self.victory_text.set('')
+        self.victory_label.configure(bg='black')
         self.winner()
 
     def winner(self):
         if self.ttt_tl.get() == 'X' and self.ttt_tm.get() == 'X' and self.ttt_tr.get() == 'X': # Top row
-            self.vicory_outcome()
+            self.x_vicory_outcome()
+            self.reset()
         elif self.ttt_ml.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_mr.get() == 'X': # Middle row
             self.vicory_outcome()
+            self.reset()
         elif self.ttt_bl.get() == 'X' and self.ttt_bm.get() == 'X' and self.ttt_br.get() == 'X': # Bottom row
-            self.vicory_outcome()
+            self.x_vicory_outcome()
+            self.reset()
         elif self.ttt_tl.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_br.get() == 'X': # Diagonal top to bot
-            self.vicory_outcome()
+            self.x_vicory_outcome()
+            self.reset()
         elif self.ttt_tr.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_bl.get() == 'X': # Diagonal bot to top
-            self.vicory_outcome()
+            self.x_vicory_outcome()
+            self.reset()
         elif self.ttt_tl.get() == 'X' and self.ttt_ml.get() == 'X' and self.ttt_bl.get() == 'X': # Left column
-            self.vicory_outcome()
+            self.x_vicory_outcome()
+            self.reset()
         elif self.ttt_tm.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_bm.get() == 'X': # Middle column
-            self.vicory_outcome()
+            self.x_vicory_outcome()
+            self.reset()
         elif self.ttt_tr.get() == 'X' and self.ttt_mr.get() == 'X' and self.ttt_br.get() == 'X': # Right column
-            self.vicory_outcome()
+            self.x_vicory_outcome()
+            self.reset()
         elif self.ttt_tl.get() == 'O' and self.ttt_tm.get() == 'O' and self.ttt_tr.get() == 'O': # Top row
-            self.vicory_outcome()
+            self.o_vicory_outcome()
+            self.reset()
         elif self.ttt_ml.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_mr.get() == 'O': # Middle row
-            self.vicory_outcome()
+            self.o_vicory_outcome()
+            self.reset()
         elif self.ttt_bl.get() == 'O' and self.ttt_bm.get() == 'O' and self.ttt_br.get() == 'O': # Bottom row
-            self.vicory_outcome()
+            self.o_vicory_outcome()
+            self.reset()
         elif self.ttt_tl.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_br.get() == 'O': # Diagonal top to bot
-            self.vicory_outcome()
+            self.o_vicory_outcome()
+            self.reset()
         elif self.ttt_tr.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_bl.get() == 'O': # Diagonal bot to top
-            self.vicory_outcome()
+            self.o_vicory_outcome()
+            self.reset()
         elif self.ttt_tl.get() == 'O' and self.ttt_ml.get() == 'O' and self.ttt_bl.get() == 'O': # Left column
-            self.vicory_outcome()
+            self.o_vicory_outcome()
+            self.reset()
         elif self.ttt_tm.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_bm.get() == 'O': # Middle column
-            self.vicory_outcome()
+            self.o_vicory_outcome()
+            self.reset()
         elif self.ttt_tr.get() == 'O' and self.ttt_mr.get() == 'O' and self.ttt_br.get() == 'O': # Right column
-            self.vicory_outcome()
+            self.o_vicory_outcome()
+            self.reset()
         elif self.ttt_tl.get() <> '' and self.ttt_tm.get() <> '' and self.ttt_tr.get() <> '' and self.ttt_ml.get() <> '' and self.ttt_mm.get() <> '' and self.ttt_mr.get() <> '' and self.ttt_bl.get() <> '' and self.ttt_bm.get() <> '' and self.ttt_br.get() <> '':
             self.draw_game()
+            self.reset()
 
-    def vicory_outcome(self):
+    def x_vicory_outcome(self):
         self.s.configure('red.Horizontal.TProgressbar', troughcolor='black', background='limegreen', thickness=48)
         self.progress_bar['value'] = self.progress_maxvalue
-        self.victory_text.set('YOU WIN!')
+        self.victory_text.set('X WINS!')
         self.victory_label.configure(bg='limegreen', fg='black')
+        self.win_counter_x += 1
+        self.win_count_label.configure(text='X: ' + str(self.win_counter_x) + '    O: ' + str(self.win_counter_o))
+
+    def o_vicory_outcome(self):
+        self.s.configure('red.Horizontal.TProgressbar', troughcolor='black', background='limegreen', thickness=48)
+        self.progress_bar['value'] = self.progress_maxvalue
+        self.victory_text.set('O WINS!')
+        self.victory_label.configure(bg='limegreen', fg='black')
+        self.win_counter_o += 1
+        self.win_count_label.configure(text='X: ' + str(self.win_counter_x) + '    O: ' + str(self.win_counter_o))
 
     def draw_game(self):
         self.s.configure('red.Horizontal.TProgressbar', troughcolor='black', background='yellow', thickness=48)
@@ -230,12 +290,10 @@ class Tictactoe(Tk):
         self.ttt_bl.set('')
         self.ttt_bm.set('')
         self.ttt_br.set('')
-        self.progress_bar['value'] = 0
-        self.victory_text.set('')
-        self.victory_label.configure(bg='black')
 
 
 app = Tictactoe()
 app.title('Tic Tac Toe')
 app.iconbitmap('TTT.ico')
+app.configure(bg='black')
 app.mainloop()
