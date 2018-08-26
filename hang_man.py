@@ -32,8 +32,15 @@ class Hangman(Tk):
                 self.letter_radio_button.grid(row=0, column=all_letters.index(letter))
 
         self.computer_choice = []
+        self.cpu_options = []
+        for x in all_letters:
+            self.cpu_options.append(x)
         for x in range(0, random.randrange(6, 10)):
-            self.computer_choice.append(random.choice(all_letters.upper()))
+            for choice in self.computer_choice:
+                for item in self.cpu_options:
+                    if item == choice:
+                        self.cpu_options.remove(item)
+            self.computer_choice.append(random.choice(self.cpu_options))
 
         print self.computer_choice
 
@@ -77,9 +84,9 @@ class Hangman(Tk):
 
     def been_clicked(self):
         for item in self.computer_choice:
-            if self.user_choice.get().upper() == item:
+            if self.user_choice.get() == item:
                 item_loc = self.computer_choice.index(item)
-                self.options[item_loc][1].set(item)
+                self.options[item_loc][1].set(item.upper())
 
 
 
