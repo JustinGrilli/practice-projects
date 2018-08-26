@@ -32,19 +32,54 @@ class Hangman(Tk):
                 self.letter_radio_button.grid(row=0, column=all_letters.index(letter))
 
         self.computer_choice = []
-        for x in range(0, 6):
-            self.computer_choice.append(random.choice(all_letters))
+        for x in range(0, random.randrange(6, 10)):
+            self.computer_choice.append(random.choice(all_letters.upper()))
 
-        col = 0
-        for x in self.computer_choice:
-            self.reveal = Label(self.top_frame, text=x, fg='white', bg='black')
+        print self.computer_choice
+
+        self.cpu_choice_str1 = StringVar()
+        self.cpu_choice_str1.set('_')
+        self.cpu_choice_str2 = StringVar()
+        self.cpu_choice_str2.set('_')
+        self.cpu_choice_str3 = StringVar()
+        self.cpu_choice_str3.set('_')
+        self.cpu_choice_str4 = StringVar()
+        self.cpu_choice_str4.set('_')
+        self.cpu_choice_str5 = StringVar()
+        self.cpu_choice_str5.set('_')
+        self.cpu_choice_str6 = StringVar()
+        self.cpu_choice_str6.set('_')
+        self.cpu_choice_str7 = StringVar()
+        self.cpu_choice_str7.set('_')
+        self.cpu_choice_str8 = StringVar()
+        self.cpu_choice_str8.set('_')
+        self.cpu_choice_str9 = StringVar()
+        self.cpu_choice_str9.set('_')
+        self.cpu_choice_str10 = StringVar()
+        self.cpu_choice_str10.set('_')
+
+        self.options = [
+            (0, self.cpu_choice_str1),
+            (1, self.cpu_choice_str2),
+            (2, self.cpu_choice_str3),
+            (3, self.cpu_choice_str4),
+            (4, self.cpu_choice_str5),
+            (5, self.cpu_choice_str6),
+            (6, self.cpu_choice_str7),
+            (7, self.cpu_choice_str8),
+            (8, self.cpu_choice_str9),
+            (9, self.cpu_choice_str10),
+        ]
+
+        for col, text in self.options[:len(self.computer_choice)]:
+            self.reveal = Label(self.top_frame, textvariable=text, fg='black', bg='white', font=game_font+' 20 bold')
             self.reveal.grid(row=0, column=col)
-            col += 1
 
     def been_clicked(self):
         for item in self.computer_choice:
-            if self.user_choice == item:
-                self.reveal.configure(bg='white')
+            if self.user_choice.get().upper() == item:
+                item_loc = self.computer_choice.index(item)
+                self.options[item_loc][1].set(item)
 
 
 
