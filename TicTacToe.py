@@ -15,7 +15,7 @@ class Tictactoe(Tk):
         self.win_counter_x = 0
         self.win_counter_o = 0
 
-        self.win_count_label = Label(self.top_frame, bg='black', fg='white', font=game_font+' 26 bold',
+        self.win_count_label = Label(self.top_frame, bg='black', fg='white', font=game_font + ' 26 bold',
                                      text='X: ' + str(self.win_counter_x) + '    O: ' + str(self.win_counter_o))
         self.win_count_label.grid(row=0, columnspan=2)
 
@@ -24,7 +24,7 @@ class Tictactoe(Tk):
 
         button_height = 0
         button_width = 4
-        button_font = game_font+' 64 bold'
+        button_font = game_font + ' 64 bold'
 
         self.s = ttk.Style()
         self.s.theme_use('classic')
@@ -77,7 +77,6 @@ class Tictactoe(Tk):
             self.button = Button(self.frame, textvariable=text, height=button_height, width=button_width,
                                  fg='white', bg='black', font=button_font, command=command)
             self.button.grid(row=row, column=col)
-
 
     def tl(self):
         if self.alter_choice is True:
@@ -206,52 +205,52 @@ class Tictactoe(Tk):
         self.winner()
 
     def winner(self):
-        if self.ttt_tl.get() == 'X' and self.ttt_tm.get() == 'X' and self.ttt_tr.get() == 'X': # Top row
+        if self.ttt_tl.get() == 'X' and self.ttt_tm.get() == 'X' and self.ttt_tr.get() == 'X':  # Top row
             self.x_vicory_outcome()
             self.reset()
-        elif self.ttt_ml.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_mr.get() == 'X': # Middle row
+        elif self.ttt_ml.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_mr.get() == 'X':  # Middle row
             self.vicory_outcome()
             self.reset()
-        elif self.ttt_bl.get() == 'X' and self.ttt_bm.get() == 'X' and self.ttt_br.get() == 'X': # Bottom row
+        elif self.ttt_bl.get() == 'X' and self.ttt_bm.get() == 'X' and self.ttt_br.get() == 'X':  # Bottom row
             self.x_vicory_outcome()
             self.reset()
-        elif self.ttt_tl.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_br.get() == 'X': # Diagonal top to bot
+        elif self.ttt_tl.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_br.get() == 'X':  # Diagonal top to bot
             self.x_vicory_outcome()
             self.reset()
-        elif self.ttt_tr.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_bl.get() == 'X': # Diagonal bot to top
+        elif self.ttt_tr.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_bl.get() == 'X':  # Diagonal bot to top
             self.x_vicory_outcome()
             self.reset()
-        elif self.ttt_tl.get() == 'X' and self.ttt_ml.get() == 'X' and self.ttt_bl.get() == 'X': # Left column
+        elif self.ttt_tl.get() == 'X' and self.ttt_ml.get() == 'X' and self.ttt_bl.get() == 'X':  # Left column
             self.x_vicory_outcome()
             self.reset()
-        elif self.ttt_tm.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_bm.get() == 'X': # Middle column
+        elif self.ttt_tm.get() == 'X' and self.ttt_mm.get() == 'X' and self.ttt_bm.get() == 'X':  # Middle column
             self.x_vicory_outcome()
             self.reset()
-        elif self.ttt_tr.get() == 'X' and self.ttt_mr.get() == 'X' and self.ttt_br.get() == 'X': # Right column
+        elif self.ttt_tr.get() == 'X' and self.ttt_mr.get() == 'X' and self.ttt_br.get() == 'X':  # Right column
             self.x_vicory_outcome()
             self.reset()
-        elif self.ttt_tl.get() == 'O' and self.ttt_tm.get() == 'O' and self.ttt_tr.get() == 'O': # Top row
+        elif self.ttt_tl.get() == 'O' and self.ttt_tm.get() == 'O' and self.ttt_tr.get() == 'O':  # Top row
             self.o_vicory_outcome()
             self.reset()
-        elif self.ttt_ml.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_mr.get() == 'O': # Middle row
+        elif self.ttt_ml.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_mr.get() == 'O':  # Middle row
             self.o_vicory_outcome()
             self.reset()
-        elif self.ttt_bl.get() == 'O' and self.ttt_bm.get() == 'O' and self.ttt_br.get() == 'O': # Bottom row
+        elif self.ttt_bl.get() == 'O' and self.ttt_bm.get() == 'O' and self.ttt_br.get() == 'O':  # Bottom row
             self.o_vicory_outcome()
             self.reset()
-        elif self.ttt_tl.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_br.get() == 'O': # Diagonal top to bot
+        elif self.ttt_tl.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_br.get() == 'O':  # Diagonal top to bot
             self.o_vicory_outcome()
             self.reset()
-        elif self.ttt_tr.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_bl.get() == 'O': # Diagonal bot to top
+        elif self.ttt_tr.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_bl.get() == 'O':  # Diagonal bot to top
             self.o_vicory_outcome()
             self.reset()
-        elif self.ttt_tl.get() == 'O' and self.ttt_ml.get() == 'O' and self.ttt_bl.get() == 'O': # Left column
+        elif self.ttt_tl.get() == 'O' and self.ttt_ml.get() == 'O' and self.ttt_bl.get() == 'O':  # Left column
             self.o_vicory_outcome()
             self.reset()
-        elif self.ttt_tm.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_bm.get() == 'O': # Middle column
+        elif self.ttt_tm.get() == 'O' and self.ttt_mm.get() == 'O' and self.ttt_bm.get() == 'O':  # Middle column
             self.o_vicory_outcome()
             self.reset()
-        elif self.ttt_tr.get() == 'O' and self.ttt_mr.get() == 'O' and self.ttt_br.get() == 'O': # Right column
+        elif self.ttt_tr.get() == 'O' and self.ttt_mr.get() == 'O' and self.ttt_br.get() == 'O':  # Right column
             self.o_vicory_outcome()
             self.reset()
         elif self.ttt_tl.get() <> '' and self.ttt_tm.get() <> '' and self.ttt_tr.get() <> '' and self.ttt_ml.get() <> '' and self.ttt_mm.get() <> '' and self.ttt_mr.get() <> '' and self.ttt_bl.get() <> '' and self.ttt_bm.get() <> '' and self.ttt_br.get() <> '':
