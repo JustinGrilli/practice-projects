@@ -265,6 +265,7 @@ class Tictactoe(Tk):
         self.victory_label.configure(bg='limegreen', fg='black')
         self.win_counter_x += 1
         self.win_count_label.configure(text='X: ' + str(self.win_counter_x) + '    O: ' + str(self.win_counter_o))
+        self.alter_choice = True
 
     def o_vicory_outcome(self):
         self.s.configure('red.Horizontal.TProgressbar', troughcolor='black', background='limegreen', thickness=48)
@@ -273,12 +274,14 @@ class Tictactoe(Tk):
         self.victory_label.configure(bg='limegreen', fg='black')
         self.win_counter_o += 1
         self.win_count_label.configure(text='X: ' + str(self.win_counter_x) + '    O: ' + str(self.win_counter_o))
+        self.alter_choice = True
 
     def draw_game(self):
         self.s.configure('red.Horizontal.TProgressbar', troughcolor='black', background='yellow', thickness=48)
         self.progress_bar['value'] = self.progress_maxvalue
         self.victory_text.set('CAT\'S GAME!')
         self.victory_label.configure(bg='yellow', fg='black')
+        self.alter_choice = True
 
     def reset(self):
         self.ttt_tl.set('')
