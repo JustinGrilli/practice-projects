@@ -1,27 +1,37 @@
 from Tkinter import *
 import random
 import ttk
-
+from random_words import RandomWords
 
 class Hangman(Tk):
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
 
-        self.top_frame = Frame()
+        self.mistake_max = 8
+        self.mistake_count = self.mistake_max
+
+        rw = RandomWords()
+
+        self.top_frame = Frame(bg='lightblue')
         self.top_frame.grid(row=0, column=0)
-        self.middle_frame = Frame()
+        self.middle_frame = Frame(bg='lightblue')
         self.middle_frame.grid(row=1, column=0)
-        self.bottom_frame = Frame()
+        self.bottom_frame = Frame(bg='lightblue')
         self.bottom_frame.grid(row=2, column=0)
 
         game_font = 'gothic'
         self.submit_button = Button(self.bottom_frame, text='Submit Guess', bg='darkgreen', fg='white', font=game_font+' 20 bold', command=self.been_clicked)
-        self.submit_button.grid()
+        self.submit_button.grid(row=0, column=0)
+        self.submit_button = Button(self.bottom_frame, text='Reset', bg='darkgray', fg='white',
+                                    font=game_font + ' 20 bold', command=self.reset)
+        self.submit_button.grid(row=0, column=1)
 
+        all_letters = 'abcdefghijklmnopqrstuvwxyz'
+
+        # User choice radio buttons
         self.user_choice = StringVar()
         self.user_choice.set(None)
-        all_letters = 'abcdefghijklmnopqrstuvwxyz'
         for letter in all_letters:
             self.letter_radio_button = Radiobutton(self.middle_frame, text=letter.upper(), value=letter,
                                                    variable=self.user_choice, width=4, height=2, indicatoron=0,
@@ -31,65 +41,67 @@ class Hangman(Tk):
             else:
                 self.letter_radio_button.grid(row=0, column=all_letters.index(letter))
 
-        self.computer_choice = []
-        self.cpu_options = []
-        for x in all_letters:
-            self.cpu_options.append(x)
-        for x in range(0, random.randrange(6, 10)):
-            for choice in self.computer_choice:
-                for item in self.cpu_options:
-                    if item == choice:
-                        self.cpu_options.remove(item)
-            self.computer_choice.append(random.choice(self.cpu_options))
+        # Computer choice from random words
+        self.word_list = rw.random_words(count=random.randrange(2, 3))
+        self.all_words = " ".join(self.word_list)
 
-        print self.computer_choice
+        self.reveal_text = StringVar()
+        self.starting_text = []
+        for letter in self.all_words:
+            if letter <> ' ':
+                self.starting_text.append('_')
+            else:
+                self.starting_text.append(' ')
+        self.starting_text = ''.join(self.starting_text)
+        self.reveal_text.set(self.starting_text)
 
-        self.cpu_choice_str1 = StringVar()
-        self.cpu_choice_str1.set('_')
-        self.cpu_choice_str2 = StringVar()
-        self.cpu_choice_str2.set('_')
-        self.cpu_choice_str3 = StringVar()
-        self.cpu_choice_str3.set('_')
-        self.cpu_choice_str4 = StringVar()
-        self.cpu_choice_str4.set('_')
-        self.cpu_choice_str5 = StringVar()
-        self.cpu_choice_str5.set('_')
-        self.cpu_choice_str6 = StringVar()
-        self.cpu_choice_str6.set('_')
-        self.cpu_choice_str7 = StringVar()
-        self.cpu_choice_str7.set('_')
-        self.cpu_choice_str8 = StringVar()
-        self.cpu_choice_str8.set('_')
-        self.cpu_choice_str9 = StringVar()
-        self.cpu_choice_str9.set('_')
-        self.cpu_choice_str10 = StringVar()
-        self.cpu_choice_str10.set('_')
+        self.reveal = Label(self.top_frame, textvariable=self.reveal_text, fg='black', bg='lightblue', font=game_font+' 48 bold')
+        self.reveal.grid(row=1, column=0)
 
-        self.options = [
-            (0, self.cpu_choice_str1),
-            (1, self.cpu_choice_str2),
-            (2, self.cpu_choice_str3),
-            (3, self.cpu_choice_str4),
-            (4, self.cpu_choice_str5),
-            (5, self.cpu_choice_str6),
-            (6, self.cpu_choice_str7),
-            (7, self.cpu_choice_str8),
-            (8, self.cpu_choice_str9),
-            (9, self.cpu_choice_str10),
-        ]
-
-        for col, text in self.options[:len(self.computer_choice)]:
-            self.reveal = Label(self.top_frame, textvariable=text, fg='black', bg='white', font=game_font+' 20 bold')
-            self.reveal.grid(row=0, column=col)
+        self.s = ttk.Style()
+        self.s.theme_use('classic')
+        self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='darkgreen', thickness=38)
+        self.progress_bar = ttk.Progressbar(self.top_frame, style='green.Horizontal.TProgressbar', length=600)
+        self.progress_bar.grid(row=0, column=0)
+        self.progress_bar['value'] = self.mistake_max
+        self.progress_bar['maximum'] = self.mistake_max
 
     def been_clicked(self):
-        for item in self.computer_choice:
-            if self.user_choice.get() == item:
-                item_loc = self.computer_choice.index(item)
-                self.options[item_loc][1].set(item.upper())
+        indexing = 0
+        matches = 0
+        all_words = []
+        for x in self.all_words:
+            all_words.append(x)
+        for letter in all_words:
+            if self.user_choice.get() == letter:
+                letter_list = []
+                for x in self.starting_text:
+                    letter_list.append(x)
+                letter_list[indexing] = letter.upper()
+                self.starting_text = ''.join(letter_list)
+                self.reveal_text.set(self.starting_text)
+                matches += 1
+            indexing += 1
+        if matches == 0:
+            self.mistake_count -= 1
+            self.progress_bar['value'] = self.mistake_count
+            if self.mistake_count <= self.mistake_max * 0.25:
+                self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='red', thickness=38)
+            elif self.mistake_count <= self.mistake_max / 2:
+                self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='yellow', thickness=38)
+        print self.mistake_count
+
+        if self.mistake_count == 0:
+            self.reveal_text.set('GAME OVER')
+            self.progress_bar['value'] = self.mistake_max
+            self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='red', thickness=38)
+
+    def reset(self):
+        exit()
 
 
 
 app = Hangman()
 app.title('Hangman')
+app.configure(bg='lightblue')
 app.mainloop()
