@@ -3,6 +3,7 @@ import random
 import ttk
 from random_words import RandomWords
 
+
 class Hangman(Tk):
 
     def __init__(self, *args, **kwargs):
@@ -15,17 +16,20 @@ class Hangman(Tk):
 
         self.top_frame = Frame(bg='lightblue')
         self.top_frame.grid(row=0, column=0)
-        self.middle_frame = Frame(bg='lightblue')
-        self.middle_frame.grid(row=1, column=0)
+        self.middle_frame1 = Frame(bg='lightblue')
+        self.middle_frame1.grid(row=1, column=0)
+        self.middle_frame2 = Frame(bg='lightblue')
+        self.middle_frame2.grid(row=2, column=0, sticky=W, pady=5)
         self.bottom_frame = Frame(bg='lightblue')
-        self.bottom_frame.grid(row=2, column=0)
+        self.bottom_frame.grid(row=3, column=0)
 
-        game_font = 'gothic'
-        self.submit_button = Button(self.bottom_frame, text='Submit Guess', bg='darkgreen', fg='white', font=game_font+' 20 bold', command=self.been_clicked)
-        self.submit_button.grid(row=0, column=0, padx=5, pady=5)
+        self.game_font = 'none'
+        self.submit_button = Button(self.bottom_frame, text='Submit Guess', bg='darkgreen', fg='white',
+                                    font=self.game_font + ' 20 bold', command=self.been_clicked)
+        self.submit_button.grid(row=1, column=0, padx=5, pady=5)
         self.submit_button = Button(self.bottom_frame, text='Reset', bg='#444444', fg='white',
-                                    font=game_font + ' 20 bold', command=self.reset)
-        self.submit_button.grid(row=0, column=1, padx=5, pady=5)
+                                    font=self.game_font + ' 20 bold', command=self.reset)
+        self.submit_button.grid(row=1, column=1, padx=5, pady=5)
 
         all_letters = 'abcdefghijklmnopqrstuvwxyz'
 
@@ -33,13 +37,19 @@ class Hangman(Tk):
         self.user_choice = StringVar()
         self.user_choice.set(None)
         for letter in all_letters:
-            self.letter_radio_button = Radiobutton(self.middle_frame, text=letter.upper(), value=letter,
+            self.letter_radio_button = Radiobutton(self.middle_frame1, text=letter.upper(), value=letter,
                                                    variable=self.user_choice, width=4, height=2, indicatoron=0,
-                                                   font=game_font+' 12 bold')
-            if all_letters.index(letter) > (len(all_letters) / 2)-1:
-                self.letter_radio_button.grid(row=1, column=all_letters.index(letter)-(len(all_letters) / 2))
+                                                   font=self.game_font + ' 12 bold')
+            if all_letters.index(letter) > (len(all_letters) / 2) - 1:
+                self.letter_radio_button.grid(row=1, column=all_letters.index(letter) - (len(all_letters) / 2))
             else:
                 self.letter_radio_button.grid(row=0, column=all_letters.index(letter))
+
+        self.wrong_choice = StringVar()
+        self.wrong_choice.set('Wrong Guesses: ')
+        self.wrong_choice_label = Label(self.middle_frame2, textvariable=self.wrong_choice,
+                                        font=self.game_font + ' 14 bold', bg='lightblue', fg='#444444')
+        self.wrong_choice_label.grid(row=0, column=0, sticky=W)
 
         # Computer choice from random words
         self.word_list = self.rw.random_words(count=random.randrange(1, 4))
@@ -49,13 +59,15 @@ class Hangman(Tk):
         self.starting_text = []
         for letter in self.all_words:
             if letter <> ' ':
-                self.starting_text.append('_')
+                self.starting_text.append('.')
             else:
                 self.starting_text.append(' ')
         self.starting_text = ''.join(self.starting_text)
         self.reveal_text.set(self.starting_text)
+        print self.word_list
 
-        self.reveal = Label(self.top_frame, textvariable=self.reveal_text, fg='black', bg='lightblue', font=game_font+' 48 bold')
+        self.reveal = Label(self.top_frame, textvariable=self.reveal_text, fg='black', bg='lightblue',
+                            font=self.game_font + ' 48 bold')
         self.reveal.grid(row=1, column=0, pady=10)
 
         self.s = ttk.Style()
@@ -85,11 +97,22 @@ class Hangman(Tk):
         if matches == 0:
             self.mistake_count -= 1
             self.progress_bar['value'] = self.mistake_count
+            wrong_choice_list = []
+            for x in self.wrong_choice.get():
+                wrong_choice_list.append(x)
+            if self.user_choice.get() not in wrong_choice_list:
+                wrong_choice_list.append(self.user_choice.get())
+            self.wrong_choice.set(''.join(wrong_choice_list))
             if self.mistake_count <= self.mistake_max * 0.25:
                 self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='red', thickness=38)
             elif self.mistake_count <= self.mistake_max / 2:
-                self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='yellow', thickness=38)
-        print self.mistake_count
+                self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='yellow',
+                                 thickness=38)
+
+        if '.' not in self.reveal_text.get():
+            self.vicory_text = Label(self.top_frame, text='YOU WIN!', bg='darkgreen', fg='white',
+                                     font=self.game_font + ' 20 bold')
+            self.vicory_text.grid(row=0, column=0)
 
         if self.mistake_count == 0:
             self.reveal_text.set('GAME OVER')
@@ -106,11 +129,16 @@ class Hangman(Tk):
         self.starting_text = []
         for letter in self.all_words:
             if letter <> ' ':
-                self.starting_text.append('_')
+                self.starting_text.append('.')
             else:
                 self.starting_text.append(' ')
         self.starting_text = ''.join(self.starting_text)
         self.reveal_text.set(self.starting_text)
+        try:
+            self.vicory_text.destroy()
+        except AttributeError:
+            pass
+        self.wrong_choice.set('Wrong Guesses: ')
 
 
 app = Hangman()
