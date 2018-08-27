@@ -11,7 +11,7 @@ class Hangman(Tk):
         self.mistake_max = 8
         self.mistake_count = self.mistake_max
 
-        rw = RandomWords()
+        self.rw = RandomWords()
 
         self.top_frame = Frame(bg='lightblue')
         self.top_frame.grid(row=0, column=0)
@@ -22,10 +22,10 @@ class Hangman(Tk):
 
         game_font = 'gothic'
         self.submit_button = Button(self.bottom_frame, text='Submit Guess', bg='darkgreen', fg='white', font=game_font+' 20 bold', command=self.been_clicked)
-        self.submit_button.grid(row=0, column=0)
-        self.submit_button = Button(self.bottom_frame, text='Reset', bg='darkgray', fg='white',
+        self.submit_button.grid(row=0, column=0, padx=5, pady=5)
+        self.submit_button = Button(self.bottom_frame, text='Reset', bg='#444444', fg='white',
                                     font=game_font + ' 20 bold', command=self.reset)
-        self.submit_button.grid(row=0, column=1)
+        self.submit_button.grid(row=0, column=1, padx=5, pady=5)
 
         all_letters = 'abcdefghijklmnopqrstuvwxyz'
 
@@ -42,8 +42,8 @@ class Hangman(Tk):
                 self.letter_radio_button.grid(row=0, column=all_letters.index(letter))
 
         # Computer choice from random words
-        self.word_list = rw.random_words(count=random.randrange(2, 3))
-        self.all_words = " ".join(self.word_list)
+        self.word_list = self.rw.random_words(count=random.randrange(1, 4))
+        self.all_words = ' '.join(self.word_list)
 
         self.reveal_text = StringVar()
         self.starting_text = []
@@ -56,7 +56,7 @@ class Hangman(Tk):
         self.reveal_text.set(self.starting_text)
 
         self.reveal = Label(self.top_frame, textvariable=self.reveal_text, fg='black', bg='lightblue', font=game_font+' 48 bold')
-        self.reveal.grid(row=1, column=0)
+        self.reveal.grid(row=1, column=0, pady=10)
 
         self.s = ttk.Style()
         self.s.theme_use('classic')
@@ -97,8 +97,20 @@ class Hangman(Tk):
             self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='red', thickness=38)
 
     def reset(self):
-        exit()
+        self.mistake_count = 8
+        self.progress_bar['value'] = self.mistake_count
+        self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='darkgreen', thickness=38)
 
+        self.word_list = self.rw.random_words(count=random.randrange(1, 4))
+        self.all_words = ' '.join(self.word_list)
+        self.starting_text = []
+        for letter in self.all_words:
+            if letter <> ' ':
+                self.starting_text.append('_')
+            else:
+                self.starting_text.append(' ')
+        self.starting_text = ''.join(self.starting_text)
+        self.reveal_text.set(self.starting_text)
 
 
 app = Hangman()
