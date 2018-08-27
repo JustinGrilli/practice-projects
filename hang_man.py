@@ -45,7 +45,8 @@ class Hangman(Tk):
             else:
                 self.letter_radio_button.grid(row=0, column=all_letters.index(letter))
 
-        self.wrong_choice_title = Label(self.bottom_frame2, text='Wrong Guesses: ', bg='lightblue', fg='#444444', font=self.game_font+' 12 bold')
+        self.wrong_choice_title = Label(self.bottom_frame2, text='Wrong Guesses: ', bg='lightblue', fg='#444444',
+                                        font=self.game_font + ' 12 bold')
         self.wrong_choice_title.grid(row=0, column=0, sticky=W)
         self.wrong_choice = StringVar()
         self.wrong_choice.set('')
@@ -66,7 +67,6 @@ class Hangman(Tk):
                 self.starting_text.append(' ')
         self.starting_text = ''.join(self.starting_text)
         self.reveal_text.set(self.starting_text)
-        print self.word_list
 
         self.reveal = Label(self.top_frame, textvariable=self.reveal_text, fg='black', bg='lightblue',
                             font=self.game_font + ' 48 bold')
