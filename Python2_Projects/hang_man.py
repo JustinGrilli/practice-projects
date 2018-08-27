@@ -101,9 +101,9 @@ class Hangman(Tk):
             self.progress_bar['value'] = self.mistake_count
             wrong_choice_list = []
             for x in self.wrong_choice.get():
-                wrong_choice_list.append(x)
-            if self.user_choice.get() not in wrong_choice_list:
-                wrong_choice_list.append(self.user_choice.get())
+                wrong_choice_list.append(x.upper())
+            if self.user_choice.get().upper() not in wrong_choice_list:
+                wrong_choice_list.append(self.user_choice.get().upper())
             self.wrong_choice.set(''.join(wrong_choice_list))
             if self.mistake_count <= self.mistake_max * 0.25:
                 self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='red', thickness=38)
