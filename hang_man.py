@@ -18,10 +18,10 @@ class Hangman(Tk):
         self.top_frame.grid(row=0, column=0)
         self.middle_frame1 = Frame(bg='lightblue')
         self.middle_frame1.grid(row=1, column=0)
-        self.middle_frame2 = Frame(bg='lightblue')
-        self.middle_frame2.grid(row=2, column=0, sticky=W, pady=5)
         self.bottom_frame = Frame(bg='lightblue')
-        self.bottom_frame.grid(row=3, column=0)
+        self.bottom_frame.grid(row=2, column=0)
+        self.bottom_frame2 = Frame(bg='lightblue')
+        self.bottom_frame2.grid(row=3, column=0, sticky=W, pady=5)
 
         self.game_font = 'none'
         self.submit_button = Button(self.bottom_frame, text='Submit Guess', bg='darkgreen', fg='white',
@@ -45,11 +45,13 @@ class Hangman(Tk):
             else:
                 self.letter_radio_button.grid(row=0, column=all_letters.index(letter))
 
+        self.wrong_choice_title = Label(self.bottom_frame2, text='Wrong Guesses: ', bg='lightblue', fg='#444444', font=self.game_font+' 12 bold')
+        self.wrong_choice_title.grid(row=0, column=0, sticky=W)
         self.wrong_choice = StringVar()
-        self.wrong_choice.set('Wrong Guesses: ')
-        self.wrong_choice_label = Label(self.middle_frame2, textvariable=self.wrong_choice,
-                                        font=self.game_font + ' 14 bold', bg='lightblue', fg='#444444')
-        self.wrong_choice_label.grid(row=0, column=0, sticky=W)
+        self.wrong_choice.set('')
+        self.wrong_choice_label = Label(self.bottom_frame2, textvariable=self.wrong_choice,
+                                        font=self.game_font + ' 20 bold overstrike roman', bg='lightblue', fg='#944444')
+        self.wrong_choice_label.grid(row=1, column=0, sticky=W)
 
         # Computer choice from random words
         self.word_list = self.rw.random_words(count=random.randrange(1, 4))
@@ -138,7 +140,7 @@ class Hangman(Tk):
             self.vicory_text.destroy()
         except AttributeError:
             pass
-        self.wrong_choice.set('Wrong Guesses: ')
+        self.wrong_choice.set('')
 
 
 app = Hangman()
