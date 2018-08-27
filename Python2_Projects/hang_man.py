@@ -115,9 +115,14 @@ class Hangman(Tk):
             self.vicory_text = Label(self.top_frame, text='YOU WIN!', bg='darkgreen', fg='white',
                                      font=self.game_font + ' 20 bold')
             self.vicory_text.grid(row=0, column=0)
+            self.progress_bar['value'] = self.mistake_max
+            self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='darkgreen', thickness=38)
 
         if self.mistake_count == 0:
-            self.reveal_text.set('GAME OVER')
+            self.vicory_text = Label(self.top_frame, text='GAME OVER!', bg='red', fg='white',
+                                     font=self.game_font + ' 20 bold')
+            self.vicory_text.grid(row=0, column=0)
+            self.reveal_text.set(self.all_words)
             self.progress_bar['value'] = self.mistake_max
             self.s.configure('green.Horizontal.TProgressbar', troughcolor='white', background='red', thickness=38)
 
