@@ -37,5 +37,6 @@ class Startscreen(Tk):
         print self.user_name_submit
         self.windowFrame.destroy()
 
+
 welcome = Startscreen('Your Game')
 welcome.mainloop()

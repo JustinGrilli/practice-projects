@@ -6,8 +6,10 @@ from random_words import RandomWords
 
 class Hangman(Tk):
 
-    def __init__(self, *args, **kwargs):
-        Tk.__init__(self, *args, **kwargs)
+    def __init__(self):
+        Tk.__init__(self)
+        Tk.title(self, 'Hangman')
+        Tk.configure(self, bg='lightblue')
 
         self.mistake_max = 8
         self.mistake_count = self.mistake_max
@@ -149,6 +151,4 @@ class Hangman(Tk):
 
 
 app = Hangman()
-app.title('Hangman')
-app.configure(bg='lightblue')
 app.mainloop()
