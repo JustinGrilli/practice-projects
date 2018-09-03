@@ -25,6 +25,7 @@ class Hangman(Tk):
         self.bottom_frame2 = Frame(bg='lightblue')
         self.bottom_frame2.grid(row=3, column=0, sticky=W, pady=5)
 
+
         self.game_font = 'none'
         self.submit_button = Button(self.bottom_frame, text='Submit Guess', bg='darkgreen', fg='white',
                                     font=self.game_font + ' 20 bold', command=self.been_clicked)
@@ -81,6 +82,7 @@ class Hangman(Tk):
         self.progress_bar.grid(row=0, column=0)
         self.progress_bar['value'] = self.mistake_max
         self.progress_bar['maximum'] = self.mistake_max
+
 
     def been_clicked(self):
         indexing = 0

@@ -1,6 +1,6 @@
 from Tkinter import *
 import ttk
-
+# import hang_man as hm
 
 class Startscreen(Tk):
 
@@ -28,14 +28,15 @@ class Startscreen(Tk):
         self.user_name.configure(justify='center')
         self.user_name.grid(row=2, column=1, pady=10, padx=2, sticky=W)
 
-        self.submitButton = Button(self.windowFrame, bg='#333333', fg='white', text='Submit', font='none 18 bold',
+        self.submitButton = Button(self.windowFrame, bg='#333333', fg='white', text='Play', font='none 18 bold',
                                    command=self.kill_welcome)
         self.submitButton.grid(row=2, column=2, pady=10, padx=2, sticky=E)
 
     def kill_welcome(self):
         self.user_name_submit = self.user_name.get()
         print self.user_name_submit
-        self.windowFrame.destroy()
+        self.destroy()
+
 
 
 welcome = Startscreen('Your Game')
