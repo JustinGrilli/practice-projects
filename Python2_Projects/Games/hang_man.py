@@ -6,8 +6,10 @@ from random_words import RandomWords
 
 class Hangman(Tk):
 
-    def __init__(self, *args, **kwargs):
-        Tk.__init__(self, *args, **kwargs)
+    def __init__(self):
+        Tk.__init__(self)
+        Tk.title(self, 'Hangman')
+        Tk.configure(self, bg='lightblue')
 
         self.mistake_max = 8
         self.mistake_count = self.mistake_max
@@ -22,6 +24,7 @@ class Hangman(Tk):
         self.bottom_frame.grid(row=2, column=0)
         self.bottom_frame2 = Frame(bg='lightblue')
         self.bottom_frame2.grid(row=3, column=0, sticky=W, pady=5)
+
 
         self.game_font = 'none'
         self.submit_button = Button(self.bottom_frame, text='Submit Guess', bg='darkgreen', fg='white',
@@ -79,6 +82,7 @@ class Hangman(Tk):
         self.progress_bar.grid(row=0, column=0)
         self.progress_bar['value'] = self.mistake_max
         self.progress_bar['maximum'] = self.mistake_max
+
 
     def been_clicked(self):
         indexing = 0
@@ -149,6 +153,4 @@ class Hangman(Tk):
 
 
 app = Hangman()
-app.title('Hangman')
-app.configure(bg='lightblue')
 app.mainloop()
