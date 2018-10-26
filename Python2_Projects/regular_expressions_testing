@@ -1,0 +1,11 @@
+import re
+
+
+# removes all values other than what we specify
+def remove_junk(the_string):
+    the_string = re.sub(r'[^A-Za-z.0-9:\n ]', '', the_string)
+    return the_string
+
+
+my_string = '!@#$@%#$%^%%&^&*^*&(Deviation: [[0123.456789]]\n\n'
+print remove_junk(my_string) + 'end'
