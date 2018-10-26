@@ -17,16 +17,16 @@ class Window(Tk):
                            'OR', 'ON', 'IN', 'BETWEEN', 'UNBOUNDED', 'PROCEEDING', 'FOLLOWING', 'UNION', 'ALL', 'WITHIN',
                            'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'COALESCE', 'NVL', 'AVG', 'MAX', 'SUM', 'COUNT']
 
-        self.open_file_button = Button(self.top_frame, text='Open File', command=self.open_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='Orange')
+        self.open_file_button = Button(self.top_frame, text='Open File', command=self.open_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='lightblue')
         self.open_file_button.pack(side=TOP, padx=10, pady=10)
 
-        self.cap_file_button = Button(self.top_frame, text='Upper Case', command=self.cap_file, width=20, height=2, font='none 20 bold', relief=RAISED)
+        self.cap_file_button = Button(self.top_frame, text='Upper Case', command=self.cap_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='lightyellow')
         self.cap_file_button.pack(side=LEFT, padx=10, pady=10)
 
-        self.cap_file_button = Button(self.top_frame, text='Lower Case', command=self.lower_file, width=20, height=2, font='none 20 bold', relief=RAISED)
+        self.cap_file_button = Button(self.top_frame, text='Lower Case', command=self.lower_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='lightyellow')
         self.cap_file_button.pack(side=LEFT, padx=10, pady=10)
 
-        self.cap_file_button = Button(self.top_frame, text='Semi Lower Case', command=self.semi_lower_file, width=20, height=2, font='none 20 bold', relief=RAISED)
+        self.cap_file_button = Button(self.top_frame, text='Semi Lower Case', command=self.semi_lower_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='lightyellow')
         self.cap_file_button.pack(side=LEFT, padx=10, pady=10)
 
         self.label_text = StringVar()
@@ -51,6 +51,7 @@ class Window(Tk):
 
             new_sql_file.close()
             self.label_text.set(new_sql_file)
+            self.file_label.config(bg='#669966')
 
     def lower_file(self):
         if self.the_file != None:
@@ -69,6 +70,7 @@ class Window(Tk):
 
             new_sql_file.close()
             self.label_text.set(new_sql_file)
+            self.file_label.config(bg='#669966')
 
     def semi_lower_file(self):
         if self.the_file != None:
@@ -98,10 +100,13 @@ class Window(Tk):
 
             new_sql_file.close()
             self.label_text.set(new_sql_file)
+            self.file_label.config(bg='#669966')
 
     def open_file(self):
         self.the_file = tkFileDialog.askopenfile(parent=self, mode='r', title='Choose a file to CAP')
-        self.label_text.set(self.the_file)
+        if self.the_file != None:
+            self.label_text.set(self.the_file)
+            self.file_label.config(bg='lightblue')
         return self.the_file
 
 
