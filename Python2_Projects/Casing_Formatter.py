@@ -30,18 +30,20 @@ class Window(Tk):
         self.cap_file_button.pack(side=LEFT, padx=10, pady=10)
 
         self.label_text = StringVar()
-        self.label_text.set(self.the_file)
+        self.label_text.set('')
         self.file_label = Label(self, textvariable=self.label_text, relief=SUNKEN)
         self.file_label.pack(side=BOTTOM, fill=X)
+
+        self.output_file = 'Re-Cased_File.sql'
 
     def cap_file(self):
         if self.the_file != None:
             sql_file = self.the_file.read()
 
-            new_sql_file = open('Re-Cased_File.sql', 'w')
+            new_sql_file = open(self.output_file, 'w')
             new_sql_file.write(sql_file.upper())
             new_sql_file.close()
-            new_sql_file = open('Re-Cased_File.sql', 'r')
+            new_sql_file = open(self.output_file, 'r')
 
             fmt = '{:<8}{:<200}{}'
             print fmt.format('', 'Before', 'After')
@@ -57,10 +59,10 @@ class Window(Tk):
         if self.the_file != None:
             sql_file = self.the_file.read()
 
-            new_sql_file = open('Re-Cased_File.sql', 'w')
+            new_sql_file = open(self.output_file, 'w')
             new_sql_file.write(sql_file.lower())
             new_sql_file.close()
-            new_sql_file = open('Re-Cased_File.sql', 'r')
+            new_sql_file = open(self.output_file, 'r')
 
             fmt = '{:<8}{:<200}{}'
             print fmt.format('', 'Before', 'After')
@@ -87,10 +89,10 @@ class Window(Tk):
 
             sql_file_formatted = ' '.join(sql_file_formatted)
 
-            new_sql_file = open('Re-Cased_File.sql', 'w')
+            new_sql_file = open(self.output_file, 'w')
             new_sql_file.write(sql_file_formatted)
             new_sql_file.close()
-            new_sql_file = open('Re-Cased_File.sql', 'r')
+            new_sql_file = open(self.output_file, 'r')
 
             fmt = '{:<8}{:<200}{}'
             print fmt.format('', 'Before', 'After')
