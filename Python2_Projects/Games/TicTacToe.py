@@ -100,10 +100,13 @@ class Tictactoe(Tk):
         self.the_file.close()
 
     def show_save(self):
-        self.the_file = open(self.save_location, 'r')
-        saved_score = json.loads(self.the_file.read())
-        self.saved_score_label_text.set('X: ' + str(saved_score['X']) + '    O: ' + str(saved_score['O']))
-        self.the_file.close()
+        try:
+            self.the_file = open(self.save_location, 'r')
+            saved_score = json.loads(self.the_file.read())
+            self.saved_score_label_text.set('X: ' + str(saved_score['X']) + '    O: ' + str(saved_score['O']))
+            self.the_file.close()
+        except IOError:
+            pass
 
     def tl(self):
         if self.alter_choice is True:
