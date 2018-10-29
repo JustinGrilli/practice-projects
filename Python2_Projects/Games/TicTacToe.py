@@ -1,6 +1,8 @@
 import random
 from Tkinter import *
 import ttk
+import os
+import json
 
 
 class Tictactoe(Tk):
@@ -11,16 +13,30 @@ class Tictactoe(Tk):
         self.top_frame = Frame(bg='black')
         self.top_frame.grid(row=0)
 
+        self.save_location = os.path.join(os.environ.get('TMP').replace('AppData', 'Documents').split('Local')[0], 'Tic-Tac-Toe-Scores.txt')
+
         game_font = 'system'
         self.win_counter_x = 0
         self.win_counter_o = 0
 
+        self.save_button = Button(self.top_frame, text='Save', command=self.save_score, bg='DarkGreen', fg='white', font=game_font + ' 10 bold', width=10)
+        self.save_button.grid(row=0, column=0, sticky=W)
+
+        self.load_save_button = Button(self.top_frame, text='Load', command=self.show_save, bg='DarkBlue', fg='white', font=game_font + ' 10 bold', width=10)
+        self.load_save_button.grid(row=0, column=2, sticky=E)
+
+        self.saved_score_label_text = StringVar()
+        self.saved_score_label_text.set('')
+        self.saved_score_label = Label(self.top_frame, textvariable=self.saved_score_label_text, bg='black', fg='yellow', font=game_font + ' 14 bold')
+        self.saved_score_label.grid(row=0, column=1)
+
         self.win_count_label = Label(self.top_frame, bg='black', fg='white', font=game_font + ' 26 bold',
-                                     text='X: ' + str(self.win_counter_x) + '    O: ' + str(self.win_counter_o))
-        self.win_count_label.grid(row=0, columnspan=2)
+                                     text='X: ' + str(self.win_counter_x) + '    O: ' + str(self.win_counter_o), anchor="center")
+        self.win_count_label.grid(row=1, column=1)
 
         self.frame = Frame(bg='black')
         self.frame.grid(row=1)
+
 
         button_height = 0
         button_width = 4
@@ -77,6 +93,20 @@ class Tictactoe(Tk):
             self.button = Button(self.frame, textvariable=text, height=button_height, width=button_width,
                                  fg='white', bg='black', font=button_font, command=command)
             self.button.grid(row=row, column=col)
+
+    def save_score(self):
+        self.the_file = open(self.save_location, 'w+')
+        self.the_file.write('{"X": ' + str(self.win_counter_x) + ', "O": ' + str(self.win_counter_o) + '}')
+        self.the_file.close()
+
+    def show_save(self):
+        try:
+            self.the_file = open(self.save_location, 'r')
+            saved_score = json.loads(self.the_file.read())
+            self.saved_score_label_text.set('X: ' + str(saved_score['X']) + '    O: ' + str(saved_score['O']))
+            self.the_file.close()
+        except IOError:
+            pass
 
     def tl(self):
         if self.alter_choice is True:
