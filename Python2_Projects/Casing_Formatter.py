@@ -30,50 +30,58 @@ class Window(Tk):
         self.cap_file_button = Button(self.top_frame, text='Semi Lower Case', command=self.semi_lower_file, width=16, font=button_font, relief=RAISED, bg='white')
         self.cap_file_button.pack(side=TOP, padx=10, pady=5)
 
-        self.label_text = StringVar()
-        self.label_text.set('')
-        self.file_label = Label(self, textvariable=self.label_text, relief=SUNKEN, font='system 8', fg='#333333')
-        self.file_label.pack(side=BOTTOM, fill=X)
+        self.status_text = StringVar()
+        self.status_text.set('')
+        self.status_label = Label(self, textvariable=self.status_text, relief=SUNKEN, font='system 8', fg='#333333')
+        self.status_label.pack(side=BOTTOM, fill=X)
 
     def cap_file(self):
         if self.the_file != None:
             sql_file = self.the_file.read()
 
             savedir = tkFileDialog.askdirectory(title='Select folder to save results')
-            new_sql_file = open(savedir+'/'+self.open_file, 'w')
-            new_sql_file.write(sql_file.upper())
-            new_sql_file.close()
-            new_sql_file = open(savedir+'/'+self.open_file, 'r')
+            if savedir != '':
+                new_sql_file = open(savedir+'/'+self.open_file, 'w')
+                new_sql_file.write(sql_file.upper())
+                new_sql_file.close()
+                new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
-            fmt = '{:<8}{:<200}{}'
-            print fmt.format('', 'Before', 'After')
-            print fmt.format('', '', '')
-            for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
-                print fmt.format(i, n, g)
+                fmt = '{:<8}{:<200}{}'
+                print fmt.format('', 'Before', 'After')
+                print fmt.format('', '', '')
+                for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
+                    print fmt.format(i, n, g)
 
-            new_sql_file.close()
-            self.label_text.set('Saved as: '+self.open_file)
-            self.file_label.config(bg='#777777')
+                new_sql_file.close()
+                self.status_text.set('Saved as: '+self.open_file)
+                self.status_label.config(bg='#777777')
+            else:
+                self.status_text.set('')
+                self.status_label.config(bg='white')
 
     def lower_file(self):
         if self.the_file != None:
             sql_file = self.the_file.read()
 
             savedir = tkFileDialog.askdirectory(title='Select folder to save results')
-            new_sql_file = open(savedir+'/'+self.open_file, 'w')
-            new_sql_file.write(sql_file.lower())
-            new_sql_file.close()
-            new_sql_file = open(savedir+'/'+self.open_file, 'r')
+            if savedir != '':
+                new_sql_file = open(savedir+'/'+self.open_file, 'w')
+                new_sql_file.write(sql_file.lower())
+                new_sql_file.close()
+                new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
-            fmt = '{:<8}{:<200}{}'
-            print fmt.format('', 'Before', 'After')
-            print fmt.format('', '', '')
-            for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
-                print fmt.format(i, n, g)
+                fmt = '{:<8}{:<200}{}'
+                print fmt.format('', 'Before', 'After')
+                print fmt.format('', '', '')
+                for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
+                    print fmt.format(i, n, g)
 
-            new_sql_file.close()
-            self.label_text.set('Saved as: '+self.open_file)
-            self.file_label.config(bg='#777777')
+                new_sql_file.close()
+                self.status_text.set('Saved as: '+self.open_file)
+                self.status_label.config(bg='#777777')
+            else:
+                self.status_text.set('')
+                self.status_label.config(bg='white')
 
     def semi_lower_file(self):
         if self.the_file != None:
@@ -91,30 +99,34 @@ class Window(Tk):
             sql_file_formatted = ' '.join(sql_file_formatted)
 
             savedir = tkFileDialog.askdirectory(title='Select folder to save results')
-            new_sql_file = open(savedir+'/'+self.open_file, 'w')
-            new_sql_file.write(sql_file_formatted)
-            new_sql_file.close()
-            new_sql_file = open(savedir+'/'+self.open_file, 'r')
+            if savedir != '':
+                new_sql_file = open(savedir+'/'+self.open_file, 'w')
+                new_sql_file.write(sql_file_formatted)
+                new_sql_file.close()
+                new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
-            fmt = '{:<8}{:<200}{}'
-            print fmt.format('', 'Before', 'After')
-            print fmt.format('', '', '')
-            for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
-                print fmt.format(i, n, g)
+                fmt = '{:<8}{:<200}{}'
+                print fmt.format('', 'Before', 'After')
+                print fmt.format('', '', '')
+                for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
+                    print fmt.format(i, n, g)
 
-            new_sql_file.close()
-            self.label_text.set('Saved as: '+self.open_file)
-            self.file_label.config(bg='#777777')
+                new_sql_file.close()
+                self.status_text.set('Saved as: '+self.open_file)
+                self.status_label.config(bg='#777777')
+            else:
+                self.status_text.set('')
+                self.status_label.config(bg='white')
 
     def open_file(self):
         self.the_file = tkFileDialog.askopenfile(parent=self, mode='r', title='Choose a file to format...')
         if self.the_file != None:
             self.open_file = re.sub(r'[^A-Za-z0-9._]', '', str(self.the_file).split(' ')[2].split('/')[-1])
-            self.label_text.set('Selected: '+self.open_file)
-            self.file_label.config(bg='lightblue')
+            self.status_text.set('Selected: '+self.open_file)
+            self.status_label.config(bg='lightblue')
         else:
-            self.label_text.set('')
-            self.file_label.config(bg='white')
+            self.status_text.set('')
+            self.status_label.config(bg='white')
         return self.the_file
 
 
