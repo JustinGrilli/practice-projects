@@ -120,5 +120,6 @@ class Window(Tk):
 
 app = Window()
 app.title('Casing Formatter')
+app.geometry('350x250')
 app.config(bg='#333333')
 app.mainloop()
