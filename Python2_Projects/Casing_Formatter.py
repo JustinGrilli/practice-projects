@@ -105,7 +105,6 @@ class Window(Tk):
             new_sql_file.close()
             self.label_text.set('Saved as: '+self.open_file)
             self.file_label.config(bg='#777777')
-            print self.open_file
 
     def open_file(self):
         self.the_file = tkFileDialog.askopenfile(parent=self, mode='r', title='Choose a file to format...')
