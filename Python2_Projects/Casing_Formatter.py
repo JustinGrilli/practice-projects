@@ -9,8 +9,14 @@ class Window(Tk):
         Tk.__init__(self)
 
         self.the_file = None
-        self.top_frame = Frame(self, bg='#333333')
-        self.top_frame.pack(side=TOP, fill=BOTH)
+        self.main_frame = Frame(self, bg='#333333')
+        self.main_frame.pack(side=TOP, fill=BOTH)
+        self.button_frame = Frame(self.main_frame, bg='#333333')
+        self.button_frame.pack(side=LEFT, fill=BOTH)
+        self.text_frame_1 = Frame(self.main_frame, bg='white')
+        self.text_frame_1.pack(side=LEFT, fill=BOTH)
+        self.text_frame_2 = Frame(self.main_frame, bg='white')
+        self.text_frame_2.pack(side=LEFT, fill=BOTH)
 
         self.upper_list = ['SELECT', 'FROM', 'ORDER', 'GROUP', 'BY', 'IS', 'NULL', 'ISNULL', 'NOTNULL', 'TRUE', 'FALSE',
                            'JOIN', 'LEFT', 'RIGHT', 'WHERE', 'HAVING', 'PARTITION', 'OVER', 'WITH', 'AS', 'NOT', 'AND',
@@ -18,22 +24,27 @@ class Window(Tk):
                            'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'COALESCE', 'NVL', 'AVG', 'MAX', 'SUM', 'COUNT']
 
         button_font = 'system 14 bold'
-        self.open_file_button = Button(self.top_frame, text='Open File', command=self.open_file, width=16, font=button_font, relief=RAISED, bg='lightblue')
+        self.open_file_button = Button(self.button_frame, text='Open File', command=self.open_file, width=16, font=button_font, relief=RAISED, bg='lightblue')
         self.open_file_button.pack(side=TOP, padx=10, pady=5)
 
-        self.cap_file_button = Button(self.top_frame, text='Upper Case', command=self.cap_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.cap_file_button = Button(self.button_frame, text='Upper Case', command=self.cap_file, width=16, font=button_font, relief=RAISED, bg='white')
         self.cap_file_button.pack(side=TOP, padx=10, pady=5)
 
-        self.cap_file_button = Button(self.top_frame, text='Lower Case', command=self.lower_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.cap_file_button = Button(self.button_frame, text='Lower Case', command=self.lower_file, width=16, font=button_font, relief=RAISED, bg='white')
         self.cap_file_button.pack(side=TOP, padx=10, pady=5)
 
-        self.cap_file_button = Button(self.top_frame, text='Semi Lower Case', command=self.semi_lower_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.cap_file_button = Button(self.button_frame, text='Semi Lower Case', command=self.semi_lower_file, width=16, font=button_font, relief=RAISED, bg='white')
         self.cap_file_button.pack(side=TOP, padx=10, pady=5)
 
         self.status_text = StringVar()
         self.status_text.set('')
         self.status_label = Label(self, textvariable=self.status_text, relief=SUNKEN, font='system 8', fg='#333333')
         self.status_label.pack(side=BOTTOM, fill=X)
+
+        self.text_box_before = Label(self.text_frame_1, text='this is my text')
+        self.text_box_before.pack()
+        self.text_box_after = Label(self.text_frame_2, text='this is my text')
+        self.text_box_after.pack()
 
     def cap_file(self):
         if self.the_file != None:
