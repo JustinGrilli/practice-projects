@@ -10,7 +10,7 @@ class Window(Tk):
 
         self.the_file = None
         self.top_frame = Frame(self, bg='#333333')
-        self.top_frame.pack(side=TOP)
+        self.top_frame.pack(side=TOP, fill=BOTH)
 
         self.upper_list = ['SELECT', 'FROM', 'ORDER', 'GROUP', 'BY', 'IS', 'NULL', 'ISNULL', 'NOTNULL', 'TRUE', 'FALSE',
                            'JOIN', 'LEFT', 'RIGHT', 'WHERE', 'HAVING', 'PARTITION', 'OVER', 'WITH', 'AS', 'NOT', 'AND',
@@ -35,16 +35,15 @@ class Window(Tk):
         self.file_label = Label(self, textvariable=self.label_text, relief=SUNKEN, font='system 8', fg='#333333')
         self.file_label.pack(side=BOTTOM, fill=X)
 
-        self.output_file = 'Re-Cased_File.sql'
-
     def cap_file(self):
         if self.the_file != None:
             sql_file = self.the_file.read()
 
-            new_sql_file = open(self.output_file, 'w')
+            savedir = tkFileDialog.askdirectory(title='Select folder to save results')
+            new_sql_file = open(savedir+'/'+self.open_file, 'w')
             new_sql_file.write(sql_file.upper())
             new_sql_file.close()
-            new_sql_file = open(self.output_file, 'r')
+            new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
             fmt = '{:<8}{:<200}{}'
             print fmt.format('', 'Before', 'After')
@@ -53,17 +52,18 @@ class Window(Tk):
                 print fmt.format(i, n, g)
 
             new_sql_file.close()
-            self.label_text.set('Saved to: '+self.output_file)
-            self.file_label.config(bg='#669966')
+            self.label_text.set('Saved as: '+self.open_file)
+            self.file_label.config(bg='#777777')
 
     def lower_file(self):
         if self.the_file != None:
             sql_file = self.the_file.read()
 
-            new_sql_file = open(self.output_file, 'w')
+            savedir = tkFileDialog.askdirectory(title='Select folder to save results')
+            new_sql_file = open(savedir+'/'+self.open_file, 'w')
             new_sql_file.write(sql_file.lower())
             new_sql_file.close()
-            new_sql_file = open(self.output_file, 'r')
+            new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
             fmt = '{:<8}{:<200}{}'
             print fmt.format('', 'Before', 'After')
@@ -72,8 +72,8 @@ class Window(Tk):
                 print fmt.format(i, n, g)
 
             new_sql_file.close()
-            self.label_text.set('Saved to: '+self.output_file)
-            self.file_label.config(bg='#669966')
+            self.label_text.set('Saved as: '+self.open_file)
+            self.file_label.config(bg='#777777')
 
     def semi_lower_file(self):
         if self.the_file != None:
@@ -90,10 +90,11 @@ class Window(Tk):
 
             sql_file_formatted = ' '.join(sql_file_formatted)
 
-            new_sql_file = open(self.output_file, 'w')
+            savedir = tkFileDialog.askdirectory(title='Select folder to save results')
+            new_sql_file = open(savedir+'/'+self.open_file, 'w')
             new_sql_file.write(sql_file_formatted)
             new_sql_file.close()
-            new_sql_file = open(self.output_file, 'r')
+            new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
             fmt = '{:<8}{:<200}{}'
             print fmt.format('', 'Before', 'After')
@@ -102,16 +103,15 @@ class Window(Tk):
                 print fmt.format(i, n, g)
 
             new_sql_file.close()
-            self.label_text.set('Saved to: '+self.output_file)
-            self.file_label.config(bg='#669966')
+            self.label_text.set('Saved as: '+self.open_file)
+            self.file_label.config(bg='#777777')
+            print self.open_file
 
     def open_file(self):
         self.the_file = tkFileDialog.askopenfile(parent=self, mode='r', title='Choose a file to format...')
         if self.the_file != None:
-            print self.the_file
-            open_file = re.sub(r'[^A-Za-z0-9._]', '', str(self.the_file).split(' ')[2].split('/')[-1])
-            print open_file
-            self.label_text.set('Selected: '+open_file)
+            self.open_file = re.sub(r'[^A-Za-z0-9._]', '', str(self.the_file).split(' ')[2].split('/')[-1])
+            self.label_text.set('Selected: '+self.open_file)
             self.file_label.config(bg='lightblue')
         else:
             self.label_text.set('')
