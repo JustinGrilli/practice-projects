@@ -9,7 +9,7 @@ class Window(Tk):
         Tk.__init__(self)
 
         self.the_file = None
-        self.top_frame = Frame(self, width=680, bg='DarkGrey')
+        self.top_frame = Frame(self, bg='#333333')
         self.top_frame.pack(side=TOP)
 
         self.upper_list = ['SELECT', 'FROM', 'ORDER', 'GROUP', 'BY', 'IS', 'NULL', 'ISNULL', 'NOTNULL', 'TRUE', 'FALSE',
@@ -17,21 +17,22 @@ class Window(Tk):
                            'OR', 'ON', 'IN', 'BETWEEN', 'UNBOUNDED', 'PROCEEDING', 'FOLLOWING', 'UNION', 'ALL', 'WITHIN',
                            'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'COALESCE', 'NVL', 'AVG', 'MAX', 'SUM', 'COUNT']
 
-        self.open_file_button = Button(self.top_frame, text='Open File', command=self.open_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='lightblue')
-        self.open_file_button.pack(side=TOP, padx=10, pady=10)
+        button_font = 'system 14 bold'
+        self.open_file_button = Button(self.top_frame, text='Open File', command=self.open_file, width=16, font=button_font, relief=RAISED, bg='lightblue')
+        self.open_file_button.pack(side=TOP, padx=10, pady=5)
 
-        self.cap_file_button = Button(self.top_frame, text='Upper Case', command=self.cap_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='lightyellow')
-        self.cap_file_button.pack(side=LEFT, padx=10, pady=10)
+        self.cap_file_button = Button(self.top_frame, text='Upper Case', command=self.cap_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.cap_file_button.pack(side=TOP, padx=10, pady=5)
 
-        self.cap_file_button = Button(self.top_frame, text='Lower Case', command=self.lower_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='lightyellow')
-        self.cap_file_button.pack(side=LEFT, padx=10, pady=10)
+        self.cap_file_button = Button(self.top_frame, text='Lower Case', command=self.lower_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.cap_file_button.pack(side=TOP, padx=10, pady=5)
 
-        self.cap_file_button = Button(self.top_frame, text='Semi Lower Case', command=self.semi_lower_file, width=20, height=2, font='none 20 bold', relief=RAISED, bg='lightyellow')
-        self.cap_file_button.pack(side=LEFT, padx=10, pady=10)
+        self.cap_file_button = Button(self.top_frame, text='Semi Lower Case', command=self.semi_lower_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.cap_file_button.pack(side=TOP, padx=10, pady=5)
 
         self.label_text = StringVar()
         self.label_text.set('')
-        self.file_label = Label(self, textvariable=self.label_text, relief=SUNKEN)
+        self.file_label = Label(self, textvariable=self.label_text, relief=SUNKEN, font='system 8', fg='#333333')
         self.file_label.pack(side=BOTTOM, fill=X)
 
         self.output_file = 'Re-Cased_File.sql'
@@ -52,7 +53,7 @@ class Window(Tk):
                 print fmt.format(i, n, g)
 
             new_sql_file.close()
-            self.label_text.set(new_sql_file)
+            self.label_text.set('Saved to: '+self.output_file)
             self.file_label.config(bg='#669966')
 
     def lower_file(self):
@@ -71,7 +72,7 @@ class Window(Tk):
                 print fmt.format(i, n, g)
 
             new_sql_file.close()
-            self.label_text.set(new_sql_file)
+            self.label_text.set('Saved to: '+self.output_file)
             self.file_label.config(bg='#669966')
 
     def semi_lower_file(self):
@@ -101,18 +102,24 @@ class Window(Tk):
                 print fmt.format(i, n, g)
 
             new_sql_file.close()
-            self.label_text.set(new_sql_file)
+            self.label_text.set('Saved to: '+self.output_file)
             self.file_label.config(bg='#669966')
 
     def open_file(self):
-        self.the_file = tkFileDialog.askopenfile(parent=self, mode='r', title='Choose a file to CAP')
+        self.the_file = tkFileDialog.askopenfile(parent=self, mode='r', title='Choose a file to format...')
         if self.the_file != None:
-            self.label_text.set(self.the_file)
+            print self.the_file
+            open_file = re.sub(r'[^A-Za-z0-9._]', '', str(self.the_file).split(' ')[2].split('/')[-1])
+            print open_file
+            self.label_text.set('Selected: '+open_file)
             self.file_label.config(bg='lightblue')
+        else:
+            self.label_text.set('')
+            self.file_label.config(bg='white')
         return self.the_file
 
 
 app = Window()
-app.title('Casing formatter')
-app.config(bg='DarkGrey')
+app.title('Casing Formatter')
+app.config(bg='#333333')
 app.mainloop()
