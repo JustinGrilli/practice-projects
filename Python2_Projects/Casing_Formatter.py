@@ -8,15 +8,19 @@ class Window(Tk):
     def __init__(self):
         Tk.__init__(self)
 
+        self.geometry(str(int(self.winfo_screenwidth()/1.5))+'x'+str(int(self.winfo_screenheight()/1.5)))
+
         self.the_file = None
-        self.main_frame = Frame(self, bg='#333333')
-        self.main_frame.pack(side=TOP, fill=BOTH)
+        self.main_frame = Frame(self, bg='#333333', width=600, height=400)
+        self.main_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
         self.button_frame = Frame(self.main_frame, bg='#333333')
         self.button_frame.pack(side=LEFT, fill=BOTH)
-        self.text_frame_1 = Frame(self.main_frame, bg='white')
-        self.text_frame_1.pack(side=LEFT, fill=BOTH)
-        self.text_frame_2 = Frame(self.main_frame, bg='white')
-        self.text_frame_2.pack(side=LEFT, fill=BOTH)
+
+        self.text_scrollbar = Scrollbar(self.main_frame)
+        self.text_scrollbar.pack(side=RIGHT, fill=BOTH)
+
+        self.text_frame = Frame(self.main_frame, bg='#333333')
+        self.text_frame.pack(side=LEFT, fill=BOTH, expand=TRUE,)
 
         self.upper_list = ['SELECT', 'FROM', 'ORDER', 'GROUP', 'BY', 'IS', 'NULL', 'ISNULL', 'NOTNULL', 'TRUE', 'FALSE',
                            'JOIN', 'LEFT', 'RIGHT', 'WHERE', 'HAVING', 'PARTITION', 'OVER', 'WITH', 'AS', 'NOT', 'AND',
@@ -25,26 +29,34 @@ class Window(Tk):
 
         button_font = 'system 14 bold'
         self.open_file_button = Button(self.button_frame, text='Open File', command=self.open_file, width=16, font=button_font, relief=RAISED, bg='lightblue')
-        self.open_file_button.pack(side=TOP, padx=10, pady=5)
+        self.open_file_button.pack(side=TOP, padx=5, pady=4)
 
         self.cap_file_button = Button(self.button_frame, text='Upper Case', command=self.cap_file, width=16, font=button_font, relief=RAISED, bg='white')
-        self.cap_file_button.pack(side=TOP, padx=10, pady=5)
+        self.cap_file_button.pack(side=TOP, padx=5, pady=4)
 
         self.cap_file_button = Button(self.button_frame, text='Lower Case', command=self.lower_file, width=16, font=button_font, relief=RAISED, bg='white')
-        self.cap_file_button.pack(side=TOP, padx=10, pady=5)
+        self.cap_file_button.pack(side=TOP, padx=5, pady=4)
 
         self.cap_file_button = Button(self.button_frame, text='Semi Lower Case', command=self.semi_lower_file, width=16, font=button_font, relief=RAISED, bg='white')
-        self.cap_file_button.pack(side=TOP, padx=10, pady=5)
+        self.cap_file_button.pack(side=TOP, padx=5, pady=4)
 
         self.status_text = StringVar()
         self.status_text.set('')
         self.status_label = Label(self, textvariable=self.status_text, relief=SUNKEN, font='system 8', fg='#333333')
         self.status_label.pack(side=BOTTOM, fill=X)
 
-        self.text_box_before = Label(self.text_frame_1, text='this is my text')
-        self.text_box_before.pack()
-        self.text_box_after = Label(self.text_frame_2, text='this is my text')
-        self.text_box_after.pack()
+        self.text_before = StringVar()
+        self.text_after = StringVar()
+
+        self.text_box_before = Text(self.text_frame, relief=SUNKEN, bg='#444444', fg='grey', font='none 10 bold', wrap=WORD, yscrollcommand=self.text_scrollbar.set)
+        self.text_box_before.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
+        self.text_box_after = Text(self.text_frame, relief=SUNKEN, bg='#444444', fg='grey', font='none 10 bold', wrap=WORD, yscrollcommand=self.text_scrollbar.set)
+        self.text_box_after.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
+        self.text_scrollbar.config(command=self.yview)
+
+    def yview(self, *args):
+        self.text_box_before.yview(*args)
+        self.text_box_after.yview(*args)
 
     def cap_file(self):
         if self.the_file != None:
@@ -110,17 +122,24 @@ class Window(Tk):
             sql_file_formatted = ' '.join(sql_file_formatted)
 
             savedir = tkFileDialog.askdirectory(title='Select folder to save results')
+
+            self.text_before.set(sql_file)
+            self.text_box_before.insert(END, self.text_before.get())
+
             if savedir != '':
                 new_sql_file = open(savedir+'/'+self.open_file, 'w')
                 new_sql_file.write(sql_file_formatted)
                 new_sql_file.close()
                 new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
-                fmt = '{:<8}{:<200}{}'
-                print fmt.format('', 'Before', 'After')
-                print fmt.format('', '', '')
-                for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
-                    print fmt.format(i, n, g)
+                self.text_after.set(new_sql_file.read())
+                self.text_box_after.insert(END, self.text_after.get())
+
+                # fmt = '{:<8}{:<200}{}'
+                # print fmt.format('', 'Before', 'After')
+                # print fmt.format('', '', '')
+                # for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
+                #     print fmt.format(i, n, g)
 
                 new_sql_file.close()
                 self.status_text.set('Saved as: '+self.open_file)
@@ -143,6 +162,5 @@ class Window(Tk):
 
 app = Window()
 app.title('Casing Formatter')
-app.geometry('350x250')
 app.config(bg='#333333')
 app.mainloop()
