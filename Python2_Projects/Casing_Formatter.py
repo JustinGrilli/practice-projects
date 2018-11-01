@@ -69,11 +69,10 @@ class Window(Tk):
                 new_sql_file.close()
                 new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
-                fmt = '{:<8}{:<200}{}'
-                print fmt.format('', 'Before', 'After')
-                print fmt.format('', '', '')
-                for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
-                    print fmt.format(i, n, g)
+                self.text_before.set(sql_file)
+                self.text_box_before.insert(END, self.text_before.get())
+                self.text_after.set(new_sql_file.read())
+                self.text_box_after.insert(END, self.text_after.get())
 
                 new_sql_file.close()
                 self.status_text.set('Saved as: '+self.open_file)
@@ -93,11 +92,10 @@ class Window(Tk):
                 new_sql_file.close()
                 new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
-                fmt = '{:<8}{:<200}{}'
-                print fmt.format('', 'Before', 'After')
-                print fmt.format('', '', '')
-                for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
-                    print fmt.format(i, n, g)
+                self.text_before.set(sql_file)
+                self.text_box_before.insert(END, self.text_before.get())
+                self.text_after.set(new_sql_file.read())
+                self.text_box_after.insert(END, self.text_after.get())
 
                 new_sql_file.close()
                 self.status_text.set('Saved as: '+self.open_file)
@@ -123,8 +121,6 @@ class Window(Tk):
 
             savedir = tkFileDialog.askdirectory(title='Select folder to save results')
 
-            self.text_before.set(sql_file)
-            self.text_box_before.insert(END, self.text_before.get())
 
             if savedir != '':
                 new_sql_file = open(savedir+'/'+self.open_file, 'w')
@@ -132,14 +128,10 @@ class Window(Tk):
                 new_sql_file.close()
                 new_sql_file = open(savedir+'/'+self.open_file, 'r')
 
+                self.text_before.set(sql_file)
+                self.text_box_before.insert(END, self.text_before.get())
                 self.text_after.set(new_sql_file.read())
                 self.text_box_after.insert(END, self.text_after.get())
-
-                # fmt = '{:<8}{:<200}{}'
-                # print fmt.format('', 'Before', 'After')
-                # print fmt.format('', '', '')
-                # for i, (n, g) in enumerate(zip(sql_file.split('\n'), new_sql_file.read().split('\n'))):
-                #     print fmt.format(i, n, g)
 
                 new_sql_file.close()
                 self.status_text.set('Saved as: '+self.open_file)
@@ -149,6 +141,8 @@ class Window(Tk):
                 self.status_label.config(bg='white')
 
     def open_file(self):
+        self.text_box_before.delete(1.0, END)
+        self.text_box_after.delete(1.0, END)
         self.the_file = tkFileDialog.askopenfile(parent=self, mode='r', title='Choose a file to format...')
         if self.the_file != None:
             self.open_file = re.sub(r'[^A-Za-z0-9._]', '', str(self.the_file).split(' ')[2].split('/')[-1])

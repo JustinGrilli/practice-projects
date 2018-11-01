@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Work.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Work.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,14 +42,14 @@
         <counts>
           <entry key="Python Console" value="12" />
           <entry key="dummy" value="18" />
-          <entry key="py" value="7213" />
+          <entry key="py" value="7268" />
           <entry key="regular_expressions_testing" value="310" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="18" />
-          <entry key="Python" value="7535" />
+          <entry key="Python" value="7590" />
         </counts>
       </usages-collector>
     </session>
@@ -92,11 +89,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="366">
-              <caret line="50" column="104" selection-start-line="50" selection-start-column="104" selection-end-line="50" selection-end-column="104" />
+            <state relative-caret-position="272">
+              <caret line="16" column="52" lean-forward="true" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="52" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
-                <marker date="1541048228644" expanded="true" signature="3088:3177" ph="..." />
+                <marker date="1541048922718" expanded="true" signature="3043:3132" ph="..." />
               </folding>
             </state>
           </provider>
@@ -138,6 +135,7 @@
       <find>text_frame</find>
       <find>text_before_c</find>
       <find>555555</find>
+      <find>text_main_c</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -488,11 +486,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="50" column="104" selection-start-line="50" selection-start-column="104" selection-end-line="50" selection-end-column="104" />
+        <state relative-caret-position="272">
+          <caret line="16" column="52" lean-forward="true" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="52" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
-            <marker date="1541048228644" expanded="true" signature="3088:3177" ph="..." />
+            <marker date="1541048922718" expanded="true" signature="3043:3132" ph="..." />
           </folding>
         </state>
       </provider>
