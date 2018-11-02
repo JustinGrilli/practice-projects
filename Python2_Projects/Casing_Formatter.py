@@ -8,7 +8,7 @@ class Window(Tk):
     def __init__(self):
         Tk.__init__(self)
 
-        self.geometry(str(int(self.winfo_screenwidth()/1.5))+'x'+str(int(self.winfo_screenheight()/1.5)))
+        self.geometry(str(int(self.winfo_screenwidth()*.85))+'x'+str(int(self.winfo_screenheight()*.85)))
 
         self.the_file = None
         self.main_frame = Frame(self, bg='#333333', width=600, height=400)
@@ -55,54 +55,52 @@ class Window(Tk):
         self.text_scrollbar.config(command=self.yview)
 
     def yview(self, *args):
+        # Used to make both text boxes scroll at the same time
         self.text_box_before.yview(*args)
         self.text_box_after.yview(*args)
+
+    def create_output_file(self):
+        # This allows you to choose a directory for the output file
+        self.savedir = tkFileDialog.askdirectory(title='Select folder to save results')
+        if self.savedir != '':
+            self.output_file = open(self.savedir + '/' + self.open_file, 'w')
+        else:
+            self.status_text.set('')
+            self.status_label.config(bg='white')
 
     def cap_file(self):
         if self.the_file != None:
             sql_file = self.the_file.read()
+            self.create_output_file()
+            self.output_file.write(sql_file.upper())
+            self.output_file.close()
+            new_sql_file = open(self.savedir+'/'+self.open_file, 'r')
 
-            savedir = tkFileDialog.askdirectory(title='Select folder to save results')
-            if savedir != '':
-                new_sql_file = open(savedir+'/'+self.open_file, 'w')
-                new_sql_file.write(sql_file.upper())
-                new_sql_file.close()
-                new_sql_file = open(savedir+'/'+self.open_file, 'r')
+            self.text_before.set(sql_file)
+            self.text_box_before.insert(END, self.text_before.get())
+            self.text_after.set(new_sql_file.read())
+            self.text_box_after.insert(END, self.text_after.get())
 
-                self.text_before.set(sql_file)
-                self.text_box_before.insert(END, self.text_before.get())
-                self.text_after.set(new_sql_file.read())
-                self.text_box_after.insert(END, self.text_after.get())
-
-                new_sql_file.close()
-                self.status_text.set('Saved as: '+self.open_file)
-                self.status_label.config(bg='#777777')
-            else:
-                self.status_text.set('')
-                self.status_label.config(bg='white')
+            new_sql_file.close()
+            self.status_text.set('Saved as: '+self.open_file)
+            self.status_label.config(bg='#777777')
 
     def lower_file(self):
         if self.the_file != None:
             sql_file = self.the_file.read()
+            self.create_output_file()
+            self.output_file.write(sql_file.lower())
+            self.output_file.close()
+            new_sql_file = open(self.savedir+'/'+self.open_file, 'r')
 
-            savedir = tkFileDialog.askdirectory(title='Select folder to save results')
-            if savedir != '':
-                new_sql_file = open(savedir+'/'+self.open_file, 'w')
-                new_sql_file.write(sql_file.lower())
-                new_sql_file.close()
-                new_sql_file = open(savedir+'/'+self.open_file, 'r')
+            self.text_before.set(sql_file)
+            self.text_box_before.insert(END, self.text_before.get())
+            self.text_after.set(new_sql_file.read())
+            self.text_box_after.insert(END, self.text_after.get())
 
-                self.text_before.set(sql_file)
-                self.text_box_before.insert(END, self.text_before.get())
-                self.text_after.set(new_sql_file.read())
-                self.text_box_after.insert(END, self.text_after.get())
-
-                new_sql_file.close()
-                self.status_text.set('Saved as: '+self.open_file)
-                self.status_label.config(bg='#777777')
-            else:
-                self.status_text.set('')
-                self.status_label.config(bg='white')
+            new_sql_file.close()
+            self.status_text.set('Saved as: '+self.open_file)
+            self.status_label.config(bg='#777777')
 
     def semi_lower_file(self):
         if self.the_file != None:
@@ -119,26 +117,19 @@ class Window(Tk):
 
             sql_file_formatted = ' '.join(sql_file_formatted)
 
-            savedir = tkFileDialog.askdirectory(title='Select folder to save results')
+            self.create_output_file()
+            self.output_file.write(sql_file_formatted)
+            self.output_file.close()
+            new_sql_file = open(self.savedir+'/'+self.open_file, 'r')
 
+            self.text_before.set(sql_file)
+            self.text_box_before.insert(END, self.text_before.get())
+            self.text_after.set(new_sql_file.read())
+            self.text_box_after.insert(END, self.text_after.get())
 
-            if savedir != '':
-                new_sql_file = open(savedir+'/'+self.open_file, 'w')
-                new_sql_file.write(sql_file_formatted)
-                new_sql_file.close()
-                new_sql_file = open(savedir+'/'+self.open_file, 'r')
-
-                self.text_before.set(sql_file)
-                self.text_box_before.insert(END, self.text_before.get())
-                self.text_after.set(new_sql_file.read())
-                self.text_box_after.insert(END, self.text_after.get())
-
-                new_sql_file.close()
-                self.status_text.set('Saved as: '+self.open_file)
-                self.status_label.config(bg='#777777')
-            else:
-                self.status_text.set('')
-                self.status_label.config(bg='white')
+            new_sql_file.close()
+            self.status_text.set('Saved as: '+self.open_file)
+            self.status_label.config(bg='#777777')
 
     def open_file(self):
         self.text_box_before.delete(1.0, END)
