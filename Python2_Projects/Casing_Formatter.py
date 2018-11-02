@@ -30,6 +30,7 @@ class Window(Tk):
         self.text_frame = Frame(self.main_frame, bg=self.main_color)
         self.text_frame.pack(side=LEFT, fill=BOTH, expand=TRUE,)
 
+        # Scrollbar
         self.text_scrollbar = Scrollbar(self.main_frame)
         self.text_scrollbar.pack(side=RIGHT, fill=BOTH)
 
