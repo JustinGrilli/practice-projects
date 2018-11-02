@@ -8,51 +8,54 @@ class Window(Tk):
     def __init__(self):
         Tk.__init__(self)
 
-        self.geometry(str(int(self.winfo_screenwidth()*.85))+'x'+str(int(self.winfo_screenheight()*.85)))
-
+        # Global Elements
+        self.main_color = '#333333'
+        self.sub_color = '#444444'
         self.the_file = None
-        self.main_frame = Frame(self, bg='#333333', width=600, height=400)
-        self.main_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
-        self.button_frame = Frame(self.main_frame, bg='#333333')
-        self.button_frame.pack(side=LEFT, fill=BOTH)
-
-        self.text_scrollbar = Scrollbar(self.main_frame)
-        self.text_scrollbar.pack(side=RIGHT, fill=BOTH)
-
-        self.text_frame = Frame(self.main_frame, bg='#333333')
-        self.text_frame.pack(side=LEFT, fill=BOTH, expand=TRUE,)
-
         self.upper_list = ['SELECT', 'FROM', 'ORDER', 'GROUP', 'BY', 'IS', 'NULL', 'ISNULL', 'NOTNULL', 'TRUE', 'FALSE',
                            'JOIN', 'LEFT', 'RIGHT', 'WHERE', 'HAVING', 'PARTITION', 'OVER', 'WITH', 'AS', 'NOT', 'AND',
                            'OR', 'ON', 'IN', 'BETWEEN', 'UNBOUNDED', 'PROCEEDING', 'FOLLOWING', 'UNION', 'ALL', 'WITHIN',
                            'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'COALESCE', 'NVL', 'AVG', 'MAX', 'SUM', 'COUNT']
 
+        # Program attributes
+        self.state('zoomed')  # starts maximized
+        self.title('Casing Formatter')
+        self.config(bg=self.main_color)
+
+        # Frames
+        self.main_frame = Frame(self, bg=self.main_color, width=600, height=400)
+        self.main_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
+        self.button_frame = Frame(self.main_frame, bg=self.main_color)
+        self.button_frame.pack(side=LEFT, fill=BOTH)
+        self.text_frame = Frame(self.main_frame, bg=self.main_color)
+        self.text_frame.pack(side=LEFT, fill=BOTH, expand=TRUE,)
+
+        self.text_scrollbar = Scrollbar(self.main_frame)
+        self.text_scrollbar.pack(side=RIGHT, fill=BOTH)
+
+        # Buttons
         button_font = 'system 14 bold'
         self.open_file_button = Button(self.button_frame, text='Open File', command=self.open_file, width=16, font=button_font, relief=RAISED, bg='lightblue')
         self.open_file_button.pack(side=TOP, padx=5, pady=4)
+        self.upper_button = Button(self.button_frame, text='Upper Case', command=self.cap_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.upper_button.pack(side=TOP, padx=5, pady=4)
+        self.lower_button = Button(self.button_frame, text='Lower Case', command=self.lower_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.lower_button.pack(side=TOP, padx=5, pady=4)
+        self.semi_lower_button = Button(self.button_frame, text='Semi Lower Case', command=self.semi_lower_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.semi_lower_button.pack(side=TOP, padx=5, pady=4)
 
-        self.cap_file_button = Button(self.button_frame, text='Upper Case', command=self.cap_file, width=16, font=button_font, relief=RAISED, bg='white')
-        self.cap_file_button.pack(side=TOP, padx=5, pady=4)
+        # Text boxes
+        self.text_box_before = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font='none 10 bold', wrap=WORD, yscrollcommand=self.text_scrollbar.set)
+        self.text_box_before.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
+        self.text_box_after = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font='none 10 bold', wrap=WORD, yscrollcommand=self.text_scrollbar.set)
+        self.text_box_after.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
+        self.text_scrollbar.config(command=self.yview)
 
-        self.cap_file_button = Button(self.button_frame, text='Lower Case', command=self.lower_file, width=16, font=button_font, relief=RAISED, bg='white')
-        self.cap_file_button.pack(side=TOP, padx=5, pady=4)
-
-        self.cap_file_button = Button(self.button_frame, text='Semi Lower Case', command=self.semi_lower_file, width=16, font=button_font, relief=RAISED, bg='white')
-        self.cap_file_button.pack(side=TOP, padx=5, pady=4)
-
+        # Bottom Status bar
         self.status_text = StringVar()
         self.status_text.set('')
         self.status_label = Label(self, textvariable=self.status_text, relief=SUNKEN, font='system 8', fg='#333333')
         self.status_label.pack(side=BOTTOM, fill=X)
-
-        self.text_before = StringVar()
-        self.text_after = StringVar()
-
-        self.text_box_before = Text(self.text_frame, relief=SUNKEN, bg='#444444', fg='grey', font='none 10 bold', wrap=WORD, yscrollcommand=self.text_scrollbar.set)
-        self.text_box_before.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
-        self.text_box_after = Text(self.text_frame, relief=SUNKEN, bg='#444444', fg='grey', font='none 10 bold', wrap=WORD, yscrollcommand=self.text_scrollbar.set)
-        self.text_box_after.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
-        self.text_scrollbar.config(command=self.yview)
 
     def yview(self, *args):
         # Used to make both text boxes scroll at the same time
@@ -76,10 +79,8 @@ class Window(Tk):
             self.output_file.close()
             new_sql_file = open(self.savedir+'/'+self.open_file, 'r')
 
-            self.text_before.set(sql_file)
-            self.text_box_before.insert(END, self.text_before.get())
-            self.text_after.set(new_sql_file.read())
-            self.text_box_after.insert(END, self.text_after.get())
+            self.text_box_before.insert(END, sql_file)
+            self.text_box_after.insert(END, new_sql_file.read())
 
             new_sql_file.close()
             self.status_text.set('Saved as: '+self.open_file)
@@ -93,10 +94,8 @@ class Window(Tk):
             self.output_file.close()
             new_sql_file = open(self.savedir+'/'+self.open_file, 'r')
 
-            self.text_before.set(sql_file)
-            self.text_box_before.insert(END, self.text_before.get())
-            self.text_after.set(new_sql_file.read())
-            self.text_box_after.insert(END, self.text_after.get())
+            self.text_box_before.insert(END, sql_file)
+            self.text_box_after.insert(END, new_sql_file.read())
 
             new_sql_file.close()
             self.status_text.set('Saved as: '+self.open_file)
@@ -122,10 +121,8 @@ class Window(Tk):
             self.output_file.close()
             new_sql_file = open(self.savedir+'/'+self.open_file, 'r')
 
-            self.text_before.set(sql_file)
-            self.text_box_before.insert(END, self.text_before.get())
-            self.text_after.set(new_sql_file.read())
-            self.text_box_after.insert(END, self.text_after.get())
+            self.text_box_before.insert(END, sql_file)
+            self.text_box_after.insert(END, new_sql_file.read())
 
             new_sql_file.close()
             self.status_text.set('Saved as: '+self.open_file)
@@ -146,6 +143,4 @@ class Window(Tk):
 
 
 app = Window()
-app.title('Casing Formatter')
-app.config(bg='#333333')
 app.mainloop()
