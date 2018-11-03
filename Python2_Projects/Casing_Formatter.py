@@ -1,4 +1,5 @@
 from Tkinter import *
+from ttk import Combobox, Style
 import tkFileDialog
 import re
 
@@ -15,7 +16,12 @@ class Window(Tk):
         self.upper_list = ['SELECT', 'FROM', 'ORDER', 'GROUP', 'BY', 'IS', 'NULL', 'ISNULL', 'NOTNULL', 'TRUE', 'FALSE',
                            'JOIN', 'LEFT', 'RIGHT', 'WHERE', 'HAVING', 'PARTITION', 'OVER', 'WITH', 'AS', 'NOT', 'AND',
                            'OR', 'ON', 'IN', 'BETWEEN', 'UNBOUNDED', 'PROCEEDING', 'FOLLOWING', 'UNION', 'ALL', 'CASE',
-                           'WHEN', 'THEN', 'ELSE', 'END', 'COALESCE', 'NVL', 'AVG', 'MAX', 'SUM', 'COUNT', 'WITHIN']
+                           'WHEN', 'THEN', 'ELSE', 'END', 'COALESCE', 'NVL', 'AVG', 'MAX', 'SUM', 'COUNT', 'WITHIN',
+                           'LISTAGG']
+        text_box_font_options = {'name': ['Courier', 'System', 'Impact', 'Times', 'Arial', 'Verdana', 'Gothic', 'Georgia', 'none'],
+                                 'size': []}
+        for num in range(6, 101):
+            text_box_font_options['size'].append(num)
 
         # Program attributes
         self.state('zoomed')  # starts maximized
@@ -35,20 +41,33 @@ class Window(Tk):
         self.text_scrollbar.pack(side=RIGHT, fill=BOTH)
 
         # Buttons
-        button_font = 'system 14 bold'
-        self.open_file_button = Button(self.button_frame, text='Open File', command=self.open_file, width=16, font=button_font, relief=RAISED, bg='lightblue')
+        button_font = 'helvetica 18 bold'
+        self.open_file_button = Button(self.button_frame, text='Open File', command=self.open_file, font='helvetica 14', relief=RAISED, bg='deepskyblue4', fg='white')
         self.open_file_button.pack(side=TOP, padx=5, pady=4)
-        self.upper_button = Button(self.button_frame, text='Upper Case', command=self.cap_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.upper_button = Button(self.button_frame, text='A', width=3, command=self.cap_file, font=button_font, relief=RAISED, bg=self.sub_color, fg='white')
         self.upper_button.pack(side=TOP, padx=5, pady=4)
-        self.lower_button = Button(self.button_frame, text='Lower Case', command=self.lower_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.lower_button = Button(self.button_frame, text='a', width=3, command=self.lower_file, font=button_font, relief=RAISED, bg=self.sub_color, fg='white')
         self.lower_button.pack(side=TOP, padx=5, pady=4)
-        self.semi_lower_button = Button(self.button_frame, text='Semi Lower Case', command=self.semi_lower_file, width=16, font=button_font, relief=RAISED, bg='white')
+        self.semi_lower_button = Button(self.button_frame, text='Ab', width=3, command=self.semi_lower_file, font=button_font, relief=RAISED, bg=self.sub_color, fg='white')
         self.semi_lower_button.pack(side=TOP, padx=5, pady=4)
+        self.semi_lower_button = Button(self.button_frame, text='Apply Font', command=self.text_box_font, font='helvetica 14', relief=RAISED, bg=self.sub_color, fg='white')
+        self.semi_lower_button.pack(side=BOTTOM, padx=5, pady=4)
+
+        # Font drop-down menus
+        self.font_name_dropdown = Combobox(self.button_frame, values=text_box_font_options['name'], justify='center')
+        self.font_name_dropdown.set(text_box_font_options['name'][1])
+        self.font_name_dropdown.pack(side=BOTTOM, padx=5, pady=4)
+        self.font_style = self.font_name_dropdown.get()
+
+        self.font_size_dropdown = Combobox(self.button_frame, values=text_box_font_options['size'], justify='center')
+        self.font_size_dropdown.set(12)
+        self.font_size_dropdown.pack(side=BOTTOM, padx=5, pady=4)
+        self.text_font_size = self.font_size_dropdown.get()
 
         # Text boxes
-        self.text_box_before = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font='none 10 bold', wrap=WORD, yscrollcommand=self.text_scrollbar.set)
+        self.text_box_before = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font=self.font_style+' '+self.text_font_size, wrap=WORD, yscrollcommand=self.text_scrollbar.set)
         self.text_box_before.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
-        self.text_box_after = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font='none 10 bold', wrap=WORD, yscrollcommand=self.text_scrollbar.set)
+        self.text_box_after = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font=self.font_style+' '+self.text_font_size, wrap=WORD, yscrollcommand=self.text_scrollbar.set)
         self.text_box_after.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
         self.text_scrollbar.config(command=self.yview)
 
@@ -87,6 +106,8 @@ class Window(Tk):
             self.status_text.set('Saved as: '+self.open_file)
             self.status_label.config(bg='#777777')
 
+            self.text_color()
+
     def lower_file(self):
         if self.the_file != None:
             sql_file = self.the_file.read()
@@ -101,6 +122,8 @@ class Window(Tk):
             new_sql_file.close()
             self.status_text.set('Saved as: '+self.open_file)
             self.status_label.config(bg='#777777')
+
+            self.text_color()
 
     def semi_lower_file(self):
         if self.the_file != None:
@@ -129,6 +152,8 @@ class Window(Tk):
             self.status_text.set('Saved as: '+self.open_file)
             self.status_label.config(bg='#777777')
 
+            self.text_color()
+
     def open_file(self):
         self.text_box_before.delete(1.0, END)
         self.text_box_after.delete(1.0, END)
@@ -141,6 +166,30 @@ class Window(Tk):
             self.status_text.set('')
             self.status_label.config(bg='white')
         return self.the_file
+
+    def text_color(self):
+        # Colors the words in the before and after text boxes, for the words that are in the upper list
+        temp_split = self.text_box_after.get(1.0, END)
+        temp_split = temp_split.split('\n')
+        line_count = 0
+        for line in temp_split:
+            line_count += 1
+            temp_list = re.sub(r'[^A-Za-z0-9._]', ' ', line).split(' ')
+            recon = []
+            for item in temp_list:
+                recon.append(item)
+                letter = len(' '.join(recon))
+                if item.upper() in self.upper_list:
+                    self.text_box_after.tag_add("start", str(line_count) + "." + str(letter - len(item)), str(line_count) + "." + str(letter))
+                    self.text_box_after.tag_config("start", foreground='orange', font=self.font_style+' '+self.text_font_size+' bold')
+                    self.text_box_before.tag_add("start", str(line_count) + "." + str(letter - len(item)), str(line_count) + "." + str(letter))
+                    self.text_box_before.tag_config("start", foreground='orange', font=self.font_style+' '+self.text_font_size+' bold')
+
+    def text_box_font(self):
+        self.text_box_after.tag_add("font", 1.0, END)
+        self.text_box_after.tag_config("font", font=self.font_name_dropdown.get() + ' ' + str(self.font_size_dropdown.get()))
+        self.text_box_before.tag_add("font", 1.0, END)
+        self.text_box_before.tag_config("font", font=self.font_name_dropdown.get() + ' ' + str(self.font_size_dropdown.get()))
 
 
 app = Window()
