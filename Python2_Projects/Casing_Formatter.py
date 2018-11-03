@@ -18,7 +18,8 @@ class Window(Tk):
                            'OR', 'ON', 'IN', 'BETWEEN', 'UNBOUNDED', 'PROCEEDING', 'FOLLOWING', 'UNION', 'ALL', 'CASE',
                            'WHEN', 'THEN', 'ELSE', 'END', 'COALESCE', 'NVL', 'AVG', 'MAX', 'SUM', 'COUNT', 'WITHIN',
                            'LISTAGG']
-        text_box_font_options = {'name': ['Courier', 'System', 'Impact', 'Times', 'Arial', 'Verdana', 'Gothic', 'Georgia', 'none'],
+        text_box_font_options = {'name': ['none', 'Courier', 'Georgia', 'Gothic',
+                                          'Impact', 'System', 'Tahoma', 'Times', 'Verdana'],
                                  'size': []}
         for num in range(6, 101):
             text_box_font_options['size'].append(num)
@@ -55,7 +56,7 @@ class Window(Tk):
 
         # Font drop-down menus
         self.font_name_dropdown = Combobox(self.button_frame, values=text_box_font_options['name'], justify='center')
-        self.font_name_dropdown.set(text_box_font_options['name'][1])
+        self.font_name_dropdown.set(text_box_font_options['name'][0])
         self.font_name_dropdown.pack(side=BOTTOM, padx=5, pady=4)
         self.font_style = self.font_name_dropdown.get()
 
@@ -65,9 +66,9 @@ class Window(Tk):
         self.text_font_size = self.font_size_dropdown.get()
 
         # Text boxes
-        self.text_box_before = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font=self.font_style+' '+self.text_font_size, wrap=WORD, yscrollcommand=self.text_scrollbar.set)
+        self.text_box_before = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font=(self.font_style, self.text_font_size), wrap=WORD, yscrollcommand=self.text_scrollbar.set)
         self.text_box_before.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
-        self.text_box_after = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font=self.font_style+' '+self.text_font_size, wrap=WORD, yscrollcommand=self.text_scrollbar.set)
+        self.text_box_after = Text(self.text_frame, relief=SUNKEN, bg=self.sub_color, fg='grey', font=(self.font_style, self.text_font_size), wrap=WORD, yscrollcommand=self.text_scrollbar.set)
         self.text_box_after.pack(side=LEFT, fill=BOTH, expand=TRUE, padx=2)
         self.text_scrollbar.config(command=self.yview)
 
@@ -181,15 +182,15 @@ class Window(Tk):
                 letter = len(' '.join(recon))
                 if item.upper() in self.upper_list:
                     self.text_box_after.tag_add("start", str(line_count) + "." + str(letter - len(item)), str(line_count) + "." + str(letter))
-                    self.text_box_after.tag_config("start", foreground='orange', font=self.font_style+' '+self.text_font_size+' bold')
+                    self.text_box_after.tag_config("start", foreground='orange', font=(self.font_style, self.text_font_size, ' bold'))
                     self.text_box_before.tag_add("start", str(line_count) + "." + str(letter - len(item)), str(line_count) + "." + str(letter))
-                    self.text_box_before.tag_config("start", foreground='orange', font=self.font_style+' '+self.text_font_size+' bold')
+                    self.text_box_before.tag_config("start", foreground='orange', font=(self.font_style, self.text_font_size, ' bold'))
 
     def text_box_font(self):
         self.text_box_after.tag_add("font", 1.0, END)
-        self.text_box_after.tag_config("font", font=self.font_name_dropdown.get() + ' ' + str(self.font_size_dropdown.get()))
+        self.text_box_after.tag_config("font", font=(self.font_name_dropdown.get(), self.font_size_dropdown.get()))
         self.text_box_before.tag_add("font", 1.0, END)
-        self.text_box_before.tag_config("font", font=self.font_name_dropdown.get() + ' ' + str(self.font_size_dropdown.get()))
+        self.text_box_before.tag_config("font", font=(self.font_name_dropdown.get(), self.font_size_dropdown.get()))
 
 
 app = Window()
