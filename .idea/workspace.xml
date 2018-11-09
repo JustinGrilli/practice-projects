@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Python2_Projects/testing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Work.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Work.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -59,41 +62,41 @@
     <session id="-532095181">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
-          <entry key="project.open.time.0" value="1" />
+          <entry key="project.closed" value="3" />
+          <entry key="project.open.time.0" value="3" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="1613" />
+          <entry key="py" value="4683" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="1613" />
+          <entry key="Python" value="4683" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="2" />
+          <entry key="py" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="2" />
+          <entry key="Python" value="8" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="21" column="42" selection-start-line="21" selection-start-column="42" selection-end-line="21" selection-end-column="42" />
+            <state relative-caret-position="1612">
+              <caret line="134" column="78" selection-start-line="134" selection-start-column="78" selection-end-line="134" selection-end-column="78" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -102,10 +105,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Python2_Projects/Games/rock_paper_scissors.py">
+        <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="179" column="54" selection-start-line="179" selection-start-column="43" selection-end-line="179" selection-end-column="54" />
+            <state relative-caret-position="240">
+              <caret line="66" column="90" selection-start-line="66" selection-start-column="90" selection-end-line="66" selection-end-column="90" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+                <marker date="1541781116131" expanded="true" signature="93:94" ph="..." />
+                <marker date="1541781116131" expanded="true" signature="93:99" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Python2_Projects/testing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+              <folding>
+                <marker date="1541782392441" expanded="true" signature="121:122" ph="..." />
+                <marker date="1541782392441" expanded="true" signature="121:127" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -141,6 +162,12 @@
       <find>output_file</find>
       <find>progress</find>
       <find>font</find>
+      <find>askdir</find>
+      <find>=ba</find>
+      <find>button_frame</find>
+      <find>search_bar_frame</find>
+      <find>re.s</find>
+      <find>image</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -159,20 +186,25 @@
         <option value="$PROJECT_DIR$/Python2_Projects/tkinter_text_coloring.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/odahfbghosdng.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py" />
+        <option value="$PROJECT_DIR$/Field_View_Searcher.py" />
+        <option value="$PROJECT_DIR$/Python2_Projects/testing_snake_case.py" />
+        <option value="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" />
+        <option value="$PROJECT_DIR$/Python2_Projects/testing.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="671" />
-    <option name="y" value="-8" />
+    <option name="x" value="484" />
+    <option name="y" value="-19" />
     <option name="width" value="1936" />
-    <option name="height" value="1065" />
+    <option name="height" value="1036" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -195,12 +227,16 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../redshift-data-warehouse" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Hover\Documents\Work\Python2_Projects" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -214,7 +250,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Casing_Formatter">
+  <component name="RunManager" selected="Python.testing">
     <configuration name="Casing_Formatter" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -236,7 +272,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="TicTacToe" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Field_View_Searcher" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -244,32 +280,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python2_Projects/Games" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python2_Projects" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/Games/TicTacToe.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Tkinter" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Work" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="C:/Python27/Lib/lib-tk" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:/Python27/Lib/lib-tk/Tkinter.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -299,7 +314,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="testing_saving" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="testing" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -311,7 +326,28 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/testing_saving.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/testing.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="testing_snake_case" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Work" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python2_Projects" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/testing_snake_case.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -322,18 +358,18 @@
     </configuration>
     <list>
       <item itemvalue="Python.Casing_Formatter" />
-      <item itemvalue="Python.testing_saving" />
-      <item itemvalue="Python.TicTacToe" />
-      <item itemvalue="Python.Tkinter" />
       <item itemvalue="Python.odahfbghosdng" />
+      <item itemvalue="Python.Field_View_Searcher" />
+      <item itemvalue="Python.testing_snake_case" />
+      <item itemvalue="Python.testing" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.testing" />
+        <item itemvalue="Python.Field_View_Searcher" />
+        <item itemvalue="Python.testing_snake_case" />
         <item itemvalue="Python.Casing_Formatter" />
         <item itemvalue="Python.odahfbghosdng" />
-        <item itemvalue="Python.Tkinter" />
-        <item itemvalue="Python.TicTacToe" />
-        <item itemvalue="Python.testing_saving" />
       </list>
     </recent_temporary>
   </component>
@@ -351,15 +387,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12765957" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12802951" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32939914" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.26599064" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.29935622" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -480,25 +516,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Python2_Projects/tkinter_text_coloring.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/tkinter_text_coloring.py" />
     <entry file="file://$PROJECT_DIR$/Python2_Projects/strings_and_stuff.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-97" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Python2_Projects/odahfbghosdng.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="28" selection-start-column="28" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/odahfbghosdng.py" />
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Games/paper_hand.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -509,26 +533,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Python2_Projects/Games/rock_paper_scissors.py">
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/testing_snake_case.py" />
+    <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="179" column="54" selection-start-line="179" selection-start-column="43" selection-end-line="179" selection-end-column="54" />
+        <state relative-caret-position="392">
+          <caret line="3302" column="8" selection-start-line="3302" selection-start-column="8" selection-end-line="3302" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/Games/rock_paper_scissors.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="2108" column="6" selection-start-line="2108" selection-start-column="6" selection-end-line="2108" selection-end-column="6" />
+        <state relative-caret-position="480">
+          <caret line="24" column="16" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="21" column="42" selection-start-line="21" selection-start-column="42" selection-end-line="21" selection-end-column="42" />
+        <state relative-caret-position="1612">
+          <caret line="134" column="78" selection-start-line="134" selection-start-column="78" selection-end-line="134" selection-end-column="78" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="66" column="90" selection-start-line="66" selection-start-column="90" selection-end-line="66" selection-end-column="90" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <marker date="1541781116131" expanded="true" signature="93:94" ph="..." />
+            <marker date="1541781116131" expanded="true" signature="93:99" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/testing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <marker date="1541782392441" expanded="true" signature="121:122" ph="..." />
+            <marker date="1541782392441" expanded="true" signature="121:127" ph="..." />
           </folding>
         </state>
       </provider>
