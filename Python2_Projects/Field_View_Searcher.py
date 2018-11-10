@@ -1,4 +1,4 @@
-from Tkinter import *
+from Tix import *
 import tkFileDialog
 from PIL import Image, ImageTk
 
@@ -25,6 +25,8 @@ class Program(Tk):
         # Frames
         self.left_frame = Frame(self, bg=aa['main_bg'])
         self.left_frame.pack(side=LEFT, fill=Y)
+        self.right_frame = Frame(self, bg=aa['sub_bg'], relief=SUNKEN)
+        self.right_frame.pack(side=LEFT, fill=BOTH, expand=True)
         self.top_left_frame = Frame(self.left_frame, bg=aa['main_bg'])
         self.top_left_frame.pack(side=TOP, fill=BOTH)
         self.bottom_left_frame = Frame(self.left_frame, bg=aa['main_bg'])
@@ -73,6 +75,16 @@ class Program(Tk):
         self.search_bar.pack(side=LEFT, fill=BOTH, expand=True, padx=ta['padx'], pady=ta['pady'])
         self.search_button = Button(self.top_left_frame, image=self.search_image, command=self.search_views, fg=ba['fg_color'], bg=ba['bg_color'], font=ba['font'])
         self.search_button.pack(side=RIGHT, padx=ba['padx'], pady=ba['pady'])
+
+        # Tooltips
+        self.tooltips = Balloon(self)
+        for sub in self.tooltips.subwidgets_all():  # Makes the tooltip background a specified color
+            sub.config(bg='white')
+        self.tooltips.subwidget('label')['image'] = BitmapImage()  # Removes arrow in the top left corner
+        self.tooltips.bind_widget(self.toggle_fs_button, balloonmsg='Fullscreen')
+        self.tooltips.bind_widget(self.exit_button, balloonmsg='Exit')
+        self.tooltips.bind_widget(self.locate_directory_button, balloonmsg='Locate views directory')
+        self.tooltips.bind_widget(self.search_button, balloonmsg='Search')
 
     def view_directory_locator(self):
         self.directory_location = tkFileDialog.askdirectory(title='Locate the folder that contains the views you would like to search')
