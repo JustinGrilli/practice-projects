@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Work.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Work.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" afterDir="false" />
     </list>
@@ -17,19 +15,19 @@
     <session id="-1076126596">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="8" />
+          <entry key="project.closed" value="9" />
           <entry key="project.open.time.0" value="3" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.2" value="4" />
+          <entry key="project.open.time.2" value="5" />
           <entry key="project.open.time.3" value="3" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="12" />
+          <entry key="project.opened" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="png" value="1" />
-          <entry key="py" value="49" />
+          <entry key="py" value="53" />
           <entry key="pyi" value="1" />
           <entry key="regular_expressions_testing" value="1" />
           <entry key="txt" value="4" />
@@ -39,7 +37,7 @@
         <counts>
           <entry key="Image" value="1" />
           <entry key="PLAIN_TEXT" value="4" />
-          <entry key="Python" value="50" />
+          <entry key="Python" value="54" />
           <entry key="PythonStub" value="1" />
         </counts>
       </usages-collector>
@@ -47,14 +45,14 @@
         <counts>
           <entry key="Python Console" value="12" />
           <entry key="dummy" value="18" />
-          <entry key="py" value="11020" />
+          <entry key="py" value="13283" />
           <entry key="regular_expressions_testing" value="310" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="18" />
-          <entry key="Python" value="11342" />
+          <entry key="Python" value="13605" />
         </counts>
       </usages-collector>
     </session>
@@ -106,11 +104,30 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="82" column="65" selection-start-line="82" selection-start-column="65" selection-end-line="82" selection-end-column="65" />
+            <state relative-caret-position="176">
+              <caret line="152" column="73" selection-start-line="152" selection-start-column="73" selection-end-line="152" selection-end-column="73" />
               <folding>
-                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#0#17#0" expanded="true" />
+                <marker date="1541885214411" expanded="true" signature="9508:9514" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Python2_Projects/life_simulator.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="367">
+              <caret line="70" column="20" selection-start-line="70" selection-start-column="20" selection-end-line="70" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="283">
+              <caret line="2577" column="8" selection-start-line="2577" selection-start-column="8" selection-end-line="2577" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -126,20 +143,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>TK</find>
-      <find>height</find>
-      <find>join</find>
-      <find>SELECT</find>
-      <find>CAP_FILE.sql</find>
-      <find>'grey'</find>
-      <find>'green'</find>
-      <find>'#449944'</find>
-      <find>saved_score_label</find>
-      <find>file_label</find>
-      <find>label_text</find>
-      <find>top_frame</find>
-      <find>width</find>
-      <find>text_frame</find>
       <find>text_before_c</find>
       <find>555555</find>
       <find>text_main_c</find>
@@ -152,6 +155,24 @@
       <find>search_bar_frame</find>
       <find>re.s</find>
       <find>image</find>
+      <find>bg_color</find>
+      <find>right_top_left_frame</find>
+      <find>right_top_frame</find>
+      <find>top_left_frame</find>
+      <find>bottom_left_frame</find>
+      <find>progre</find>
+      <find>wb_progressbar</find>
+      <find>view_progressbar</find>
+      <find>always_0</find>
+      <find>workbook_count_text</find>
+      <find>view_count_text</find>
+      <find>workbook_count</find>
+      <find>workbook_desc_text</find>
+      <find>workbook_desc</find>
+      <find>total_wb_desc</find>
+      <find>view_count</find>
+      <find>view_desc_text</find>
+      <find>view_desc</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -178,10 +199,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="484" />
-    <option name="y" value="-19" />
-    <option name="width" value="1936" />
-    <option name="height" value="1036" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="2576" />
+    <option name="height" value="1416" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -200,6 +221,12 @@
               <item name="Work" type="462c0819:PsiDirectoryNode" />
               <item name="Python2_Projects" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Work" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Work" type="462c0819:PsiDirectoryNode" />
+              <item name="Python2_Projects" type="462c0819:PsiDirectoryNode" />
+              <item name="Games" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -208,7 +235,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../tableau" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -271,7 +298,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="odahfbghosdng" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="life_simulator" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -283,7 +310,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/odahfbghosdng.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/life_simulator.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -336,18 +363,18 @@
     </configuration>
     <list>
       <item itemvalue="Python.Casing_Formatter" />
-      <item itemvalue="Python.odahfbghosdng" />
       <item itemvalue="Python.Field_View_Searcher" />
       <item itemvalue="Python.testing_snake_case" />
       <item itemvalue="Python.testing" />
+      <item itemvalue="Python.life_simulator" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.Field_View_Searcher" />
+        <item itemvalue="Python.life_simulator" />
         <item itemvalue="Python.testing" />
         <item itemvalue="Python.testing_snake_case" />
         <item itemvalue="Python.Casing_Formatter" />
-        <item itemvalue="Python.odahfbghosdng" />
       </list>
     </recent_temporary>
   </component>
@@ -484,13 +511,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Python2_Projects/life_simulator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/tkinter_text_coloring.py" />
     <entry file="file://$PROJECT_DIR$/Python2_Projects/strings_and_stuff.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -509,13 +529,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/testing_snake_case.py" />
-    <entry file="file://$PROJECT_DIR$/Python2_Projects/Games/rock_paper_scissors.py">
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/testing.py" />
+    <entry file="file://C:/Python27/Lib/lib-tk/Tix.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="24" column="16" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="291">
+          <caret line="527" column="8" selection-start-line="527" selection-start-column="8" selection-end-line="527" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -529,27 +547,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Python2_Projects/testing.py" />
     <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3560">
-          <caret line="2145" column="8" selection-start-line="2145" selection-start-column="8" selection-end-line="2145" selection-end-column="8" />
+        <state relative-caret-position="283">
+          <caret line="2577" column="8" selection-start-line="2577" selection-start-column="8" selection-end-line="2577" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/lib-tk/Tix.py">
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/Games/rock_paper_scissors.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="527" column="8" selection-start-line="527" selection-start-column="8" selection-end-line="527" selection-end-column="8" />
+        <state relative-caret-position="-378">
+          <caret line="119" column="30" lean-forward="true" selection-start-line="119" selection-start-column="30" selection-end-line="119" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Python2_Projects/life_simulator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="70" column="20" selection-start-line="70" selection-start-column="20" selection-end-line="70" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="82" column="65" selection-start-line="82" selection-start-column="65" selection-end-line="82" selection-end-column="65" />
+        <state relative-caret-position="176">
+          <caret line="152" column="73" selection-start-line="152" selection-start-column="73" selection-end-line="152" selection-end-column="73" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#0#17#0" expanded="true" />
+            <marker date="1541885214411" expanded="true" signature="9508:9514" ph="..." />
           </folding>
         </state>
       </provider>
