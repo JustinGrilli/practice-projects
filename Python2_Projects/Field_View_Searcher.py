@@ -68,7 +68,7 @@ class Program(Tk):
             'fg_color': aa['main_bg']
         }
         # Images
-        image_width, image_height = 30, 30
+        image_width, image_height = 35, 35
         dir_image = Image.open('Images/blue_folder.png')
         dir_image = dir_image.resize((image_width, image_height), Image.ANTIALIAS)
         self.directory_image = ImageTk.PhotoImage(dir_image)
