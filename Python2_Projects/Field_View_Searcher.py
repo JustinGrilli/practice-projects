@@ -41,12 +41,6 @@ class Program(Tk):
 
         self.right_frame = Frame(self, bg=aa['sub_bg'], relief=SUNKEN)
         self.right_frame.pack(side=LEFT, fill=BOTH, expand=True)
-        self.right_left_frame = Frame(self.right_frame, bg=aa['sub_bg'])
-        self.right_left_frame.pack(side=LEFT, fill=BOTH)
-        self.right_left_frame_1 = Frame(self.right_frame, bg=aa['sub_bg'])
-        self.right_left_frame_1.pack(side=LEFT, fill=BOTH)
-        self.right_left_frame_2 = Frame(self.right_frame, bg=aa['sub_bg'])
-        self.right_left_frame_2.pack(side=LEFT, fill=BOTH)
 
 
         ba = {
@@ -69,7 +63,7 @@ class Program(Tk):
             # Label Attributes
             'padx': 2,
             'pady': 4,
-            'font': 'none 26 bold',
+            'font': 'none 14 bold',
             'bg_color': aa['sub_bg'],
             'fg_color': aa['main_bg']
         }
@@ -111,24 +105,19 @@ class Program(Tk):
         self.total_wb_desc_text = StringVar()
         self.total_wb_desc_text.set('')
 
-        # Labels
-        self.total_wb_desc_label = Label(self.right_left_frame, textvariable=self.total_wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=NE)
-        self.total_wb_desc_label.pack(side=TOP, fill=BOTH, padx=la['padx'], pady=la['pady'])
-        self.total_wb_count_label = Label(self.right_left_frame_2, textvariable=self.total_wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=NW)
-        self.total_wb_count_label.pack(side=TOP, fill=BOTH, padx=la['padx'], pady=la['pady'])
-
-        self.wb_desc_label = Label(self.right_left_frame, textvariable=self.wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=NE)
-        self.wb_desc_label.pack(side=TOP, fill=BOTH, padx=la['padx'], pady=la['pady'])
-        self.wb_count_label = Label(self.right_left_frame_2, textvariable=self.wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=NW)
-        self.wb_count_label.pack(side=TOP, fill=BOTH, padx=la['padx'], pady=la['pady'])
-
-        # Progress Bars
+        # Progress Bars Style
         self.s = Style()
         self.s.theme_use('classic')
         self.s.configure('blue.Horizontal.TProgressbar', troughcolor=aa['sub_bg'], background=aa['main_bg'], thickness=45)
 
-        self.wb_total_progressbar = Progressbar(self.right_left_frame_1, style='blue.Horizontal.TProgressbar', length=400)
-        self.wb_progressbar = Progressbar(self.right_left_frame_1, style='blue.Horizontal.TProgressbar', length=400)
+        # Right Frame Grid Components -- Labels and Progress Bars
+        self.total_wb_desc_label = Label(self.right_frame, textvariable=self.total_wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=E)
+        self.wb_total_progressbar = Progressbar(self.right_frame, style='blue.Horizontal.TProgressbar', length=400)
+        self.total_wb_count_label = Label(self.right_frame, textvariable=self.total_wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=W)
+
+        self.wb_desc_label = Label(self.right_frame, textvariable=self.wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=E)
+        self.wb_progressbar = Progressbar(self.right_frame, style='blue.Horizontal.TProgressbar', length=400)
+        self.wb_count_label = Label(self.right_frame, textvariable=self.wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=W)
 
         # Tooltips
         self.tooltips = Balloon(self)
@@ -162,13 +151,12 @@ class Program(Tk):
                     self.wb_count += 1
 
         if self.search_bar.get() != '':
-            self.wb_desc_text.set('Workbooks Using ' + self.search_bar.get() + ': ')
-            self.total_wb_desc_text.set('Workbooks Total: ')
+            self.wb_desc_text.set('Workbooks Using ' + self.search_bar.get())
+            self.total_wb_desc_text.set('Workbooks Total')
 
             self.wb_total_progressbar['maximum'] = self.total_wb_count
             self.wb_progressbar['maximum'] = self.total_wb_count
-            self.wb_total_progressbar.pack(side=TOP, fill=BOTH)
-            self.wb_progressbar.pack(side=TOP, fill=BOTH)
+            self.right_frame_grid()
             self.total_wb_progress_start()
             self.wb_progress_start()
 
@@ -204,6 +192,17 @@ class Program(Tk):
         else:
             self.fs = True
         self.attributes('-fullscreen', self.fs)
+
+    def right_frame_grid(self):
+        # Row 0 - Total Workbooks
+        self.total_wb_desc_label.grid(row=0, column=0, sticky=N + S + E + W)
+        self.wb_total_progressbar.grid(row=0, column=1, sticky=N + S + E + W, padx=2, pady=2)
+        self.total_wb_count_label.grid(row=0, column=2, sticky=N + S + E + W)
+
+        # Row 1 - Workbooks with searched field
+        self.wb_desc_label.grid(row=1, column=0, sticky=N + S + E + W)
+        self.wb_progressbar.grid(row=1, column=1, sticky=N + S + E + W, padx=2, pady=2)
+        self.wb_count_label.grid(row=1, column=2, sticky=N + S + E + W)
 
 
 app = Program()
