@@ -4,6 +4,7 @@ from ttk import Progressbar, Style
 from PIL import Image, ImageTk
 import xml.etree.cElementTree as ET
 import os
+import re
 
 
 class Program(Tk):
@@ -28,6 +29,7 @@ class Program(Tk):
         self.root = None
         self.total_wb_count = 0
         self.wb_count = 0
+        self.view_count = 0
         self.total_wb_start = 0
         self.wb_start = 0
 
@@ -138,6 +140,7 @@ class Program(Tk):
         :return: Will probably run other functions that do things like count the views with that field, count the workbooks, etc.
         """
         self.reset_metrics()
+        wb_count = 0
 
         if self.directory_location != None and self.search_bar.get() != '':
             for the_file in os.listdir(self.directory_location):
@@ -145,10 +148,22 @@ class Program(Tk):
                     # set the path to the file
                     path = self.directory_location + '/' + the_file
                     # set the tree and root
-                    self.tree = ET.parse(path)
-                    self.root = self.tree.getroot()
+                    tree = ET.parse(path)
+                    root = tree.getroot()
+                    for column in root.iter('column-instance'):
+                        name = str(column.attrib.get('name'))
+                        regex = '\[.*?\]'
+                        if self.search_bar.get() in str(column.attrib.get('name')):
+                            wb_count = 1
+                            self.view_count += 1
+                    if wb_count == 1:
+                        print the_file + ' - ' + str(self.view_count) + ' views'
+                    self.wb_count += wb_count
+                    wb_count = 0
+                    self.view_count = 0
+
                     self.total_wb_count += 1
-                    self.wb_count += 1
+        print self.view_count
 
         if self.search_bar.get() != '':
             self.wb_desc_text.set('Workbooks Using ' + self.search_bar.get())
@@ -179,12 +194,15 @@ class Program(Tk):
     def reset_metrics(self):
         self.total_wb_count = 0
         self.wb_count = 0
+        self.view_count = 0
         self.total_wb_start = 0
         self.wb_start = 0
         self.wb_desc_text.set('')
         self.total_wb_desc_text.set('')
         self.wb_count_text.set('')
         self.total_wb_count_text.set('')
+        self.wb_progressbar['value'] = 0
+        self.wb_total_progressbar['value'] = 0
 
     def toggle_fullscreen(self):
         if self.fs:
