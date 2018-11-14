@@ -1,4 +1,4 @@
-from Tix import *
+from Tkinter import *
 import tkFileDialog
 from ttk import Progressbar, Style
 from PIL import Image, ImageTk
@@ -127,14 +127,14 @@ class Program(Tk):
         self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg='skyblue1', fg=aa['main_bg'])
 
         # Tooltips
-        self.tooltips = Balloon(self)
-        for sub in self.tooltips.subwidgets_all():  # Makes the tooltip background a specified color
-            sub.config(bg='white')
-        self.tooltips.subwidget('label')['image'] = BitmapImage()  # Removes arrow in the top left corner
-        self.tooltips.bind_widget(self.toggle_fs_button, balloonmsg='Fullscreen')
-        self.tooltips.bind_widget(self.exit_button, balloonmsg='Exit')
-        self.tooltips.bind_widget(self.locate_directory_button, balloonmsg='Locate views directory')
-        self.tooltips.bind_widget(self.search_button, balloonmsg='Search')
+        # self.tooltips = Balloon(self)
+        # for sub in self.tooltips.subwidgets_all():  # Makes the tooltip background a specified color
+        #     sub.config(bg='white')
+        # self.tooltips.subwidget('label')['image'] = BitmapImage()  # Removes arrow in the top left corner
+        # self.tooltips.bind_widget(self.toggle_fs_button, balloonmsg='Fullscreen')
+        # self.tooltips.bind_widget(self.exit_button, balloonmsg='Exit')
+        # self.tooltips.bind_widget(self.locate_directory_button, balloonmsg='Locate views directory')
+        # self.tooltips.bind_widget(self.search_button, balloonmsg='Search')
 
     def view_directory_locator(self):
         self.directory_location = tkFileDialog.askdirectory(title='Locate the folder that contains the views you would like to search')
@@ -167,7 +167,7 @@ class Program(Tk):
                                 wb_count = 1
                                 view_count += 1
                     if wb_count == 1:
-                        self.view_list.insert(END, '  ' + the_file + ' - ' + str(view_count) + '/' + str(sheet_count) + ' views\n')
+                        self.view_list.insert(END, '  ' + str(view_count) + '/' + str(sheet_count) + ' views - ' + the_file + '\n')
 
                     self.wb_count += wb_count
                     self.total_wb_count += 1
