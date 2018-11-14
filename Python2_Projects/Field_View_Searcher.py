@@ -29,7 +29,6 @@ class Program(Tk):
         self.root = None
         self.total_wb_count = 0
         self.wb_count = 0
-        self.view_count = 0
         self.total_wb_start = 0
         self.wb_start = 0
 
@@ -43,6 +42,10 @@ class Program(Tk):
 
         self.right_frame = Frame(self, bg=aa['sub_bg'], relief=SUNKEN)
         self.right_frame.pack(side=LEFT, fill=BOTH, expand=True)
+        self.right_top_frame = Frame(self.right_frame, bg=aa['sub_bg'], relief=SUNKEN)
+        self.right_top_frame.pack(side=TOP, fill=BOTH)
+        self.right_bottom_frame = Frame(self.right_frame, bg=aa['sub_bg'], relief=SUNKEN)
+        self.right_bottom_frame.pack(side=TOP, fill=BOTH, expand=True, pady=6, padx=4)
 
 
         ba = {
@@ -67,7 +70,7 @@ class Program(Tk):
             'pady': 4,
             'font': 'none 14 bold',
             'bg_color': aa['sub_bg'],
-            'fg_color': aa['main_bg']
+            'fg_color': 'white'
         }
         # Images
         image_width, image_height = 35, 35
@@ -113,13 +116,15 @@ class Program(Tk):
         self.s.configure('blue.Horizontal.TProgressbar', troughcolor=aa['sub_bg'], background=aa['main_bg'], thickness=45)
 
         # Right Frame Grid Components -- Labels and Progress Bars
-        self.total_wb_desc_label = Label(self.right_frame, textvariable=self.total_wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=E)
-        self.wb_total_progressbar = Progressbar(self.right_frame, style='blue.Horizontal.TProgressbar', length=400)
-        self.total_wb_count_label = Label(self.right_frame, textvariable=self.total_wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=W)
+        self.total_wb_desc_label = Label(self.right_top_frame, textvariable=self.total_wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=E)
+        self.wb_total_progressbar = Progressbar(self.right_top_frame, style='blue.Horizontal.TProgressbar', length=400)
+        self.total_wb_count_label = Label(self.right_top_frame, textvariable=self.total_wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=W)
 
-        self.wb_desc_label = Label(self.right_frame, textvariable=self.wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=E)
-        self.wb_progressbar = Progressbar(self.right_frame, style='blue.Horizontal.TProgressbar', length=400)
-        self.wb_count_label = Label(self.right_frame, textvariable=self.wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=W)
+        self.wb_desc_label = Label(self.right_top_frame, textvariable=self.wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=E)
+        self.wb_progressbar = Progressbar(self.right_top_frame, style='blue.Horizontal.TProgressbar', length=400)
+        self.wb_count_label = Label(self.right_top_frame, textvariable=self.wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=W)
+
+        self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg='skyblue1', fg=aa['main_bg'])
 
         # Tooltips
         self.tooltips = Balloon(self)
@@ -140,61 +145,63 @@ class Program(Tk):
         :return: Will probably run other functions that do things like count the views with that field, count the workbooks, etc.
         """
         self.reset_metrics()
-        wb_count = 0
 
         if self.directory_location != None and self.search_bar.get() != '':
             for the_file in os.listdir(self.directory_location):
-                if the_file.split('.')[1] == 'twb':
+                if the_file.split('.')[-1] == 'twb':
                     # set the path to the file
                     path = self.directory_location + '/' + the_file
                     # set the tree and root
                     tree = ET.parse(path)
                     root = tree.getroot()
+                    sheet_count = 0
+                    view_count = 0
+                    wb_count = 0
+                    for sheet in root.iter("worksheet"):
+                        sheet_count += 1
                     for column in root.iter('column-instance'):
                         name = str(column.attrib.get('name'))
-                        regex = '\[.*?\]'
-                        if self.search_bar.get() in str(column.attrib.get('name')):
-                            wb_count = 1
-                            self.view_count += 1
+                        regex = '\:.*?\:'
+                        for m in re.finditer(regex, name):
+                            if self.search_bar.get() == str(m.group(0)).replace(':', ''):
+                                wb_count = 1
+                                view_count += 1
                     if wb_count == 1:
-                        print the_file + ' - ' + str(self.view_count) + ' views'
+                        self.view_list.insert(END, '  ' + the_file + ' - ' + str(view_count) + '/' + str(sheet_count) + ' views\n')
+
                     self.wb_count += wb_count
-                    wb_count = 0
-                    self.view_count = 0
-
                     self.total_wb_count += 1
-        print self.view_count
 
-        if self.search_bar.get() != '':
             self.wb_desc_text.set('Workbooks Using ' + self.search_bar.get())
             self.total_wb_desc_text.set('Workbooks Total')
-
             self.wb_total_progressbar['maximum'] = self.total_wb_count
             self.wb_progressbar['maximum'] = self.total_wb_count
             self.right_frame_grid()
             self.total_wb_progress_start()
-            self.wb_progress_start()
+            # self.wb_progress_start()
 
     def total_wb_progress_start(self):
         if self.total_wb_start < self.total_wb_count:
-            self.total_wb_start += (self.total_wb_count * 0.02)
+            self.total_wb_start += (self.total_wb_count * 0.05)
             self.wb_total_progressbar['value'] = self.total_wb_start
             self.after(1, self.total_wb_progress_start)
         else:
             self.total_wb_count_text.set(str(self.total_wb_count))
+            self.wb_progress_start()
 
     def wb_progress_start(self):
         if self.wb_start < self.wb_count:
-            self.wb_start += (self.wb_count * 0.02)
+            self.wb_start += (self.wb_count * 0.05)
             self.wb_progressbar['value'] = self.wb_start
             self.after(1, self.wb_progress_start)
         else:
             self.wb_count_text.set(str(self.wb_count))
+            # Workbook list with view counts
+            self.view_list.pack(side=TOP, fill=BOTH, expand=True)
 
     def reset_metrics(self):
         self.total_wb_count = 0
         self.wb_count = 0
-        self.view_count = 0
         self.total_wb_start = 0
         self.wb_start = 0
         self.wb_desc_text.set('')
@@ -203,6 +210,7 @@ class Program(Tk):
         self.total_wb_count_text.set('')
         self.wb_progressbar['value'] = 0
         self.wb_total_progressbar['value'] = 0
+        self.view_list.delete(1.0, END)
 
     def toggle_fullscreen(self):
         if self.fs:
