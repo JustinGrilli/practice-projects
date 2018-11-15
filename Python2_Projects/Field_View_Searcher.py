@@ -5,6 +5,8 @@ from PIL import Image, ImageTk
 import xml.etree.cElementTree as ET
 import os
 import re
+from pprint import pprint
+import operator
 
 
 class Program(Tk):
@@ -31,6 +33,7 @@ class Program(Tk):
         self.wb_count = 0
         self.total_wb_start = 0
         self.wb_start = 0
+        self.sort_desc = True
 
         # Frames
         self.left_frame = Frame(self, bg=aa['main_bg'])
@@ -43,10 +46,11 @@ class Program(Tk):
         self.right_frame = Frame(self, bg=aa['sub_bg'], relief=SUNKEN)
         self.right_frame.pack(side=LEFT, fill=BOTH, expand=True)
         self.right_top_frame = Frame(self.right_frame, bg=aa['sub_bg'], relief=SUNKEN)
-        self.right_top_frame.pack(side=TOP, fill=BOTH)
         self.right_bottom_frame = Frame(self.right_frame, bg=aa['sub_bg'], relief=SUNKEN)
-        self.right_bottom_frame.pack(side=TOP, fill=BOTH, expand=True, pady=6, padx=4)
 
+        # Scrollbar / Canvas
+        self.right_top_canvas = Canvas(self.right_bottom_frame, bg=aa['sub_bg'], bd=0, highlightthickness=0, relief=RIDGE)
+        self.scrollbar = Scrollbar(self.right_bottom_frame, orient=VERTICAL)
 
         ba = {
             # Button Attributes
@@ -77,6 +81,9 @@ class Program(Tk):
         dir_image = Image.open('Images/blue_folder.png')
         dir_image = dir_image.resize((image_width, image_height), Image.ANTIALIAS)
         self.directory_image = ImageTk.PhotoImage(dir_image)
+        s_folder_image = Image.open('Images/search_folder.png')
+        s_folder_image = s_folder_image.resize((image_width, image_height), Image.ANTIALIAS)
+        self.search_folder_image = ImageTk.PhotoImage(s_folder_image)
         s_image = Image.open('Images/search.png')
         s_image = s_image.resize((image_width, image_height), Image.ANTIALIAS)
         self.search_image = ImageTk.PhotoImage(s_image)
@@ -94,6 +101,8 @@ class Program(Tk):
         self.toggle_fs_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.exit_button = Button(self.left_bottom_frame, image=self.quit_image, command=quit, fg=ba['fg_color'], bg=ba['bg_color'], font=ba['font'])
         self.exit_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
+        self.search_directory_button = Button(self.left_frame, image=self.search_folder_image, command=self.general_search, fg=ba['fg_color'], bg=ba['bg_color'], font=ba['font'])
+        self.search_directory_button.pack(side=TOP, padx=ba['padx'], pady=ba['pady'])
         # Search bar & button
         self.search_bar = Entry(self.left_top_frame, fg=ta['fg_color'], bg=ta['bg_color'], font=ta['font'], relief=SUNKEN)
         self.search_bar.pack(side=LEFT, fill=BOTH, expand=True, padx=ta['padx'], pady=ta['pady'])
@@ -113,28 +122,18 @@ class Program(Tk):
         # Progress Bars Style
         self.s = Style()
         self.s.theme_use('classic')
-        self.s.configure('blue.Horizontal.TProgressbar', troughcolor=aa['sub_bg'], background=aa['main_bg'], thickness=45)
+        self.s.configure('blue.Horizontal.TProgressbar', troughcolor=aa['sub_bg'], background=aa['main_bg'], thickness=30)
 
         # Right Frame Grid Components -- Labels and Progress Bars
         self.total_wb_desc_label = Label(self.right_top_frame, textvariable=self.total_wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=E)
-        self.wb_total_progressbar = Progressbar(self.right_top_frame, style='blue.Horizontal.TProgressbar', length=400)
+        self.wb_total_progressbar = Progressbar(self.right_top_frame, style='blue.Horizontal.TProgressbar', length=600)
         self.total_wb_count_label = Label(self.right_top_frame, textvariable=self.total_wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=W)
 
         self.wb_desc_label = Label(self.right_top_frame, textvariable=self.wb_desc_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=E)
-        self.wb_progressbar = Progressbar(self.right_top_frame, style='blue.Horizontal.TProgressbar', length=400)
+        self.wb_progressbar = Progressbar(self.right_top_frame, style='blue.Horizontal.TProgressbar', length=600)
         self.wb_count_label = Label(self.right_top_frame, textvariable=self.wb_count_text, fg=la['fg_color'], bg=la['bg_color'], font=la['font'], anchor=W)
 
-        self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg='skyblue1', fg=aa['main_bg'])
-
-        # Tooltips
-        # self.tooltips = Balloon(self)
-        # for sub in self.tooltips.subwidgets_all():  # Makes the tooltip background a specified color
-        #     sub.config(bg='white')
-        # self.tooltips.subwidget('label')['image'] = BitmapImage()  # Removes arrow in the top left corner
-        # self.tooltips.bind_widget(self.toggle_fs_button, balloonmsg='Fullscreen')
-        # self.tooltips.bind_widget(self.exit_button, balloonmsg='Exit')
-        # self.tooltips.bind_widget(self.locate_directory_button, balloonmsg='Locate views directory')
-        # self.tooltips.bind_widget(self.search_button, balloonmsg='Search')
+        self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg='skyblue1', fg=aa['main_bg'], yscrollcommand=self.scrollbar.set)
 
     def view_directory_locator(self):
         self.directory_location = tkFileDialog.askdirectory(title='Locate the folder that contains the views you would like to search')
@@ -145,6 +144,7 @@ class Program(Tk):
         :return: Will probably run other functions that do things like count the views with that field, count the workbooks, etc.
         """
         self.reset_metrics()
+        self.right_frame_forget()
 
         if self.directory_location != None and self.search_bar.get() != '':
             for the_file in os.listdir(self.directory_location):
@@ -178,7 +178,73 @@ class Program(Tk):
             self.wb_progressbar['maximum'] = self.total_wb_count
             self.right_frame_grid()
             self.total_wb_progress_start()
-            # self.wb_progress_start()
+
+    def general_search(self):
+        """ Used to search all workbooks in the directory for general stats, such as a list of all fields and how many times they are used.
+
+        :return:
+        """
+        self.reset_metrics()
+        self.right_frame_forget()
+        self.right_bottom_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
+        self.scrollbar.config(command=self.right_top_canvas.yview)
+        self.right_top_canvas.config(scrollregion=(0,0,500,500))
+        self.right_top_canvas.config(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.pack(side=RIGHT, fill=Y)
+        self.right_top_canvas.pack(side=LEFT)
+        sheet_count = 0
+        unique_fields = {}
+        if self.directory_location != None:
+            # Creates our dictionary of unique field names used in all workbooks
+            for the_file in os.listdir(self.directory_location):
+                if the_file.split('.')[-1] == 'twb':
+                    # set the path to the file
+                    path = self.directory_location + '/' + the_file
+                    # set the tree and root
+                    tree = ET.parse(path)
+                    root = tree.getroot()
+                    for column in root.iter('column-instance'):
+                        name = str(column.attrib.get('name'))
+                        regex = '\:.*?\:'
+                        for m in re.finditer(regex, name):
+                            field = str(m.group(0)).replace(':', '')
+                            if field not in unique_fields and 'Calculation_' not in field and '(copy' not in field:
+                                unique_fields[field] = 0
+            # Counts how many views each field is used in, in all workbooks
+            for the_file in os.listdir(self.directory_location):
+                if the_file.split('.')[-1] == 'twb':
+                    # set the path to the file
+                    path = self.directory_location + '/' + the_file
+                    # set the tree and root
+                    tree = ET.parse(path)
+                    root = tree.getroot()
+                    for sheet in root.iter("worksheet"):
+                        sheet_count += 1
+                    for k, v in unique_fields.items():
+                        for column in root.iter('column-instance'):
+                            name = str(column.attrib.get('name'))
+                            regex = '\:.*?\:'
+                            for m in re.finditer(regex, name):
+                                if k == str(m.group(0)).replace(':', ''):
+                                    unique_fields[k] = unique_fields[k] + 1
+            sorted_unique_dict = sorted(unique_fields.items(), key=operator.itemgetter(1), reverse=self.sort_desc)
+            row = 0
+            maximum = 0
+            for k, v in unique_fields.items():
+                if v >= maximum:
+                    maximum = v
+            for tup in sorted_unique_dict:
+                self.label = Label(self.right_top_canvas, text=tup[0], font='none 14 bold', bg='deepskyblue2', fg='deepskyblue4', anchor=E)
+                self.label.grid(row=row, column=0, sticky=N + S + E + W, pady=1)
+                self.bar = Progressbar(self.right_top_canvas, style='blue.Horizontal.TProgressbar', length=600)
+                self.bar['maximum'] = maximum
+                self.bar['value'] = tup[1]
+                self.bar.grid(row=row, column=1, sticky=N + S + E + W, pady=1)
+                self.label = Label(self.right_top_canvas, text=str(tup[1]), font='none 14 bold', bg='deepskyblue2', fg='deepskyblue4', anchor=W)
+                self.label.grid(row=row, column=2, sticky=N + S + E + W, pady=1)
+                row += 1
+
+            pprint(sorted_unique_dict)
 
     def total_wb_progress_start(self):
         if self.total_wb_start < self.total_wb_count:
@@ -220,6 +286,10 @@ class Program(Tk):
         self.attributes('-fullscreen', self.fs)
 
     def right_frame_grid(self):
+        self.right_top_frame.pack(side=TOP, fill=BOTH)
+        self.right_bottom_frame.pack(side=TOP, fill=BOTH, expand=True, pady=6, padx=4)
+        self.scrollbar.pack(side=RIGHT, fill=Y)
+        self.scrollbar.config(command=self.view_list.yview)
         # Row 0 - Total Workbooks
         self.total_wb_desc_label.grid(row=0, column=0, sticky=N + S + E + W)
         self.wb_total_progressbar.grid(row=0, column=1, sticky=N + S + E + W, padx=2, pady=2)
@@ -229,6 +299,22 @@ class Program(Tk):
         self.wb_desc_label.grid(row=1, column=0, sticky=N + S + E + W)
         self.wb_progressbar.grid(row=1, column=1, sticky=N + S + E + W, padx=2, pady=2)
         self.wb_count_label.grid(row=1, column=2, sticky=N + S + E + W)
+
+    def right_frame_forget(self):
+        self.view_list.pack_forget()
+        self.right_top_frame.pack_forget()
+        self.right_bottom_frame.pack_forget()
+        self.right_top_canvas.pack_forget()
+        self.scrollbar.pack_forget()
+        # Row 0 - Total Workbooks
+        self.total_wb_desc_label.grid_forget()
+        self.wb_total_progressbar.grid_forget()
+        self.total_wb_count_label.grid_forget()
+
+        # Row 1 - Workbooks with searched field
+        self.wb_desc_label.grid_forget()
+        self.wb_progressbar.grid_forget()
+        self.wb_count_label.grid_forget()
 
 
 app = Program()

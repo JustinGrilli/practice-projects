@@ -4,6 +4,7 @@
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/blue_folder.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python2_Projects/Images/blue_folder.png" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,19 +16,19 @@
     <session id="-1076126596">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="9" />
-          <entry key="project.open.time.0" value="4" />
-          <entry key="project.open.time.1" value="1" />
+          <entry key="project.closed" value="10" />
+          <entry key="project.open.time.0" value="5" />
+          <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.2" value="5" />
           <entry key="project.open.time.3" value="3" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="14" />
+          <entry key="project.opened" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="png" value="1" />
-          <entry key="py" value="53" />
+          <entry key="py" value="54" />
           <entry key="pyi" value="1" />
           <entry key="regular_expressions_testing" value="1" />
           <entry key="txt" value="4" />
@@ -37,7 +38,7 @@
         <counts>
           <entry key="Image" value="1" />
           <entry key="PLAIN_TEXT" value="4" />
-          <entry key="Python" value="54" />
+          <entry key="Python" value="55" />
           <entry key="PythonStub" value="1" />
         </counts>
       </usages-collector>
@@ -45,14 +46,14 @@
         <counts>
           <entry key="Python Console" value="12" />
           <entry key="dummy" value="18" />
-          <entry key="py" value="14440" />
+          <entry key="py" value="16172" />
           <entry key="regular_expressions_testing" value="310" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="18" />
-          <entry key="Python" value="14762" />
+          <entry key="Python" value="16494" />
         </counts>
       </usages-collector>
     </session>
@@ -93,8 +94,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="565">
-              <caret line="66" selection-start-line="66" selection-end-line="66" />
+            <state relative-caret-position="276">
+              <caret line="70" column="159" selection-start-line="70" selection-start-column="154" selection-end-line="70" selection-end-column="159" />
             </state>
           </provider>
         </entry>
@@ -102,8 +103,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="169" column="111" lean-forward="true" selection-start-line="169" selection-start-column="111" selection-end-line="169" selection-end-column="111" />
+            <state relative-caret-position="-2272">
+              <caret line="188" column="45" selection-start-line="188" selection-start-column="45" selection-end-line="188" selection-end-column="45" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="287">
+              <caret line="1945" column="23" selection-start-line="1945" selection-start-column="23" selection-end-line="1945" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -119,14 +132,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>progress</find>
-      <find>font</find>
-      <find>askdir</find>
-      <find>=ba</find>
-      <find>button_frame</find>
-      <find>search_bar_frame</find>
-      <find>re.s</find>
-      <find>image</find>
       <find>bg_color</find>
       <find>right_top_left_frame</find>
       <find>right_top_frame</find>
@@ -149,6 +154,14 @@
       <find>order_id</find>
       <find>inser</find>
       <find>right_frame</find>
+      <find>job_type</find>
+      <find>text_scrollbar</find>
+      <find>scrol</find>
+      <find>scroll</find>
+      <find>400</find>
+      <find>canvas_scrollbar</find>
+      <find>master</find>
+      <find>scrollbar</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -359,15 +372,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12908325" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12884161" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32939914" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3969957" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.29095164" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -500,13 +513,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="56694">
-          <caret line="2577" column="8" selection-start-line="2577" selection-start-column="8" selection-end-line="2577" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Games/rock_paper_scissors.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-378">
@@ -523,15 +529,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="565">
-          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        <state relative-caret-position="276">
+          <caret line="70" column="159" selection-start-line="70" selection-start-column="154" selection-end-line="70" selection-end-column="159" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="1945" column="23" selection-start-line="1945" selection-start-column="23" selection-end-line="1945" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="169" column="111" lean-forward="true" selection-start-line="169" selection-start-column="111" selection-end-line="169" selection-end-column="111" />
+        <state relative-caret-position="-2272">
+          <caret line="188" column="45" selection-start-line="188" selection-start-column="45" selection-end-line="188" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
