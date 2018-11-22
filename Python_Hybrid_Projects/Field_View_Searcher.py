@@ -48,7 +48,7 @@ class Program(Tk):
         self.config(bg=self.default_colors['sub_bg'])
         self.iconbitmap('Images/search.ico')
 
-        self.directory_location = None
+        self.directory_location = os.path.join(os.environ.get("TABLEAU_PATH"), 'workbooks')
         self.tree = None
         self.root = None
         self.total_wb_count = 0
@@ -61,7 +61,12 @@ class Program(Tk):
         self.view_start = 0
 
         # Frames
-        self.left_frame = Frame(self, bg=self.default_colors['main_bg'])
+        self.top_frame = Frame(self)
+        self.top_frame.pack(side=TOP, expand=True, fill=BOTH)
+        self.bottom_frame = Frame(self, bg=self.default_colors['main_bg'])
+        self.bottom_frame.pack(side=TOP, expand=False, fill=X)
+
+        self.left_frame = Frame(self.top_frame, bg=self.default_colors['main_bg'])
         self.left_frame.pack(side=LEFT, fill=Y)
         self.left_top_frame = Frame(self.left_frame, bg=self.default_colors['main_bg'])
         self.left_top_frame.pack(side=TOP, fill=BOTH)
@@ -70,10 +75,11 @@ class Program(Tk):
         self.left_bottom_frame = Frame(self.left_frame, bg=self.default_colors['main_bg'])
         self.left_bottom_frame.pack(side=BOTTOM, fill=BOTH)
 
-        self.right_frame = Frame(self, bg=self.default_colors['sub_bg'], relief=SUNKEN, height=self.frame_height)
+        self.right_frame = Frame(self.top_frame, bg=self.default_colors['sub_bg'], relief=SUNKEN)
         self.right_frame.pack(side=LEFT, fill=BOTH, expand=True)
         self.right_top_frame = Frame(self.right_frame, bg=self.default_colors['sub_bg'], relief=SUNKEN)
-        self.right_bottom_frame = Frame(self.right_frame, bg=self.default_colors['sub_bg'], relief=SUNKEN, height=self.frame_height)
+        self.right_bottom_frame = Frame(self.right_frame, bg=self.default_colors['sub_bg'], relief=SUNKEN)
+
 
         # Scrollbar / Canvas
         self.right_top_canvas = Canvas(self.right_bottom_frame, bg=self.default_colors['sub_bg'], bd=0, highlightthickness=0, relief=RIDGE)
@@ -195,8 +201,13 @@ class Program(Tk):
         self.view_list = Text(self.right_bottom_frame, font=la['font'], bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['fg'])
         self.bind_class("Text", hotkeys['Select All Text'], self.select_all)
 
+        self.dir_status_text = StringVar()
+        self.dir_status_text.set('View Folder Selected: '+str(self.directory_location))
+        self.current_dir_status = Label(self.bottom_frame, bg=self.default_colors['main_bg'], fg=self.default_colors['fg'], font=la['font'], textvariable=self.dir_status_text)
+        self.current_dir_status.pack(side=BOTTOM)
+
     def canvas_dim(self, *args):
-        self.right_top_canvas.configure(scrollregion=self.right_top_canvas.bbox("all"), width=self.right_top_canvas.winfo_screenwidth(), height=self.right_top_canvas.winfo_screenheight())
+        self.right_top_canvas.configure(scrollregion=self.right_top_canvas.bbox("all"), width=self.right_top_canvas.winfo_screenwidth(), height=(self.winfo_screenheight()-20))
 
     def select_all(self, *args):
         """Select all text in the text widget"""
@@ -204,6 +215,7 @@ class Program(Tk):
 
     def view_directory_locator(self, *args):
         self.directory_location = tkFileDialog.askdirectory(title='Locate the folder that contains the views you would like to search')
+        self.dir_status_text.set('View Folder Selected: '+str(self.directory_location))
 
     def search_views(self, *args):
         """ Will be used to search the directory's workbooks for the field written in the search bar.
