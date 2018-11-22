@@ -10,7 +10,6 @@ except ModuleNotFoundError:
     from tkinter.ttk import Progressbar, Style
     import tkinter.filedialog as tkFileDialog
 from PIL import Image, ImageTk
-from pprint import pprint
 import xml.etree.cElementTree as ET, os, re, operator
 
 
@@ -310,7 +309,6 @@ class Program(Tk):
                 self.bar_count = Label(self.canvas_frame, text=str(tup[1]), font='none 12 bold', bg=self.default_colors['sub_bg'], fg=self.default_colors['fg'], anchor=W)
                 self.bar_count.grid(row=row, column=2, sticky=N + S + E + W, pady=1)
                 row += 1
-            pprint(sorted_unique_fields)
 
     def total_wb_progress_start(self):
         if self.total_wb_start < self.total_wb_count:
