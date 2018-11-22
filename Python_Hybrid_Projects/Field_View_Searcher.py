@@ -20,9 +20,9 @@ class Program(Tk):
 
         self.default_colors = {
             # The common colors used throughout the application
-            'main_bg': '#%02x%02x%02x' % (23, 46, 71),
-            'sub_bg': '#%02x%02x%02x' % (39, 78, 119),
-            'sub_sub_bg': '#%02x%02x%02x' % (62, 123, 188),
+            'main_bg': '#%02x%02x%02x' % (43, 53, 68),
+            'sub_bg': '#%02x%02x%02x' % (62, 77, 99),
+            'sub_sub_bg': '#%02x%02x%02x' % (83, 103, 132),
             'fg': '#%02x%02x%02x' % (255, 255, 255)
         }
         """
@@ -192,7 +192,7 @@ class Program(Tk):
         self.view_progressbar = Progressbar(self.right_top_frame, style='blue.Horizontal.TProgressbar', length=600)
         self.view_count_label = Label(self.right_top_frame, textvariable=self.view_count_text, fg=self.default_colors['fg'], bg=self.default_colors['sub_bg'], font=la['font'], anchor=W)
 
-        self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'])
+        self.view_list = Text(self.right_bottom_frame, font=la['font'], bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['fg'])
         self.bind_class("Text", hotkeys['Select All Text'], self.select_all)
 
     def canvas_dim(self, *args):
