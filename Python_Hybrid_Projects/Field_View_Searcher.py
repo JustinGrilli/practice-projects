@@ -26,12 +26,27 @@ class Program(Tk):
             'sub_sub_bg': '#%02x%02x%02x' % (62, 123, 188),
             'fg': '#%02x%02x%02x' % (255, 255, 255)
         }
+        """
+        The speed that the bars fill is different when using python 2 vs python 3.
+        This is an attempt to make them more similar.
+        """
+        if int(sys.version[0]) == 2:
+            self.bar_animation = {
+                'speed': 3,
+                'rate': 0.05
+            }
+        else:
+            self.bar_animation = {
+                'speed': 3,
+                'rate': 0.02
+            }
         self.fs = False
         self.title('Field View Searcher')
         self.geometry(str(int(self.winfo_screenwidth()*0.8)) + 'x' + str(int(self.winfo_screenheight()*0.8)))
         self.attributes('-fullscreen', self.fs)  # Fullscreen the program
         # self.state('zoomed')  # Maximize the program
         self.config(bg=self.default_colors['sub_bg'])
+        self.iconbitmap('Images/search.ico')
 
         self.directory_location = None
         self.tree = None
@@ -273,7 +288,10 @@ class Program(Tk):
                                 unique_fields[field] = 1
             sorted_unique_fields = sorted(unique_fields.items(), key=operator.itemgetter(1), reverse=self.var.get())
             row = 0
-            max_bar_value = max(unique_fields.items(), key=operator.itemgetter(1))[1]
+            try:
+                max_bar_value = max(unique_fields.viewvalues())
+            except AttributeError:
+                max_bar_value = max(unique_fields.values())
             # Creates the bar visual for the list of fields and their view counts
             for tup in sorted_unique_fields:
                 self.bar_field = Label(self.right_top_canvas, text=tup[0], font='none 12 bold', bg=self.default_colors['sub_bg'], fg=self.default_colors['fg'], anchor=E)
@@ -290,36 +308,36 @@ class Program(Tk):
 
     def total_wb_progress_start(self):
         if self.total_wb_start < self.total_wb_count:
-            self.total_wb_start += (self.total_wb_count * 0.02)
+            self.total_wb_start += (self.total_wb_count * self.bar_animation['rate'])
             self.wb_total_progressbar['value'] = self.total_wb_start
-            self.after(3, self.total_wb_progress_start)
+            self.after(self.bar_animation['speed'], self.total_wb_progress_start)
         else:
             self.total_wb_count_text.set(str(self.total_wb_count))
             self.wb_progress_start()
 
     def wb_progress_start(self):
         if self.wb_start < self.wb_count:
-            self.wb_start += (self.wb_count * 0.02)
+            self.wb_start += (self.wb_count * self.bar_animation['rate'])
             self.wb_progressbar['value'] = self.wb_start
-            self.after(3, self.wb_progress_start)
+            self.after(self.bar_animation['speed'], self.wb_progress_start)
         else:
             self.wb_count_text.set(str(self.wb_count))
             self.total_view_progress_start()
 
     def total_view_progress_start(self):
         if self.total_view_start < self.total_view_count:
-            self.total_view_start += (self.total_view_count * 0.02)
+            self.total_view_start += (self.total_view_count * self.bar_animation['rate'])
             self.total_view_progressbar['value'] = self.total_view_start
-            self.after(3, self.total_view_progress_start)
+            self.after(self.bar_animation['speed'], self.total_view_progress_start)
         else:
             self.total_view_count_text.set(str(self.total_view_count))
             self.view_progress_start()
 
     def view_progress_start(self):
         if self.view_start < self.view_count:
-            self.view_start += (self.view_count * 0.02)
+            self.view_start += (self.view_count * self.bar_animation['rate'])
             self.view_progressbar['value'] = self.view_start
-            self.after(3, self.view_progress_start)
+            self.after(self.bar_animation['speed'], self.view_progress_start)
         else:
             self.view_count_text.set(str(self.view_count))
             # Workbook list with view counts

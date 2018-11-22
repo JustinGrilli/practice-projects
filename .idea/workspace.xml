@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Work.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Work.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/blue_folder.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/blue_folder.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/fullscreen.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/fullscreen.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/quit.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/quit.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/search.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/search.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/search_folder.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/search_folder.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,8 +25,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="606">
-              <caret line="342" column="18" lean-forward="true" selection-start-line="342" selection-start-column="18" selection-end-line="342" selection-end-column="18" />
+            <state relative-caret-position="418">
+              <caret line="30" column="53" lean-forward="true" selection-start-line="30" selection-start-column="53" selection-end-line="30" selection-end-column="53" />
               <folding>
                 <element signature="e#9#93#0" />
                 <element signature="e#106#220#0" />
@@ -53,8 +46,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>view_progressbar</find>
-      <find>always_0</find>
       <find>workbook_count_text</find>
       <find>view_count_text</find>
       <find>workbook_count</find>
@@ -83,6 +74,8 @@
       <find>aa</find>
       <find>0.05</find>
       <find>after(1</find>
+      <find>after(3</find>
+      <find>0.02</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -106,6 +99,7 @@
         <option value="$PROJECT_DIR$/Python2_Projects/max_dict_value.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" />
         <option value="$PROJECT_DIR$/Field_View_Searcher.py" />
+        <option value="$PROJECT_DIR$/playing_with_dicts.py" />
         <option value="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" />
       </list>
     </option>
@@ -128,6 +122,17 @@
             <path>
               <item name="Work" type="b2602c69:ProjectViewProjectNode" />
               <item name="Work" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Work" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Work" type="462c0819:PsiDirectoryNode" />
+              <item name="Python_Hybrid_Projects" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Work" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Work" type="462c0819:PsiDirectoryNode" />
+              <item name="Python_Hybrid_Projects" type="462c0819:PsiDirectoryNode" />
+              <item name="Images" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -244,7 +249,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="testing_snake_case" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="playing_with_dicts" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -252,11 +257,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python2_Projects" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/testing_snake_case.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/playing_with_dicts.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -267,14 +272,15 @@
     </configuration>
     <list>
       <item itemvalue="Python.Field_View_Searcher" />
-      <item itemvalue="Python.testing_snake_case" />
       <item itemvalue="Python.max_dict_value" />
       <item itemvalue="Python.Field_View_Searcher (1)" />
       <item itemvalue="Python.Field_View_Searcher (2)" />
+      <item itemvalue="Python.playing_with_dicts" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.Field_View_Searcher (2)" />
+        <item itemvalue="Python.playing_with_dicts" />
         <item itemvalue="Python.Field_View_Searcher (1)" />
         <item itemvalue="Python.Field_View_Searcher" />
         <item itemvalue="Python.max_dict_value" />
@@ -469,10 +475,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/454874874/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="529" column="4" selection-start-line="529" selection-start-column="4" selection-end-line="529" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playing_with_dicts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="56" selection-start-line="6" selection-start-column="56" selection-end-line="6" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="606">
-          <caret line="342" column="18" lean-forward="true" selection-start-line="342" selection-start-column="18" selection-end-line="342" selection-end-column="18" />
+        <state relative-caret-position="418">
+          <caret line="30" column="53" lean-forward="true" selection-start-line="30" selection-start-column="53" selection-end-line="30" selection-end-column="53" />
           <folding>
             <element signature="e#9#93#0" />
             <element signature="e#106#220#0" />
