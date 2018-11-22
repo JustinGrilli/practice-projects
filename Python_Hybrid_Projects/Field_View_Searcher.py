@@ -226,7 +226,7 @@ class Program(Tk):
         self.reset_metrics()
         self.right_frame_forget()
 
-        if self.directory_location != None and self.search_bar.get() != '':
+        if self.directory_location != None and self.directory_location != '' and self.search_bar.get() != '':
             for the_file in os.listdir(self.directory_location):
                 if the_file.split('.')[-1] == 'twb':
                     # set the path to the file
@@ -277,7 +277,7 @@ class Program(Tk):
         self.reset_metrics()
         self.right_frame_forget()
 
-        if self.directory_location != None:
+        if self.directory_location != None and self.directory_location != '':
             sheet_count = 0
             unique_fields = {}
             self.right_bottom_frame.pack(side=BOTTOM, fill=BOTH)
