@@ -62,8 +62,8 @@ class Program(Tk):
             'font': 'none 12 bold',
             'bg_color': 'white'
         }
-        ta = {
-            # Text Attributes
+        ea = {
+            # Entry Attributes -- Search bar
             'padx': 2,
             'pady': 4,
             'font': 'none 12',
@@ -74,8 +74,7 @@ class Program(Tk):
             # Label Attributes
             'padx': 2,
             'pady': 4,
-            'font': 'none 12 bold',
-            'fg_color': 'white'
+            'font': 'none 12 bold'
         }
         # Images
         image_width, image_height = 35, 35
@@ -102,17 +101,19 @@ class Program(Tk):
         self.toggle_fs_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.exit_button = Button(self.left_bottom_frame, image=self.quit_image, command=quit, bg=ba['bg_color'], font=ba['font'])
         self.exit_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
-        self.search_directory_button = Button(self.left_top_frame1, image=self.search_folder_image, command=self.general_search, bg=ba['bg_color'], font=ba['font'])
+        self.search_directory_button = Button(self.left_top_frame, image=self.search_folder_image, command=self.general_search, bg=ba['bg_color'], font=ba['font'])
         self.search_directory_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.var = BooleanVar()
         self.var.set(True)
-        self.sort_toggle_button = Checkbutton(self.left_top_frame1, text='Descending', variable=self.var, bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], font=la['font'])
+        self.sort_toggle_button = Checkbutton(self.left_top_frame, text='Descending', variable=self.var, bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], font=la['font'])
         self.sort_toggle_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         # Search bar & button
-        self.search_bar = Entry(self.left_top_frame, fg=ta['fg_color'], bg=ta['bg_color'], font=ta['font'], relief=SUNKEN)
-        self.search_bar.pack(side=LEFT, fill=BOTH, expand=True, padx=ta['padx'], pady=ta['pady'])
-        self.search_button = Button(self.left_top_frame, image=self.search_image, command=self.search_views, bg=ba['bg_color'], font=ba['font'])
+        self.search_bar = Entry(self.left_top_frame1, fg=ea['fg_color'], bg=ea['bg_color'], font=ea['font'], relief=SUNKEN)
+        self.search_bar.pack(side=LEFT, fill=BOTH, expand=True, padx=ea['padx'], pady=ea['pady'])
+        self.search_button = Button(self.left_top_frame1, image=self.search_image, command=self.search_views, bg=ba['bg_color'], font=ba['font'])
         self.search_button.pack(side=RIGHT, padx=ba['padx'], pady=ba['pady'])
+        self.bind('<Control-o>', self.view_directory_locator)
+        self.search_bar.bind('<Return>', self.search_views)
 
         # Label Text
         self.wb_count_text = StringVar()
@@ -155,11 +156,16 @@ class Program(Tk):
         self.view_count_label = Label(self.right_top_frame, textvariable=self.view_count_text, fg=self.default_colors['fg'], bg=self.default_colors['sub_bg'], font=la['font'], anchor=W)
 
         self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], yscrollcommand=self.scrollbar.set)
+        self.bind_class("Text", "<Control-a>", self.select_all)
 
-    def view_directory_locator(self):
+    def select_all(self, *args):
+        """Select all text in the text widget"""
+        self.view_list.tag_add('sel', '1.0', 'end')
+
+    def view_directory_locator(self, *args):
         self.directory_location = tkFileDialog.askdirectory(title='Locate the folder that contains the views you would like to search')
 
-    def search_views(self):
+    def search_views(self, *args):
         """ Will be used to search the directory's workbooks for the field written in the search bar.
 
         :return: Will probably run other functions that do things like count the views with that field, count the workbooks, etc.
