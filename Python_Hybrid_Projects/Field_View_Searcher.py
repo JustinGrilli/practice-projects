@@ -42,7 +42,8 @@ class Program(Tk):
             }
         self.fs = False
         self.title('Field View Searcher')
-        self.geometry(str(int(self.winfo_screenwidth()*0.8)) + 'x' + str(int(self.winfo_screenheight()*0.8)))
+        self.frame_width, self.frame_height = int(self.winfo_screenwidth()*0.8), int(self.winfo_screenheight()*0.8)
+        self.geometry(str(self.frame_width) + 'x' + str(self.frame_height))
         self.attributes('-fullscreen', self.fs)  # Fullscreen the program
         # self.state('zoomed')  # Maximize the program
         self.config(bg=self.default_colors['sub_bg'])
@@ -70,14 +71,17 @@ class Program(Tk):
         self.left_bottom_frame = Frame(self.left_frame, bg=self.default_colors['main_bg'])
         self.left_bottom_frame.pack(side=BOTTOM, fill=BOTH)
 
-        self.right_frame = Frame(self, bg=self.default_colors['sub_bg'], relief=SUNKEN)
+        self.right_frame = Frame(self, bg=self.default_colors['sub_bg'], relief=SUNKEN, height=self.frame_height)
         self.right_frame.pack(side=LEFT, fill=BOTH, expand=True)
         self.right_top_frame = Frame(self.right_frame, bg=self.default_colors['sub_bg'], relief=SUNKEN)
-        self.right_bottom_frame = Frame(self.right_frame, bg=self.default_colors['sub_bg'], relief=SUNKEN)
+        self.right_bottom_frame = Frame(self.right_frame, bg=self.default_colors['sub_bg'], relief=SUNKEN, height=self.frame_height)
 
         # Scrollbar / Canvas
-        self.right_top_canvas = Canvas(self.right_bottom_frame, bg=self.default_colors['sub_bg'], bd=0, highlightthickness=0, relief=RIDGE, scrollregion=(0, 0, 500, 500))
+        self.right_top_canvas = Canvas(self.right_bottom_frame, bg=self.default_colors['sub_bg'], bd=0, highlightthickness=0, relief=RIDGE)
+        self.canvas_frame = Frame(self.right_top_canvas, bg=self.default_colors['sub_bg'])
         self.scrollbar = Scrollbar(self.right_bottom_frame, orient=VERTICAL)
+        self.right_top_canvas.create_window((0, 0), window=self.canvas_frame, anchor=NW)
+        self.canvas_frame.bind('<Configure>', self.canvas_dim)
 
         hotkeys = {
             # Keyboard shortcuts
@@ -192,6 +196,9 @@ class Program(Tk):
         self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'])
         self.bind_class("Text", hotkeys['Select All Text'], self.select_all)
 
+    def canvas_dim(self, *args):
+        self.right_top_canvas.configure(scrollregion=self.right_top_canvas.bbox("all"), width=self.right_top_canvas.winfo_screenwidth(), height=self.right_top_canvas.winfo_screenheight())
+
     def select_all(self, *args):
         """Select all text in the text widget"""
         self.view_list.tag_add('sel', '1.0', 'end')
@@ -294,16 +301,15 @@ class Program(Tk):
                 max_bar_value = max(unique_fields.values())
             # Creates the bar visual for the list of fields and their view counts
             for tup in sorted_unique_fields:
-                self.bar_field = Label(self.right_top_canvas, text=tup[0], font='none 12 bold', bg=self.default_colors['sub_bg'], fg=self.default_colors['fg'], anchor=E)
+                self.bar_field = Label(self.canvas_frame, text=tup[0], font='none 12 bold', bg=self.default_colors['sub_bg'], fg=self.default_colors['fg'], anchor=E)
                 self.bar_field.grid(row=row, column=0, sticky=N + S + E + W, pady=1)
-                self.bar = Progressbar(self.right_top_canvas, style='blue.Horizontal.TProgressbar', length=600)
+                self.bar = Progressbar(self.canvas_frame, style='blue.Horizontal.TProgressbar', length=600)
                 self.bar['maximum'] = max_bar_value
                 self.bar['value'] = tup[1]
                 self.bar.grid(row=row, column=1, sticky=N + S + E + W, pady=1)
-                self.bar_count = Label(self.right_top_canvas, text=str(tup[1]), font='none 12 bold', bg=self.default_colors['sub_bg'], fg=self.default_colors['fg'], anchor=W)
+                self.bar_count = Label(self.canvas_frame, text=str(tup[1]), font='none 12 bold', bg=self.default_colors['sub_bg'], fg=self.default_colors['fg'], anchor=W)
                 self.bar_count.grid(row=row, column=2, sticky=N + S + E + W, pady=1)
                 row += 1
-
             pprint(sorted_unique_fields)
 
     def total_wb_progress_start(self):
