@@ -1,8 +1,17 @@
-from Tkinter import *
-from ttk import Progressbar, Style
+"""
+This Program should work with both Python 2 and Python 3
+"""
+try:
+    from Tkinter import *
+    from ttk import Progressbar, Style
+    import tkFileDialog
+except ModuleNotFoundError:
+    from tkinter import *
+    from tkinter.ttk import Progressbar, Style
+    import tkinter.filedialog as tkFileDialog
 from PIL import Image, ImageTk
 from pprint import pprint
-import xml.etree.cElementTree as ET, os, re, operator, tkFileDialog
+import xml.etree.cElementTree as ET, os, re, operator
 
 
 class Program(Tk):
@@ -54,7 +63,7 @@ class Program(Tk):
         # Scrollbar / Canvas
         self.right_top_canvas = Canvas(self.right_bottom_frame, bg=self.default_colors['sub_bg'], bd=0, highlightthickness=0, relief=RIDGE, scrollregion=(0, 0, 500, 500))
         self.scrollbar = Scrollbar(self.right_bottom_frame, orient=VERTICAL)
-        
+
         hotkeys = {
             # Keyboard shortcuts
             'Fullscreen': '<F2>',
@@ -165,7 +174,7 @@ class Program(Tk):
         self.view_progressbar = Progressbar(self.right_top_frame, style='blue.Horizontal.TProgressbar', length=600)
         self.view_count_label = Label(self.right_top_frame, textvariable=self.view_count_text, fg=self.default_colors['fg'], bg=self.default_colors['sub_bg'], font=la['font'], anchor=W)
 
-        self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], yscrollcommand=self.scrollbar.set)
+        self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'])
         self.bind_class("Text", hotkeys['Select All Text'], self.select_all)
 
     def select_all(self, *args):
@@ -264,7 +273,7 @@ class Program(Tk):
                                 unique_fields[field] = 1
             sorted_unique_fields = sorted(unique_fields.items(), key=operator.itemgetter(1), reverse=self.var.get())
             row = 0
-            max_bar_value = max(unique_fields.iteritems(), key=operator.itemgetter(1))[1]
+            max_bar_value = max(unique_fields.items(), key=operator.itemgetter(1))[1]
             # Creates the bar visual for the list of fields and their view counts
             for tup in sorted_unique_fields:
                 self.bar_field = Label(self.right_top_canvas, text=tup[0], font='none 12 bold', bg=self.default_colors['sub_bg'], fg=self.default_colors['fg'], anchor=E)
@@ -281,39 +290,40 @@ class Program(Tk):
 
     def total_wb_progress_start(self):
         if self.total_wb_start < self.total_wb_count:
-            self.total_wb_start += (self.total_wb_count * 0.05)
+            self.total_wb_start += (self.total_wb_count * 0.02)
             self.wb_total_progressbar['value'] = self.total_wb_start
-            self.after(1, self.total_wb_progress_start)
+            self.after(3, self.total_wb_progress_start)
         else:
             self.total_wb_count_text.set(str(self.total_wb_count))
             self.wb_progress_start()
 
     def wb_progress_start(self):
         if self.wb_start < self.wb_count:
-            self.wb_start += (self.wb_count * 0.05)
+            self.wb_start += (self.wb_count * 0.02)
             self.wb_progressbar['value'] = self.wb_start
-            self.after(1, self.wb_progress_start)
+            self.after(3, self.wb_progress_start)
         else:
             self.wb_count_text.set(str(self.wb_count))
             self.total_view_progress_start()
 
     def total_view_progress_start(self):
         if self.total_view_start < self.total_view_count:
-            self.total_view_start += (self.total_view_count * 0.05)
+            self.total_view_start += (self.total_view_count * 0.02)
             self.total_view_progressbar['value'] = self.total_view_start
-            self.after(1, self.total_view_progress_start)
+            self.after(3, self.total_view_progress_start)
         else:
             self.total_view_count_text.set(str(self.total_view_count))
             self.view_progress_start()
 
     def view_progress_start(self):
         if self.view_start < self.view_count:
-            self.view_start += (self.view_count * 0.05)
+            self.view_start += (self.view_count * 0.02)
             self.view_progressbar['value'] = self.view_start
-            self.after(1, self.view_progress_start)
+            self.after(3, self.view_progress_start)
         else:
             self.view_count_text.set(str(self.view_count))
             # Workbook list with view counts
+            self.view_list.config(yscrollcommand=self.scrollbar.set)
             self.view_list.pack(side=TOP, fill=BOTH, expand=True)
 
     def reset_metrics(self):
@@ -326,11 +336,17 @@ class Program(Tk):
         self.view_count = 0
         self.view_start = 0
         self.wb_desc_text.set('')
-        self.total_wb_desc_text.set('')
         self.wb_count_text.set('')
+        self.total_wb_desc_text.set('')
         self.total_wb_count_text.set('')
+        self.view_desc_text.set('')
+        self.view_count_text.set('')
+        self.total_view_desc_text.set('')
+        self.total_view_count_text.set('')
         self.wb_progressbar['value'] = 0
         self.wb_total_progressbar['value'] = 0
+        self.view_progressbar['value'] = 0
+        self.total_view_progressbar['value'] = 0
         self.view_list.delete(1.0, END)
 
     def toggle_fullscreen(self, *args):

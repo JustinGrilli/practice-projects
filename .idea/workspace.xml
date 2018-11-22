@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Work.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Work.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/blue_folder.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/blue_folder.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/fullscreen.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/fullscreen.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/quit.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/quit.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/search.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/search.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python2_Projects/Images/search_folder.png" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Images/search_folder.png" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,22 +30,14 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
+        <entry file="file://$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="57" column="32" selection-start-line="57" selection-start-column="32" selection-end-line="57" selection-end-column="32" />
+            <state relative-caret-position="606">
+              <caret line="342" column="18" lean-forward="true" selection-start-line="342" selection-start-column="18" selection-end-line="342" selection-end-column="18" />
               <folding>
-                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#9#93#0" />
+                <element signature="e#106#220#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42790">
-              <caret line="1945" column="23" selection-start-line="1945" selection-start-column="23" selection-end-line="1945" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -53,8 +53,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>progre</find>
-      <find>wb_progressbar</find>
       <find>view_progressbar</find>
       <find>always_0</find>
       <find>workbook_count_text</find>
@@ -83,6 +81,8 @@
       <find>deepskyblue3</find>
       <find>deepskyblue4</find>
       <find>aa</find>
+      <find>0.05</find>
+      <find>after(1</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -101,11 +101,12 @@
         <option value="$PROJECT_DIR$/Python2_Projects/tkinter_text_coloring.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/odahfbghosdng.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py" />
-        <option value="$PROJECT_DIR$/Field_View_Searcher.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/testing_snake_case.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/testing.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/max_dict_value.py" />
         <option value="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" />
+        <option value="$PROJECT_DIR$/Field_View_Searcher.py" />
+        <option value="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" />
       </list>
     </option>
   </component>
@@ -128,11 +129,6 @@
               <item name="Work" type="b2602c69:ProjectViewProjectNode" />
               <item name="Work" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Work" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Work" type="462c0819:PsiDirectoryNode" />
-              <item name="Python2_Projects" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -146,6 +142,8 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Justango\Documents\Work\Python_Hybrid_Projects" />
+      <recent name="C:\Users\Justango\Documents\Work" />
       <recent name="C:\Users\Hover\Documents\Work\Python2_Projects" />
     </key>
   </component>
@@ -161,7 +159,49 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Field_View_Searcher">
+  <component name="RunManager" selected="Python.Field_View_Searcher (2)">
+    <configuration name="Field_View_Searcher (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Work" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\Justango\Documents\Work\Python_Hybrid_Projects\Field_View_Searcher.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Field_View_Searcher (2)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Work" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python_Hybrid_Projects" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Field_View_Searcher" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -174,28 +214,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="life_simulator" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Work" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python2_Projects" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/life_simulator.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Justango\Documents\Work\Python_Hybrid_Projects\Field_View_Searcher.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -217,27 +236,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/max_dict_value.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="testing" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Work" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python2_Projects" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/testing.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -269,13 +267,15 @@
     </configuration>
     <list>
       <item itemvalue="Python.Field_View_Searcher" />
-      <item itemvalue="Python.life_simulator" />
-      <item itemvalue="Python.testing" />
       <item itemvalue="Python.testing_snake_case" />
       <item itemvalue="Python.max_dict_value" />
+      <item itemvalue="Python.Field_View_Searcher (1)" />
+      <item itemvalue="Python.Field_View_Searcher (2)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Field_View_Searcher (2)" />
+        <item itemvalue="Python.Field_View_Searcher (1)" />
         <item itemvalue="Python.Field_View_Searcher" />
         <item itemvalue="Python.max_dict_value" />
       </list>
@@ -455,13 +455,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42790">
-          <caret line="1945" column="23" selection-start-line="1945" selection-start-column="23" selection-end-line="1945" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/-762174762/__builtin__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
@@ -469,12 +462,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
+    <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="57" column="32" selection-start-line="57" selection-start-column="32" selection-end-line="57" selection-end-column="32" />
+        <state relative-caret-position="304">
+          <caret line="2108" column="6" selection-start-line="2108" selection-start-column="6" selection-end-line="2108" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="606">
+          <caret line="342" column="18" lean-forward="true" selection-start-line="342" selection-start-column="18" selection-end-line="342" selection-end-column="18" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#9#93#0" />
+            <element signature="e#106#220#0" />
           </folding>
         </state>
       </provider>
