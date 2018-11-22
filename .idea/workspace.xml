@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2530">
-              <caret line="115" column="59" lean-forward="true" selection-start-line="115" selection-start-column="59" selection-end-line="115" selection-end-column="59" />
+            <state relative-caret-position="348">
+              <caret line="106" column="29" selection-start-line="106" selection-start-column="29" selection-end-line="106" selection-end-column="29" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -472,8 +471,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Field_View_Searcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2530">
-          <caret line="115" column="59" lean-forward="true" selection-start-line="115" selection-start-column="59" selection-end-line="115" selection-end-column="59" />
+        <state relative-caret-position="348">
+          <caret line="106" column="29" selection-start-line="106" selection-start-column="29" selection-end-line="106" selection-end-column="29" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>

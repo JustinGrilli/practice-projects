@@ -99,10 +99,12 @@ class Program(Tk):
         self.locate_directory_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.toggle_fs_button = Button(self.left_bottom_frame, image=self.fullscreen_image, command=self.toggle_fullscreen, bg=ba['bg_color'], font=ba['font'])
         self.toggle_fs_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
+        self.bind('<F2>', self.toggle_fullscreen)
         self.exit_button = Button(self.left_bottom_frame, image=self.quit_image, command=quit, bg=ba['bg_color'], font=ba['font'])
         self.exit_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.search_directory_button = Button(self.left_top_frame, image=self.search_folder_image, command=self.general_search, bg=ba['bg_color'], font=ba['font'])
         self.search_directory_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
+        self.bind('<Control-s>', self.general_search)
         self.var = BooleanVar()
         self.var.set(True)
         self.sort_toggle_button = Checkbutton(self.left_top_frame, text='Descending', variable=self.var, bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], font=la['font'])
@@ -216,7 +218,7 @@ class Program(Tk):
             self.right_frame_grid()
             self.total_wb_progress_start()
 
-    def general_search(self):
+    def general_search(self, *args):
         """ Used to search all workbooks in the directory for general stats, such as a list of all fields and how many times they are used.
 
         :return:
@@ -323,7 +325,7 @@ class Program(Tk):
         self.wb_total_progressbar['value'] = 0
         self.view_list.delete(1.0, END)
 
-    def toggle_fullscreen(self):
+    def toggle_fullscreen(self, *args):
         if self.fs:
             self.fs = False
         else:
