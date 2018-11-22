@@ -54,7 +54,15 @@ class Program(Tk):
         # Scrollbar / Canvas
         self.right_top_canvas = Canvas(self.right_bottom_frame, bg=self.default_colors['sub_bg'], bd=0, highlightthickness=0, relief=RIDGE, scrollregion=(0, 0, 500, 500))
         self.scrollbar = Scrollbar(self.right_bottom_frame, orient=VERTICAL)
-
+        
+        hotkeys = {
+            # Keyboard shortcuts
+            'Fullscreen': '<F2>',
+            'Search': '<Return>',
+            'General Search': '<Control-s>',
+            'Dir Locate': '<Control-o>',
+            'Select All Text': '<Control-a>'
+        }
         ba = {
             # Button Attributes
             'padx': 2,
@@ -99,12 +107,12 @@ class Program(Tk):
         self.locate_directory_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.toggle_fs_button = Button(self.left_bottom_frame, image=self.fullscreen_image, command=self.toggle_fullscreen, bg=ba['bg_color'], font=ba['font'])
         self.toggle_fs_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
-        self.bind('<F2>', self.toggle_fullscreen)
+        self.bind(hotkeys['Fullscreen'], self.toggle_fullscreen)
         self.exit_button = Button(self.left_bottom_frame, image=self.quit_image, command=quit, bg=ba['bg_color'], font=ba['font'])
         self.exit_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.search_directory_button = Button(self.left_top_frame, image=self.search_folder_image, command=self.general_search, bg=ba['bg_color'], font=ba['font'])
         self.search_directory_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
-        self.bind('<Control-s>', self.general_search)
+        self.bind(hotkeys['General Search'], self.general_search)
         self.var = BooleanVar()
         self.var.set(True)
         self.sort_toggle_button = Checkbutton(self.left_top_frame, text='Descending', variable=self.var, bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], font=la['font'])
@@ -114,8 +122,8 @@ class Program(Tk):
         self.search_bar.pack(side=LEFT, fill=BOTH, expand=True, padx=ea['padx'], pady=ea['pady'])
         self.search_button = Button(self.left_top_frame1, image=self.search_image, command=self.search_views, bg=ba['bg_color'], font=ba['font'])
         self.search_button.pack(side=RIGHT, padx=ba['padx'], pady=ba['pady'])
-        self.bind('<Control-o>', self.view_directory_locator)
-        self.search_bar.bind('<Return>', self.search_views)
+        self.bind(hotkeys['Dir Locate'], self.view_directory_locator)
+        self.search_bar.bind(hotkeys['Search'], self.search_views)
 
         # Label Text
         self.wb_count_text = StringVar()
@@ -158,7 +166,7 @@ class Program(Tk):
         self.view_count_label = Label(self.right_top_frame, textvariable=self.view_count_text, fg=self.default_colors['fg'], bg=self.default_colors['sub_bg'], font=la['font'], anchor=W)
 
         self.view_list = Text(self.right_bottom_frame, font='none 12 bold', bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], yscrollcommand=self.scrollbar.set)
-        self.bind_class("Text", "<Control-a>", self.select_all)
+        self.bind_class("Text", hotkeys['Select All Text'], self.select_all)
 
     def select_all(self, *args):
         """Select all text in the text widget"""
