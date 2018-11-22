@@ -35,13 +35,14 @@ class Program(Tk):
         self.total_view_start = 0
         self.view_count = 0
         self.view_start = 0
-        self.sort_desc = True
 
         # Frames
         self.left_frame = Frame(self, bg=self.default_colors['main_bg'])
         self.left_frame.pack(side=LEFT, fill=Y)
         self.left_top_frame = Frame(self.left_frame, bg=self.default_colors['main_bg'])
         self.left_top_frame.pack(side=TOP, fill=BOTH)
+        self.left_top_frame1 = Frame(self.left_frame, bg=self.default_colors['main_bg'])
+        self.left_top_frame1.pack(side=TOP, fill=BOTH)
         self.left_bottom_frame = Frame(self.left_frame, bg=self.default_colors['main_bg'])
         self.left_bottom_frame.pack(side=BOTTOM, fill=BOTH)
 
@@ -101,8 +102,12 @@ class Program(Tk):
         self.toggle_fs_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.exit_button = Button(self.left_bottom_frame, image=self.quit_image, command=quit, bg=ba['bg_color'], font=ba['font'])
         self.exit_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
-        self.search_directory_button = Button(self.left_frame, image=self.search_folder_image, command=self.general_search, bg=ba['bg_color'], font=ba['font'])
-        self.search_directory_button.pack(side=TOP, padx=ba['padx'], pady=ba['pady'])
+        self.search_directory_button = Button(self.left_top_frame1, image=self.search_folder_image, command=self.general_search, bg=ba['bg_color'], font=ba['font'])
+        self.search_directory_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
+        self.var = BooleanVar()
+        self.var.set(True)
+        self.sort_toggle_button = Checkbutton(self.left_top_frame1, text='Descending', variable=self.var, bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], font=la['font'])
+        self.sort_toggle_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         # Search bar & button
         self.search_bar = Entry(self.left_top_frame, fg=ta['fg_color'], bg=ta['bg_color'], font=ta['font'], relief=SUNKEN)
         self.search_bar.pack(side=LEFT, fill=BOTH, expand=True, padx=ta['padx'], pady=ta['pady'])
@@ -241,7 +246,7 @@ class Program(Tk):
                                 unique_fields[field] = unique_fields[field] + 1
                             elif 'Calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
                                 unique_fields[field] = 1
-            sorted_unique_fields = sorted(unique_fields.items(), key=operator.itemgetter(1), reverse=self.sort_desc)
+            sorted_unique_fields = sorted(unique_fields.items(), key=operator.itemgetter(1), reverse=self.var.get())
             row = 0
             max_bar_value = max(unique_fields.iteritems(), key=operator.itemgetter(1))[1]
             # Creates the bar visual for the list of fields and their view counts
