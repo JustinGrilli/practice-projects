@@ -202,7 +202,7 @@ class Program(Tk):
         self.bind_class("Text", hotkeys['Select All Text'], self.select_all)
 
         self.dir_status_text = StringVar()
-        self.dir_status_text.set('View Folder Selected: '+str(self.directory_location))
+        self.dir_status_text.set('Folder Selected: '+str(self.directory_location))
         self.current_dir_status = Label(self.bottom_frame, bg=self.default_colors['main_bg'], fg=self.default_colors['fg'], font=la['font'], textvariable=self.dir_status_text)
         self.current_dir_status.pack(side=BOTTOM)
 
@@ -215,7 +215,7 @@ class Program(Tk):
 
     def view_directory_locator(self, *args):
         self.directory_location = tkFileDialog.askdirectory(title='Locate the folder that contains the views you would like to search')
-        self.dir_status_text.set('View Folder Selected: '+str(self.directory_location))
+        self.dir_status_text.set('Folder Selected: '+str(self.directory_location))
 
     def search_views(self, *args):
         """ Will be used to search the directory's workbooks for the field written in the search bar.
