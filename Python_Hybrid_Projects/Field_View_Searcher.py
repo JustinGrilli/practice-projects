@@ -248,7 +248,7 @@ class Program(Tk):
                         name = str(column.attrib.get('name'))
                         regex = '\:.*?\:'
                         for m in re.finditer(regex, name):
-                            if self.exact.get() and self.search_bar.get() == str(m.group(0)).replace(':', ''):
+                            if self.exact.get() and self.search_bar.get().lower() == str(m.group(0)).replace(':', '').lower():
                                 wb_count = 1
                                 view_count += 1
                                 self.view_count += 1
@@ -307,10 +307,10 @@ class Program(Tk):
                         name = str(column.attrib.get('name'))
                         regex = '\:.*?\:'
                         for m in re.finditer(regex, name):
-                            field = str(m.group(0)).replace(':', '')
-                            if field in unique_fields and 'Calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
+                            field = str(m.group(0)).replace(':', '').lower()
+                            if field in unique_fields and 'calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
                                 unique_fields[field] = unique_fields[field] + 1
-                            elif 'Calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
+                            elif 'calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
                                 unique_fields[field] = 1
             sorted_unique_fields = sorted(unique_fields.items(), key=operator.itemgetter(1), reverse=self.sort.get())
             row = 0
