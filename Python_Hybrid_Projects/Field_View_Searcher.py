@@ -222,9 +222,10 @@ class Program(Tk):
         self.dir_status_text.set('Folder Selected: '+str(self.directory_location))
 
     def search_views(self, *args):
-        """ Will be used to search the directory's workbooks for the field written in the search bar.
+        """ Used to search the directory's workbooks for the field written in the search bar.
 
-        :return: Will probably run other functions that do things like count the views with that field, count the workbooks, etc.
+        :return: Resets stats for anything that has been searched previously. Counts several stats related to the field
+                 searched, and produces a visual and list of those stats.
         """
         # Clears everything on the right frame when the function first runs
         self.reset_metrics()
@@ -277,9 +278,9 @@ class Program(Tk):
             self.total_wb_progress_start()
 
     def general_search(self, *args):
-        """ Used to search all workbooks in the directory for general stats, such as a list of all fields and how many times they are used.
+        """ Used to search all workbooks in the directory.
 
-        :return:
+        :return: General stats in a visual list, such as all fields and how many times they are used.
         """
         # Clears everything on the right frame when the function first runs
         self.reset_metrics()
