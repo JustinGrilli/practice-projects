@@ -47,5 +47,5 @@ except FileNotFoundError:
 finally:
     # Move new files from one location to another
     new_files_path, move_new_files_path = saves.read().split('\n')
-    move_new_files(new_files_path, move_new_files_path, 3)
+    move_new_files(new_files_path, move_new_files_path, 7)
     saves.close()
