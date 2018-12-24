@@ -7,7 +7,6 @@ import datetime
 import shutil
 import tkinter.filedialog as ttk
 from tkinter.ttk import Progressbar
-import time
 
 
 def move_new_files(current_path, new_path, days_old):
@@ -41,6 +40,7 @@ def move_new_files(current_path, new_path, days_old):
             progress_bar['value'] = count
     quit()
     return None
+
 
 app = ttk.Tk()
 progress_bar = Progressbar(app, length=200)
