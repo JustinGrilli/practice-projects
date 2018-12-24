@@ -146,10 +146,14 @@ class Program(Tk):
         self.search_directory_button = Button(self.left_top_frame, image=self.search_folder_image, command=self.general_search, bg=ba['bg_color'], font=ba['font'])
         self.search_directory_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         self.bind(hotkeys['General Search'], self.general_search)
-        self.var = BooleanVar()
-        self.var.set(True)
-        self.sort_toggle_button = Checkbutton(self.left_top_frame, text='Descending', variable=self.var, bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], font=la['font'])
+        self.sort = BooleanVar()
+        self.sort.set(True)
+        self.exact = BooleanVar()
+        self.exact.set(True)
+        self.sort_toggle_button = Checkbutton(self.left_top_frame, text='Sort\nDesc', variable=self.sort, bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], font='none 10 bold')
         self.sort_toggle_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
+        self.exact_search_toggle_button = Checkbutton(self.left_top_frame, text='Exact\nSearch', variable=self.exact, bg=self.default_colors['sub_sub_bg'], fg=self.default_colors['main_bg'], font='none 10 bold')
+        self.exact_search_toggle_button.pack(side=LEFT, padx=ba['padx'], pady=ba['pady'])
         # Search bar & button
         self.search_bar = Entry(self.left_top_frame1, fg=ea['fg_color'], bg=ea['bg_color'], font=ea['font'], relief=SUNKEN)
         self.search_bar.pack(side=LEFT, fill=BOTH, expand=True, padx=ea['padx'], pady=ea['pady'])
@@ -218,9 +222,10 @@ class Program(Tk):
         self.dir_status_text.set('Folder Selected: '+str(self.directory_location))
 
     def search_views(self, *args):
-        """ Will be used to search the directory's workbooks for the field written in the search bar.
+        """ Used to search the directory's workbooks for the field written in the search bar.
 
-        :return: Will probably run other functions that do things like count the views with that field, count the workbooks, etc.
+        :return: Resets stats for anything that has been searched previously. Counts several stats related to the field
+                 searched, and produces a visual and list of those stats.
         """
         # Clears everything on the right frame when the function first runs
         self.reset_metrics()
@@ -244,7 +249,11 @@ class Program(Tk):
                         name = str(column.attrib.get('name'))
                         regex = '\:.*?\:'
                         for m in re.finditer(regex, name):
-                            if self.search_bar.get() == str(m.group(0)).replace(':', ''):
+                            if self.exact.get() and self.search_bar.get().lower() == str(m.group(0)).replace(':', '').lower():
+                                wb_count = 1
+                                view_count += 1
+                                self.view_count += 1
+                            elif self.exact.get() is False and self.search_bar.get().lower() in str(m.group(0)).replace(':', '').lower():
                                 wb_count = 1
                                 view_count += 1
                                 self.view_count += 1
@@ -269,9 +278,9 @@ class Program(Tk):
             self.total_wb_progress_start()
 
     def general_search(self, *args):
-        """ Used to search all workbooks in the directory for general stats, such as a list of all fields and how many times they are used.
+        """ Used to search all workbooks in the directory.
 
-        :return:
+        :return: General stats in a visual list, such as all fields and how many times they are used.
         """
         # Clears everything on the right frame when the function first runs
         self.reset_metrics()
@@ -299,12 +308,12 @@ class Program(Tk):
                         name = str(column.attrib.get('name'))
                         regex = '\:.*?\:'
                         for m in re.finditer(regex, name):
-                            field = str(m.group(0)).replace(':', '')
-                            if field in unique_fields and 'Calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
+                            field = str(m.group(0)).replace(':', '').lower()
+                            if field in unique_fields and 'calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
                                 unique_fields[field] = unique_fields[field] + 1
-                            elif 'Calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
+                            elif 'calculation_' not in field and '(copy' not in field and field != 'usr' and field != 'qk':
                                 unique_fields[field] = 1
-            sorted_unique_fields = sorted(unique_fields.items(), key=operator.itemgetter(1), reverse=self.var.get())
+            sorted_unique_fields = sorted(unique_fields.items(), key=operator.itemgetter(1), reverse=self.sort.get())
             row = 0
             try:
                 max_bar_value = max(unique_fields.viewvalues())

@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/Python3_Projects/randomstuff.py" beforeDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" afterDir="false" />
+>>>>>>> e2bb9ce76b963f2c963fc673e7c5c67025d510d6
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -10,13 +15,35 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-532095181">
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="py" value="423" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Python" value="423" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.5" value="1" />
+          <entry key="project.opened" value="2" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1474">
-              <caret line="70" column="159" selection-start-line="70" selection-start-column="154" selection-end-line="70" selection-end-column="159" />
+            <state relative-caret-position="1260">
+              <caret line="66" selection-start-line="66" selection-end-line="66" />
             </state>
           </provider>
         </entry>
@@ -24,8 +51,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="110">
               <caret line="11" selection-start-line="11" selection-end-line="11" />
+=======
+            <state relative-caret-position="-670">
+              <caret line="227" column="73" lean-forward="true" selection-start-line="227" selection-start-column="73" selection-end-line="227" selection-end-column="73" />
+>>>>>>> e2bb9ce76b963f2c963fc673e7c5c67025d510d6
               <folding>
                 <element signature="e#74#158#0" />
                 <element signature="e#191#305#0" />
@@ -54,6 +86,19 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
+<<<<<<< HEAD
+=======
+      <find>workbook_desc_text</find>
+      <find>workbook_desc</find>
+      <find>total_wb_desc</find>
+      <find>view_count</find>
+      <find>view_desc_text</find>
+      <find>view_desc</find>
+      <find>desc</find>
+      <find>order_id</find>
+      <find>inser</find>
+      <find>right_frame</find>
+>>>>>>> e2bb9ce76b963f2c963fc673e7c5c67025d510d6
       <find>job_type</find>
       <find>text_scrollbar</find>
       <find>scrol</find>
@@ -71,6 +116,7 @@
       <find>after(1</find>
       <find>after(3</find>
       <find>0.02</find>
+<<<<<<< HEAD
       <find>View Folder Selected:</find>
       <find>QtCore</find>
       <find>QtGui</find>
@@ -84,6 +130,11 @@
       <find>null,</find>
       <find>false,</find>
       <find>true,</find>
+=======
+      <find>sort_toggle_button</find>
+      <find>var</find>
+      <find>sort</find>
+>>>>>>> e2bb9ce76b963f2c963fc673e7c5c67025d510d6
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -116,10 +167,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="2576" />
-    <option name="height" value="1416" />
+    <option name="x" value="484" />
+    <option name="y" value="-19" />
+    <option name="width" value="1936" />
+    <option name="height" value="1036" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -147,7 +198,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GoToClass.toSaveIncludeLibraries" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../alooma-etl" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -314,14 +365,25 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
+<<<<<<< HEAD
     <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12884161" />
+=======
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11959958" />
+>>>>>>> e2bb9ce76b963f2c963fc673e7c5c67025d510d6
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32939914" />
+<<<<<<< HEAD
       <window_info anchor="bottom" id="Run" order="2" weight="0.75993764" />
+=======
+      <window_info anchor="bottom" id="Run" order="2" weight="0.25" />
+>>>>>>> e2bb9ce76b963f2c963fc673e7c5c67025d510d6
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -337,9 +399,14 @@
       <window_info anchor="right" id="Database" order="3" />
     </layout>
   </component>
+<<<<<<< HEAD
   <component name="VcsManagerConfiguration">
     <MESSAGE value="updated" />
     <option name="LAST_COMMIT_MESSAGE" value="updated" />
+=======
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+>>>>>>> e2bb9ce76b963f2c963fc673e7c5c67025d510d6
   </component>
   <component name="editorHistoryManager">
     <entry file="file://C:/Python27/Lib/lib-tk/tkCommonDialog.py">
@@ -470,13 +537,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/max_dict_value.py" />
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/-762174762/__builtin__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="502" column="4" selection-start-line="502" selection-start-column="4" selection-end-line="502" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/-762174762/__builtin__.py" />
     <entry file="file://C:/Python27/Lib/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
@@ -484,13 +545,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/454874874/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="529" column="4" selection-start-line="529" selection-start-column="4" selection-end-line="529" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/454874874/builtins.py" />
     <entry file="file://$PROJECT_DIR$/playing_with_dicts.py" />
     <entry file="file://$PROJECT_DIR$/VerticalScrolledFrame.py" />
     <entry file="file://$PROJECT_DIR$/Python3_Projects/Search_Views.py">
@@ -516,15 +571,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1474">
-          <caret line="70" column="159" selection-start-line="70" selection-start-column="154" selection-end-line="70" selection-end-column="159" />
+        <state relative-caret-position="1260">
+          <caret line="66" selection-start-line="66" selection-end-line="66" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="110">
           <caret line="11" selection-start-line="11" selection-end-line="11" />
+=======
+        <state relative-caret-position="-670">
+          <caret line="227" column="73" lean-forward="true" selection-start-line="227" selection-start-column="73" selection-end-line="227" selection-end-column="73" />
+>>>>>>> e2bb9ce76b963f2c963fc673e7c5c67025d510d6
           <folding>
             <element signature="e#74#158#0" />
             <element signature="e#191#305#0" />
