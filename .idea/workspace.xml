@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e31c8408-52f5-42e7-a1df-332c833492f9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Python3_Projects/Field_View_Searcher_PyQt.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Python3_Projects/randomstuff.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,15 +23,33 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="228" column="76" selection-start-line="228" selection-start-column="76" selection-end-line="228" selection-end-column="76" />
+            <state relative-caret-position="110">
+              <caret line="11" selection-start-line="11" selection-end-line="11" />
               <folding>
                 <element signature="e#74#158#0" />
                 <element signature="e#191#305#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Python3_Projects/Field_View_Searcher_PyQt.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="342">
+              <caret line="16" column="36" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Python3_Projects/randomstuff.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1089">
+              <caret line="83" column="17" selection-start-line="83" selection-start-column="17" selection-end-line="83" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -45,19 +65,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>workbook_count_text</find>
-      <find>view_count_text</find>
-      <find>workbook_count</find>
-      <find>workbook_desc_text</find>
-      <find>workbook_desc</find>
-      <find>total_wb_desc</find>
-      <find>view_count</find>
-      <find>view_desc_text</find>
-      <find>view_desc</find>
-      <find>desc</find>
-      <find>order_id</find>
-      <find>inser</find>
-      <find>right_frame</find>
       <find>job_type</find>
       <find>text_scrollbar</find>
       <find>scrol</find>
@@ -75,6 +82,19 @@
       <find>after(1</find>
       <find>after(3</find>
       <find>0.02</find>
+      <find>View Folder Selected:</find>
+      <find>QtCore</find>
+      <find>QtGui</find>
+      <find>QtWidgets</find>
+      <find>title</find>
+      <find>icon4</find>
+      <find>icon3</find>
+      <find>icon2</find>
+      <find>icon1</find>
+      <find>icon</find>
+      <find>null,</find>
+      <find>false,</find>
+      <find>true,</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -101,6 +121,8 @@
         <option value="$PROJECT_DIR$/playing_with_dicts.py" />
         <option value="$PROJECT_DIR$/VerticalScrolledFrame.py" />
         <option value="$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py" />
+        <option value="$PROJECT_DIR$/Python3_Projects/Field_View_Searcher_PyQt.py" />
+        <option value="$PROJECT_DIR$/Python3_Projects/randomstuff.py" />
       </list>
     </option>
   </component>
@@ -125,7 +147,7 @@
             <path>
               <item name="Work" type="b2602c69:ProjectViewProjectNode" />
               <item name="Work" type="462c0819:PsiDirectoryNode" />
-              <item name="Python_Hybrid_Projects" type="462c0819:PsiDirectoryNode" />
+              <item name="Python3_Projects" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -158,28 +180,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Field_View_Searcher (2)">
-    <configuration name="Field_View_Searcher (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Work" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\Justango\Documents\Work\Python_Hybrid_Projects\Field_View_Searcher.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.randomstuff">
     <configuration name="Field_View_Searcher (2)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -201,7 +202,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Field_View_Searcher" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Field_View_Searcher_PyQt" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -209,11 +210,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python2_Projects" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python3_Projects" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\Justango\Documents\Work\Python_Hybrid_Projects\Field_View_Searcher.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python3_Projects/Field_View_Searcher_PyQt.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -222,7 +223,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="max_dict_value" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Search_Views" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Work" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -230,11 +231,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python2_Projects" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python3_Projects" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python2_Projects/max_dict_value.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python3_Projects/Search_Views.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -264,20 +265,41 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="randomstuff" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Work" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python3_Projects" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python3_Projects/randomstuff.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Python.Field_View_Searcher" />
-      <item itemvalue="Python.max_dict_value" />
-      <item itemvalue="Python.Field_View_Searcher (1)" />
       <item itemvalue="Python.Field_View_Searcher (2)" />
       <item itemvalue="Python.playing_with_dicts" />
+      <item itemvalue="Python.Search_Views" />
+      <item itemvalue="Python.Field_View_Searcher_PyQt" />
+      <item itemvalue="Python.randomstuff" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.randomstuff" />
+        <item itemvalue="Python.Field_View_Searcher_PyQt" />
+        <item itemvalue="Python.Search_Views" />
         <item itemvalue="Python.Field_View_Searcher (2)" />
         <item itemvalue="Python.playing_with_dicts" />
-        <item itemvalue="Python.Field_View_Searcher (1)" />
-        <item itemvalue="Python.Field_View_Searcher" />
-        <item itemvalue="Python.max_dict_value" />
       </list>
     </recent_temporary>
   </component>
@@ -292,18 +314,25 @@
       <option name="presentableId" value="Default" />
       <updated>1539042531360</updated>
     </task>
+    <task id="LOCAL-00001" summary="updated">
+      <created>1542940936181</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1542940936181</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12884161" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32939914" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.25019485" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.75993764" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -318,6 +347,10 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
     </layout>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://C:/Python27/Lib/lib-tk/tkCommonDialog.py">
@@ -471,6 +504,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/playing_with_dicts.py" />
     <entry file="file://$PROJECT_DIR$/VerticalScrolledFrame.py" />
+    <entry file="file://$PROJECT_DIR$/Python3_Projects/Search_Views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" selection-start-line="8" selection-end-line="114" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/454874874/PyQt5/QtWidgets/QFrame.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="752">
+          <caret line="221" column="8" selection-start-line="221" selection-start-column="8" selection-end-line="221" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/454874874/PyQt5/QtCore/QCoreApplication.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="224" column="8" selection-start-line="224" selection-start-column="8" selection-end-line="224" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Python2_Projects/Casing_Formatter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1474">
@@ -480,12 +534,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Python_Hybrid_Projects/Field_View_Searcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="228" column="76" selection-start-line="228" selection-start-column="76" selection-end-line="228" selection-end-column="76" />
+        <state relative-caret-position="110">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
           <folding>
             <element signature="e#74#158#0" />
             <element signature="e#191#305#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Python3_Projects/Field_View_Searcher_PyQt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="16" column="36" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Python3_Projects/randomstuff.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1089">
+          <caret line="83" column="17" selection-start-line="83" selection-start-column="17" selection-end-line="83" selection-end-column="17" />
         </state>
       </provider>
     </entry>

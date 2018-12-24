@@ -1,0 +1,117 @@
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(1396, 985)
+        MainWindow.setWindowIcon(QtGui.QIcon('../Python_Hybrid_Projects/Images/search.ico'))
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+
+        # Images
+        locate_directory_image = QtGui.QIcon()
+        locate_directory_image.addPixmap(QtGui.QPixmap("../Python_Hybrid_Projects/Images/blue_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        search_directory_image = QtGui.QIcon()
+        search_directory_image.addPixmap(QtGui.QPixmap("../Python_Hybrid_Projects/Images/search_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        search_image = QtGui.QIcon()
+        search_image.addPixmap(QtGui.QPixmap("../Python_Hybrid_Projects/Images/search.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        fullscreen_image = QtGui.QIcon()
+        fullscreen_image.addPixmap(QtGui.QPixmap("../Python_Hybrid_Projects/Images/fullscreen.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        quit_image = QtGui.QIcon()
+        quit_image.addPixmap(QtGui.QPixmap("../Python_Hybrid_Projects/Images/quit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+        # Frames
+        self.left_frame = QtWidgets.QFrame(self.centralwidget)
+        self.left_frame.setGeometry(QtCore.QRect(-1, -1, 261, 961))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.left_frame.sizePolicy().hasHeightForWidth())
+        self.left_frame.setSizePolicy(sizePolicy)
+        self.left_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.left_frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.left_frame.setObjectName("left_frame")
+
+        # Buttons
+        self.locate_directory_button = QtWidgets.QPushButton(self.left_frame)
+        self.locate_directory_button.setGeometry(QtCore.QRect(10, 0, 50, 50))
+        self.locate_directory_button.setText("")
+        self.locate_directory_button.setIcon(locate_directory_image)
+        self.locate_directory_button.setIconSize(QtCore.QSize(45, 45))
+        self.locate_directory_button.setObjectName("locate_directory_button")
+        self.search_directory_button = QtWidgets.QPushButton(self.left_frame)
+        self.search_directory_button.setGeometry(QtCore.QRect(70, 0, 50, 50))
+        self.search_directory_button.setText("")
+        self.search_directory_button.setIcon(search_directory_image)
+        self.search_directory_button.setIconSize(QtCore.QSize(45, 45))
+        self.search_directory_button.setObjectName("search_directory_button")
+        self.toggle_desc_checkbox = QtWidgets.QCheckBox(self.left_frame)
+        self.toggle_desc_checkbox.setGeometry(QtCore.QRect(140, 0, 121, 50))
+        self.toggle_desc_checkbox.setChecked(True)
+        self.toggle_desc_checkbox.setObjectName("toggle_desc_checkbox")
+        self.search_field_button = QtWidgets.QPushButton(self.left_frame)
+        self.search_field_button.setGeometry(QtCore.QRect(220, 60, 35, 35))
+        self.search_field_button.setText("")
+        self.search_field_button.setIcon(search_image)
+        self.search_field_button.setIconSize(QtCore.QSize(36, 36))
+        self.search_field_button.setObjectName("search_field_button")
+        self.search_bar = QtWidgets.QLineEdit(self.left_frame)
+        self.search_bar.setGeometry(QtCore.QRect(10, 60, 211, 35))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.search_bar.setFont(font)
+        self.search_bar.setObjectName("search_bar")
+        self.fullscreen_button = QtWidgets.QPushButton(self.left_frame)
+        self.fullscreen_button.setGeometry(QtCore.QRect(10, 890, 50, 50))
+        self.fullscreen_button.setText("")
+        self.fullscreen_button.setIcon(fullscreen_image)
+        self.fullscreen_button.setIconSize(QtCore.QSize(45, 45))
+        self.fullscreen_button.setObjectName("fullscreen_button")
+        self.exit_button = QtWidgets.QPushButton(self.left_frame)
+        self.exit_button.setGeometry(QtCore.QRect(70, 890, 50, 50))
+        self.exit_button.clicked.connect(QtCore.QCoreApplication.instance().quit)
+        self.exit_button.setIcon(quit_image)
+        self.exit_button.setIconSize(QtCore.QSize(45, 45))
+        self.exit_button.setObjectName("exit_button")
+        self.right_frame = QtWidgets.QFrame(self.centralwidget)
+        self.right_frame.setGeometry(QtCore.QRect(259, -1, 1131, 961))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.right_frame.sizePolicy().hasHeightForWidth())
+        self.right_frame.setSizePolicy(sizePolicy)
+        self.right_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.right_frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.right_frame.setObjectName("right_frame")
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1396, 21))
+        self.menubar.setObjectName("menubar")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "Search Views"))
+        self.toggle_desc_checkbox.setText(_translate("MainWindow", "Descending"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
+
+
