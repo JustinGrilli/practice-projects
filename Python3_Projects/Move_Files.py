@@ -6,7 +6,6 @@ import os
 import datetime
 import shutil
 import tkinter.filedialog as ttk
-from tkinter.ttk import Progressbar
 
 
 def move_new_files(current_path, new_path, days_old):
@@ -18,33 +17,17 @@ def move_new_files(current_path, new_path, days_old):
     :return: None
     """
     oldest_date = datetime.date.today() - datetime.timedelta(days=days_old)
-    progress_bar['value'] = 0
-    progress_bar['maximum'] = 0
-    count = 0
-    for file in os.listdir(current_path):
-        time_stamp = os.path.getctime(current_path+file)
-        file_modified_date = datetime.date.fromtimestamp(time_stamp)
 
-        if file_modified_date >= oldest_date:
-            count += 1
-            progress_bar['maximum'] = count
-
-    count = 0
     for file in os.listdir(current_path):
         time_stamp = os.path.getctime(current_path+file)
         file_modified_date = datetime.date.fromtimestamp(time_stamp)
 
         if file_modified_date >= oldest_date:
             shutil.move(current_path+file, new_path+file)
-            count += 1
-            progress_bar['value'] = count
-    quit()
+
     return None
 
 
-app = ttk.Tk()
-progress_bar = Progressbar(app, length=200)
-progress_bar.pack()
 # Set it up so that it won't ask for the folder locations every time the file is run; Only the first time.
 try:
     # If the locations are already saved to a file, open that file
@@ -67,6 +50,3 @@ finally:
     new_files_path, move_new_files_path = saves.read().split('\n')
     move_new_files(new_files_path, move_new_files_path, 7)
     saves.close()
-
-app.mainloop()
-
