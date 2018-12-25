@@ -12,7 +12,7 @@ def flatten_tv_show_folders(download_path, delete_folders=True):
         if tv_show_folder != [] and os.path.isdir(subpath):
             for subfile in os.listdir(subpath):
                 tv_show_file = re.findall(r's\d+e\d+', subfile.lower())
-                if tv_show_file != [] and os.path.isfile(os.path.join(subpath, subfile)):
+                if tv_show_file != [] and os.path.isfile(os.path.join(subpath, subfile)) and subfile.split('.')[-1] in media_extentions:
                     shutil.move(os.path.join(subpath, subfile), os.path.join(download_path, subfile))
             if delete_folders:
                 shutil.rmtree(subpath)
@@ -24,7 +24,7 @@ def organize_tv_shows(download_path, media_path):
         file_path = os.path.join(download_path, file)
         renamed_file = initcap_file_name(file)
         tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', renamed_file)
-        if tv_show_episode != [] and os.path.isfile(file_path):
+        if tv_show_episode != [] and os.path.isfile(file_path) and renamed_file.split('.')[-1] in media_extentions:
             renamed_file = renamed_file.split(tv_show_episode[0])[0]+tv_show_episode[0]+'.'+renamed_file.split('.')[-1]
             season = int(re.sub(r'[^0-9]', '', tv_show_episode[0].lower().split('e')[0]))
             media_show_path = os.path.join(media_path, 'TV Shows', renamed_file.split(' '+tv_show_episode[0])[0], 'Season '+str(season))
@@ -48,6 +48,8 @@ def initcap_file_name(string):
     new_string = '.'.join([new_string, extension])
     return new_string
 
+
+media_extentions = ['mp4', 'mkv', 'avi', 'flv', 'wmv', 'webm', 'm4p', 'mov', 'm4v', 'mpg']
 
 try:
     # If the locations are already saved to a file, open that file
