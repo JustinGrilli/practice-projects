@@ -2,6 +2,7 @@ import tkinter.filedialog as ttk
 import re
 import os
 
+
 def initcap_file_name(string):
     words = re.sub(r'[^a-zA-Z0-9()]', ' ', string).split(' ')
     extension = words[-1]
@@ -10,9 +11,11 @@ def initcap_file_name(string):
     new_string = '.'.join([new_string, extension])
     return new_string
 
+
 def initcap_folder_name(string):
     new_string = re.sub(r'[^a-zA-Z0-9()]', ' ', string).title()
     return new_string
+
 
 def rename_file_names(path):
     for file in os.listdir(path):
@@ -30,6 +33,7 @@ def rename_file_names(path):
             for subfile in os.listdir(subpath):
                 new_subname = initcap_file_name(subfile)
                 os.rename(os.path.join(subpath, subfile), os.path.join(subpath, new_subname))
+
 
 try:
     # If the locations are already saved to a file, open that file
