@@ -66,7 +66,6 @@ def recursively_organize_movies(dl_path, media_path, delete_folders=True):
                         os.makedirs(movies_folder)
                         shutil.move(current_file_path, movies_file_path)
                         os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
-                    print('Moved File: ' + file)
         else:
             # Moves Media files NOT in the main folder
             for file in files:
@@ -83,14 +82,13 @@ def recursively_organize_movies(dl_path, media_path, delete_folders=True):
                         os.makedirs(movies_folder)
                         shutil.move(current_file_path, movies_file_path)
                         os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
-                    print('Moved File: ' + file)
     # Delete folders that contained media files that were moved
     if delete_folders:
         for f in folders_in_main:
             for folder in folders_to_delete:
                 if f in folder:
-                    shutil.rmtree(os.path.join(dl_path, f))
-                    print('Deleted Folder: '+os.path.join(dl_path, f))
+                    if os.path.exists(os.path.join(dl_path, f)):
+                        shutil.rmtree(os.path.join(dl_path, f))
     return None
 
 
