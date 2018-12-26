@@ -48,46 +48,49 @@ def initcap_file_name(string):
     return new_string
 
 
-def organize_movies(dl_path, media_path, delete_folders=True):
-    """ Moves media files from the downloads folder to the media/movies folder.
-
-    :param dl_path: Path of the downloaded files to be organized
-    :param media_path: Path to the media folder
-    :param delete_folders: True to delete folders containing media, inside the downloads folder
-    :return: None
-    """
-    for file in os.listdir(dl_path):
-        file_path = os.path.join(dl_path, file)
-        if file.split('.')[-1] in media_extentions and os.path.isfile(file_path):
-            renamed_file = initcap_file_name(file)
-            movies_path = os.path.join(media_path, 'Movies')
-            moved_path = os.path.join(movies_path, file)
-            if os.path.exists(movies_path):
-                shutil.move(file_path, moved_path)
-                os.rename(moved_path, os.path.join(movies_path, renamed_file))
-            else:
-                os.makedirs(movies_path)
-                shutil.move(file_path, moved_path)
-                os.rename(moved_path, os.path.join(movies_path, renamed_file))
-        elif os.path.isdir(file_path):
-            count = 0
-            for subfile in os.listdir(file_path):
-                subfile_path = os.path.join(file_path, subfile)
-                movies_path = os.path.join(media_path, 'Movies')
-                moved_path = os.path.join(movies_path, subfile)
-                if subfile.split('.')[-1] in media_extentions and os.path.isfile(subfile_path):
-                    count += 1
-                    renamed_subfile = initcap_file_name(subfile)
-                    if os.path.exists(movies_path):
-                        shutil.move(subfile_path, moved_path)
-                        os.rename(moved_path, os.path.join(movies_path, renamed_subfile))
+def recursively_organize_movies(dl_path, media_path, delete_folders=True):
+    movies_folder = os.path.join(media_path, 'Movies')
+    folders_in_main = [folders for path, folders, files in os.walk(dl_path) if path == dl_path][:][0]
+    folders_to_delete = []
+    for path, folders, files in os.walk(dl_path):
+        if path == dl_path:
+            # Moves Media files in the main folder
+            for file in files:
+                movies_file_path = os.path.join(movies_folder, file)
+                current_file_path = os.path.join(path, file)
+                if file.split('.')[-1] in media_extentions and os.path.isfile(current_file_path):
+                    if os.path.exists(movies_folder):
+                        shutil.move(current_file_path, movies_file_path)
+                        os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
                     else:
-                        os.makedirs(movies_path)
-                        shutil.move(subfile_path, moved_path)
-                        os.rename(moved_path, os.path.join(movies_path, renamed_subfile))
-            if delete_folders and count > 0:
-                if os.path.exists(file_path):
-                    shutil.rmtree(file_path)
+                        os.makedirs(movies_folder)
+                        shutil.move(current_file_path, movies_file_path)
+                        os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
+                    print('Moved File: ' + file)
+        else:
+            # Moves Media files NOT in the main folder
+            for file in files:
+                movies_file_path = os.path.join(movies_folder, file)
+                current_file_path = os.path.join(path, file)
+                if file.split('.')[-1] in media_extentions and os.path.isfile(current_file_path):
+                    if path not in folders_to_delete:
+                        folders_to_delete.append(path)
+
+                    if os.path.exists(movies_folder):
+                        shutil.move(current_file_path, movies_file_path)
+                        os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
+                    else:
+                        os.makedirs(movies_folder)
+                        shutil.move(current_file_path, movies_file_path)
+                        os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
+                    print('Moved File: ' + file)
+    # Delete folders that contained media files that were moved
+    if delete_folders:
+        for f in folders_in_main:
+            for folder in folders_to_delete:
+                if f in folder:
+                    shutil.rmtree(os.path.join(dl_path, f))
+                    print('Deleted Folder: '+os.path.join(dl_path, f))
     return None
 
 
@@ -114,5 +117,5 @@ finally:
     m_path = json.loads(paths)['media']
     flatten_tv_show_folders(dl_path, delete_folders=True)
     organize_tv_shows(dl_path, m_path)
-    organize_movies(dl_path, m_path)
+    recursively_organize_movies(dl_path, m_path, delete_folders=True)
     saves.close()
