@@ -34,7 +34,7 @@ class Organize(Tk):
 
         # Images
         image_width, image_height = 35, 35
-        dir_image = Image.open('Images/blue_folder.png')
+        dir_image = Image.open('Images/dir.png')
         dir_image = dir_image.resize((image_width, image_height), Image.ANTIALIAS)
         self.directory_image = ImageTk.PhotoImage(dir_image)
 
@@ -188,6 +188,14 @@ class Organize(Tk):
         movies_folder = os.path.join(media_path, 'Movies')
         folders_in_main = [folders for path, folders, files in os.walk(movies_folder) if path == movies_folder][:][0]
         folders_to_delete = []
+        total_count = 0
+        progress_count = 0
+        for path, folders, files in os.walk(media_path):
+            for file in files:
+                current_file_path = os.path.join(path, file)
+                if file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                    total_count += 1
+        self.progress_bar['maximum'] = progress_count
         if os.path.exists(movies_folder):
             for path, folders, files in os.walk(movies_folder):
                 if path != movies_folder:
@@ -202,6 +210,9 @@ class Organize(Tk):
                                 folders_to_delete.append(path)
                             shutil.move(current_file_path, movies_file_path)
                             os.rename(movies_file_path, os.path.join(movies_folder, self.initcap_file_name(file)))
+                            progress_count += 1
+                            self.progress_label_text.set('Moved:\n'+self.initcap_file_name(file))
+                            self.progress_bar['value'] = progress_count
             # Delete folders that contained media files that were moved
             if delete_folders:
                 for f in folders_in_main:
@@ -231,11 +242,10 @@ class Organize(Tk):
             paths = saves.read()
             dl_path = json.loads(paths)['downloads']
             m_path = json.loads(paths)['media']
-            self.progress_bar.pack(side=BOTTOM)
+            self.progress_bar_appear()
             self.recursively_organize_shows_and_movies(dl_path, m_path, delete_folders=True)
             saves.close()
-            self.progress_label_text.set('Complete!')
-            self.close_button.pack(side=RIGHT, fill=X, anchor=SE, pady=4)
+            self.progress_complete()
 
     def choose_directory(self):
         download_path = filedialog.askdirectory(title='Path to Download folder')
@@ -297,9 +307,21 @@ class Organize(Tk):
         finally:
             # Move new files from one location to another
             paths = saves.read()
+            self.progress_bar_appear()
             m_path = json.loads(paths)['media']
             self.flatten_movies(m_path)
             saves.close()
+            self.progress_complete()
+
+    def progress_bar_appear(self):
+        self.progress_bar['value'] = 0
+        self.progress_bar.pack(side=BOTTOM)
+        self.progress_label_text.set('')
+        self.close_button.pack_forget()
+
+    def progress_complete(self):
+        self.progress_label_text.set('Complete!')
+        self.close_button.pack(side=RIGHT, fill=X, anchor=SE, pady=4)
 
 
 app = Organize()
