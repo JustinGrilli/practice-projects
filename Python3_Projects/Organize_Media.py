@@ -17,13 +17,19 @@ class Organize(Tk):
         self.resizable(0, 0)
 
         self.media_extensions = ['mp4', 'mkv', 'avi', 'flv', 'wmv', 'webm', 'm4p', 'mov', 'm4v', 'mpg']
+        colors = {
+            'main': '#%02x%02x%02x' % (43, 53, 68),
+            'sub': '#%02x%02x%02x' % (62, 77, 99),
+            'special': '#%02x%02x%02x' % (153, 68, 12),
+            'alt': 'white'
+        }
 
         # Frames
-        left_frame = Frame(self, bg='#222222')
+        left_frame = Frame(self, bg=colors['main'])
         left_frame.pack(side=LEFT, expand=True, fill=BOTH)
-        right_frame = Frame(self, bg='#222222')
+        right_frame = Frame(self, bg=colors['main'])
         right_frame.pack(side=LEFT, expand=True, fill=BOTH)
-        right_bottom_frame = Frame(right_frame, bg='#222222')
+        right_bottom_frame = Frame(right_frame, bg=colors['main'])
         right_bottom_frame.pack(side=BOTTOM, expand=True, fill=BOTH)
 
         # Images
@@ -33,22 +39,24 @@ class Organize(Tk):
         self.directory_image = ImageTk.PhotoImage(dir_image)
 
         # Buttons
-        organize_button = Button(left_frame, text='Organize Media', command=self.organize_media, font='none 14 bold', fg='white', bg='#111111', width=14)
-        organize_button.grid(row=0, column=0, sticky=NW)
-        directory_button = Button(left_frame, image=self.directory_image, command=self.choose_directory, font='none 14 bold', fg='white', bg='#111111')
-        directory_button.grid(row=0, column=1, sticky=NW)
-        flatten_button = Button(left_frame, text='Flatten Movies', command=self.organize_media, font='none 14 bold', fg='white', bg='#111111', width=14)
-        flatten_button.grid(row=1, column=0, sticky=NW)
-        rename_button = Button(left_frame, text='Rename Media', command=self.rename_media, font='none 14 bold', fg='white', bg='#111111', width=14)
-        rename_button.grid(row=2, column=0, sticky=NW)
+        organize_button = Button(left_frame, text='Organize Media', command=self.organize_media, font='none 14 bold', fg='white', bg=colors['special'], width=14)
+        organize_button.grid(row=0, column=0, sticky=NW, padx=1, pady=2)
+        directory_button = Button(left_frame, image=self.directory_image, command=self.choose_directory, font='none 14 bold', fg='white', bg=colors['sub'])
+        directory_button.grid(row=0, column=1, sticky=NW, padx=1, pady=2)
+        rename_button = Button(left_frame, text='Rename Media', command=self.rename_media, font='none 14 bold', fg='white', bg=colors['sub'], width=14)
+        rename_button.grid(row=1, column=0, sticky=NW, padx=1, pady=2)
+        flatten_button = Button(left_frame, text='Flatten Movies', command=self.flatten_movie_files, font='none 14 bold', fg='white', bg=colors['sub'], width=14)
+        flatten_button.grid(row=2, column=0, sticky=NW, padx=1, pady=2)
+        note_label = Label(left_frame, text='- Note about Organize Media -', font='none 11 bold underline', fg='grey', bg=colors['main'], width=12, wraplength=220, justify=LEFT)
+        note_label.grid(row=3, columnspan=2, sticky=N + S + E + W, pady=2)
         self.label_var = StringVar()
-        self.label_var.set('Note for Organize Media:\nIf have a Movies/TV Shows folder with a name other than "Movies" or "TV Shows", in your media folder, you should rename them. Casing matters!\n\nIf you do not have the folders, they will be created for you.')
-        note_label = Label(left_frame, textvariable=self.label_var, font='none 10 italic', fg='grey', bg='#222222', width=12, wraplength=220, justify=LEFT)
-        note_label.grid(row=3, columnspan=2, sticky=N+S+E+W)
+        self.label_var.set('If have a Movies/TV Shows folder with a name other than "Movies" or "TV Shows", in your media folder, you should rename them. Casing matters!\n\nIf you do not have the folders, they will be created for you.')
+        note_label = Label(left_frame, textvariable=self.label_var, font='none 10 italic', fg='grey', bg=colors['main'], width=12, wraplength=220, justify=LEFT)
+        note_label.grid(row=4, columnspan=2, sticky=N+S+E+W)
 
         self.progress_label_text = StringVar()
         self.progress_label_text.set('')
-        progress_label = Label(right_frame, textvariable=self.progress_label_text, font='none 18 bold', fg='white', bg='#222222', justify=LEFT)
+        progress_label = Label(right_frame, textvariable=self.progress_label_text, font='none 18 bold', fg='white', bg=colors['main'], justify=LEFT)
         progress_label.pack(side=TOP, expand=True, anchor=SW)
         self.close_button = Button(right_bottom_frame, text='Close', command=self.destroy, font='none 14 bold', fg='white', bg='darkgreen')
         self.s = Style()
@@ -176,6 +184,32 @@ class Organize(Tk):
                             shutil.rmtree(os.path.join(dl_path, f))
         return None
 
+    def flatten_movies(self, media_path, delete_folders=True):
+        movies_folder = os.path.join(media_path, 'Movies')
+        folders_in_main = [folders for path, folders, files in os.walk(movies_folder) if path == movies_folder][:][0]
+        folders_to_delete = []
+        if os.path.exists(movies_folder):
+            for path, folders, files in os.walk(movies_folder):
+                if path != movies_folder:
+                    # Moves Media files NOT in the main folder
+                    for file in files:
+                        movies_file_path = os.path.join(movies_folder, file)
+                        current_file_path = os.path.join(path, file)
+                        tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', self.initcap_file_name(file))
+                        # Route for TV Shows
+                        if tv_show_episode == [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                            if path not in folders_to_delete:
+                                folders_to_delete.append(path)
+                            shutil.move(current_file_path, movies_file_path)
+                            os.rename(movies_file_path, os.path.join(movies_folder, self.initcap_file_name(file)))
+            # Delete folders that contained media files that were moved
+            if delete_folders:
+                for f in folders_in_main:
+                    for folder in folders_to_delete:
+                        if f in folder:
+                            if os.path.exists(os.path.join(movies_folder, f)):
+                                shutil.rmtree(os.path.join(movies_folder, f))
+        return None
 
     def organize_media(self):
         try:
@@ -245,6 +279,27 @@ class Organize(Tk):
             self.rename_all_media(m_path)
             saves.close()
 
+    def flatten_movie_files(self):
+        try:
+            # If the locations are already saved to a file, open that file
+            saves = open('path_saves.json', 'r')
+        except FileNotFoundError:
+            # If the locations are not saved, ask for the locations and save them to a file
+            saved_locations = open('path_saves.json', 'w')
+
+            download_path = filedialog.askdirectory(title='Path to Download folder')
+            media_path = filedialog.askdirectory(title='Path to Media folder')
+            dictionary = '{"downloads": "'+download_path+'", "media": "'+media_path+'"}'
+            saved_locations.write(dictionary)
+            saved_locations.close()
+            # Now open that file
+            saves = open('path_saves.json', 'r')
+        finally:
+            # Move new files from one location to another
+            paths = saves.read()
+            m_path = json.loads(paths)['media']
+            self.flatten_movies(m_path)
+            saves.close()
 
 
 app = Organize()
