@@ -314,10 +314,9 @@ class Organize(Tk):
         if delete_folders:
             for f in folders_in_main:
                 for folder in folders_to_delete:
-                    if f in folder:
+                    if os.path.join(dl_path, f) in folder:
                         if os.path.exists(os.path.join(dl_path, f)):
                             shutil.rmtree(os.path.join(dl_path, f))
-
         self.progress_complete()
         return None
 
