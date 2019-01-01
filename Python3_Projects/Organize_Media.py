@@ -87,24 +87,32 @@ class Organize(Tk):
         new_string = '.'.join([new_string, extension])
         return new_string
 
-    def media_files_info(self, folder_path):
+    def media_files_info(self, folder_path, filtered_media, filter=False):
         total_count = 0
         media = []
         for path, folders, files in os.walk(folder_path):
             for file in files:
                 current_file_path = os.path.join(path, file)
-                if file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
-                    total_count += 1
-                    tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', self.initcap_file_name(file))
-                    if tv_show_episode != [] and self.initcap_file_name(file).split(' '+tv_show_episode[0])[0] not in media:
-                        media.append(self.initcap_file_name(file).split(' '+tv_show_episode[0])[0])
-                    elif tv_show_episode == [] and self.initcap_file_name(file) not in media:
-                        media.append(self.initcap_file_name(file))
+                tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', self.initcap_file_name(file))
+                try:
+                    media_file = self.initcap_file_name(file).split(' ' + tv_show_episode[0])[0]
+                except IndexError:
+                    media_file = self.initcap_file_name(file)
+                if filter:
+                    if media_file in filtered_media and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                        total_count += 1
+                        if media_file not in media:
+                            media.append(media_file)
+                else:
+                    if file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                        total_count += 1
+                        if media_file not in media:
+                            media.append(media_file)
         return [total_count, sorted(media)]
 
     def filter_window(self, dl_path):
         self.middle_frame.grid_forget()
-        self.filter_file_list = self.media_files_info(dl_path)[-1]
+        self.filter_file_list = self.media_files_info(dl_path, [])[-1]
 
         def upon_select(widget):
             if widget.var.get():
@@ -148,17 +156,12 @@ class Organize(Tk):
         button.pack(side=BOTTOM, fill=Y, pady=4)
 
 
-    def recursively_organize_shows_and_movies(self, dl_path, media_path, delete_folders=True):
+    def recursively_organize_shows_and_movies(self, dl_path, media_path, filtered_media, delete_folders=True):
         movies_folder = os.path.join(media_path, 'Movies')
         folders_in_main = [folders for path, folders, files in os.walk(dl_path) if path == dl_path][:][0]
         folders_to_delete = []
-        total_count = 0
         progress_count = 0
-        for path, folders, files in os.walk(dl_path):
-            for file in files:
-                current_file_path = os.path.join(path, file)
-                if file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
-                    total_count += 1
+        total_count = self.media_files_info(dl_path, filtered_media, filter=True)[0]
         self.progress_bar['maximum'] = total_count
         self.progress_bar['value'] = progress_count
         for path, folders, files in os.walk(dl_path):
@@ -168,10 +171,14 @@ class Organize(Tk):
                     movies_file_path = os.path.join(movies_folder, file)
                     current_file_path = os.path.join(path, file)
                     tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', self.initcap_file_name(file))
+                    try:
+                        show = self.initcap_file_name(file).split(' ' + tv_show_episode[0])[0]
+                    except IndexError:
+                        show = None
                     # Route for TV Shows
-                    if tv_show_episode != [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                    if show in filtered_media and tv_show_episode != [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
                         season = int(re.sub(r'[^0-9]', '', tv_show_episode[0].lower().split('e')[0]))
-                        show_folder = os.path.join(media_path, 'TV Shows', self.initcap_file_name(file).split(' ' + tv_show_episode[0])[0], 'Season ' + str(season))
+                        show_folder = os.path.join(media_path, 'TV Shows', show, 'Season ' + str(season))
                         show_file_path = os.path.join(show_folder, file)
                         renamed_file = self.initcap_file_name(file)
                         renamed_file = renamed_file.split(tv_show_episode[0])[0]+tv_show_episode[0]+'.'+renamed_file.split('.')[-1]
@@ -189,7 +196,7 @@ class Organize(Tk):
                             progress_count += 1
                             self.progress_bar['value'] = progress_count
                     # Route for Movies
-                    elif file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                    elif self.initcap_file_name(file) in filtered_media and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
                         if os.path.exists(movies_folder):
                             shutil.move(current_file_path, movies_file_path)
                             os.rename(movies_file_path, os.path.join(movies_folder, self.initcap_file_name(file)))
@@ -209,10 +216,14 @@ class Organize(Tk):
                     movies_file_path = os.path.join(movies_folder, file)
                     current_file_path = os.path.join(path, file)
                     tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', self.initcap_file_name(file))
+                    try:
+                        show = self.initcap_file_name(file).split(' ' + tv_show_episode[0])[0]
+                    except IndexError:
+                        show = None
                     # Route for TV Shows
-                    if tv_show_episode != [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                    if show in filtered_media and tv_show_episode != [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
                         season = int(re.sub(r'[^0-9]', '', tv_show_episode[0].lower().split('e')[0]))
-                        show_folder = os.path.join(media_path, 'TV Shows', self.initcap_file_name(file).split(' ' + tv_show_episode[0])[0], 'Season ' + str(season))
+                        show_folder = os.path.join(media_path, 'TV Shows', show, 'Season ' + str(season))
                         show_file_path = os.path.join(show_folder, file)
                         renamed_file = self.initcap_file_name(file)
                         renamed_file = renamed_file.split(tv_show_episode[0])[0]+tv_show_episode[0]+'.'+renamed_file.split('.')[-1]
@@ -233,7 +244,7 @@ class Organize(Tk):
                             progress_count += 1
                             self.progress_bar['value'] = progress_count
                     # Route for Movies
-                    elif file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                    elif self.initcap_file_name(file) in filtered_media and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
                         if path not in folders_to_delete:
                             folders_to_delete.append(path)
 
@@ -320,8 +331,12 @@ class Organize(Tk):
             paths = saves.read()
             dl_path = json.loads(paths)['downloads']
             m_path = json.loads(paths)['media']
+            try:
+                self.filter_file_list == None
+            except AttributeError:
+                self.filter_file_list = self.media_files_info(dl_path, [])
             self.progress_bar_appear()
-            tl = threading.Thread(target=self.recursively_organize_shows_and_movies, args=(dl_path, m_path))
+            tl = threading.Thread(target=self.recursively_organize_shows_and_movies, args=(dl_path, m_path, self.filter_file_list))
             tl.start()
             saves.close()
 
@@ -412,7 +427,7 @@ class Organize(Tk):
             # self.progress_bar_appear()
             dl_path = json.loads(paths)['downloads']
             self.filter_window(dl_path)
-            tl = threading.Thread(target=self.media_files_info, args=(dl_path,))
+            tl = threading.Thread(target=self.media_files_info, args=(dl_path, []))
             tl.start()
             saves.close()
 
