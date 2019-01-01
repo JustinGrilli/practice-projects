@@ -57,13 +57,13 @@ class Organize(Tk):
 
         self.progress_label_text = StringVar()
         self.progress_label_text.set('')
-        progress_label = Label(right_frame, textvariable=self.progress_label_text, font='none 18 bold', fg='white', bg=colors['main'], justify=LEFT)
+        progress_label = Label(right_frame, textvariable=self.progress_label_text, font='none 16', fg='grey', bg=colors['main'], justify=LEFT)
         progress_label.pack(side=TOP, expand=True, anchor=SW)
         self.close_button = Button(right_bottom_frame, text='Close', command=self.destroy, font='none 14 bold', fg='white', bg='darkgreen')
         self.s = Style()
         self.s.theme_use('classic')
-        self.s.configure('blue.Horizontal.TProgressbar', troughcolor='#222222', background='darkgreen', thickness=25)
-        self.progress_bar = Progressbar(right_frame, style='blue.Horizontal.TProgressbar', length=600)
+        self.s.configure('blue.Horizontal.TProgressbar', troughcolor=colors['main'], background='darkgreen', thickness=50)
+        self.progress_bar = Progressbar(right_frame, style='blue.Horizontal.TProgressbar', length=800)
 
     def initcap_file_name(self, string):
         words = re.sub(r'[^a-zA-Z0-9()]', ' ', string).split(' ')
