@@ -4,7 +4,7 @@ import os
 import shutil
 import json
 import re
-from tkinter.ttk import Progressbar, Style
+from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
 import threading
 
@@ -14,56 +14,70 @@ class Organize(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title('Media Organizer 9000')
-        self.configure(bg='#222222')
         self.resizable(0, 0)
 
         self.media_extensions = ['mp4', 'mkv', 'avi', 'flv', 'wmv', 'webm', 'm4p', 'mov', 'm4v', 'mpg']
-        colors = {
+        self.colors = {
             'main': '#%02x%02x%02x' % (43, 53, 68),
             'sub': '#%02x%02x%02x' % (62, 77, 99),
             'special': '#%02x%02x%02x' % (153, 68, 12),
             'alt': 'white'
         }
+        self.configure(bg=self.colors['main'])
 
         # Frames
-        left_frame = Frame(self, bg=colors['main'])
-        left_frame.pack(side=LEFT, expand=True, fill=BOTH)
-        right_frame = Frame(self, bg=colors['main'])
-        right_frame.pack(side=LEFT, expand=True, fill=BOTH)
-        right_bottom_frame = Frame(right_frame, bg=colors['main'])
-        right_bottom_frame.pack(side=BOTTOM, expand=True, fill=BOTH)
+        self.left_frame = Frame(self, bg=self.colors['main'])
+        self.left_frame.grid(row=0, column=0, sticky=N+S+E+W, padx=2, pady=2)
+        self.middle_frame = Frame(self, bg=self.colors['main'])
+        self.right_frame = Frame(self, bg=self.colors['main'])
+        self.right_bottom_frame = Frame(self.right_frame, bg=self.colors['main'])
 
         # Images
         image_width, image_height = 35, 35
         dir_image = Image.open('Images/dir.png')
         dir_image = dir_image.resize((image_width, image_height), Image.ANTIALIAS)
         self.directory_image = ImageTk.PhotoImage(dir_image)
+        image_width, image_height = 35, 35
+        f_image = Image.open('Images/filter.png')
+        f_image = f_image.resize((image_width, image_height), Image.ANTIALIAS)
+        self.filter_image = ImageTk.PhotoImage(f_image)
 
         # Buttons
-        organize_button = Button(left_frame, text='Organize Media', command=self.organize_media, font='none 14 bold', fg='white', bg=colors['special'], width=14)
+        organize_button = Button(self.left_frame, text='Organize Media', command=self.organize_media, font='none 14 bold', fg='white', bg=self.colors['special'], width=14)
         organize_button.grid(row=0, column=0, sticky=NW, padx=1, pady=2)
-        directory_button = Button(left_frame, image=self.directory_image, command=self.choose_directory, font='none 14 bold', fg='white', bg=colors['sub'])
+        directory_button = Button(self.left_frame, image=self.directory_image, command=self.choose_directory, font='none 14 bold', fg='white', bg=self.colors['sub'])
         directory_button.grid(row=0, column=1, sticky=NW, padx=1, pady=2)
-        rename_button = Button(left_frame, text='Rename Media', command=self.rename_media, font='none 14 bold', fg='white', bg=colors['sub'], width=14)
+        filter_button = Button(self.left_frame, image=self.filter_image, command=self.media_info, font='none 14 bold', fg='white', bg=self.colors['sub'])
+        filter_button.grid(row=0, column=2, sticky=NW, padx=1, pady=2)
+        rename_button = Button(self.left_frame, text='Rename Media', command=self.rename_media, font='none 14 bold', fg='white', bg=self.colors['sub'], width=14)
         rename_button.grid(row=1, column=0, sticky=NW, padx=1, pady=2)
-        flatten_button = Button(left_frame, text='Flatten Movies', command=self.flatten_movie_files, font='none 14 bold', fg='white', bg=colors['sub'], width=14)
+        flatten_button = Button(self.left_frame, text='Flatten Movies', command=self.flatten_movie_files, font='none 14 bold', fg='white', bg=self.colors['sub'], width=14)
         flatten_button.grid(row=2, column=0, sticky=NW, padx=1, pady=2)
-        note_label = Label(left_frame, text='- Note about Organize Media -', font='none 11 bold underline', fg='grey', bg=colors['main'], width=12, wraplength=220, justify=LEFT)
-        note_label.grid(row=3, columnspan=2, sticky=N + S + E + W, pady=2)
+        note_label = Label(self.left_frame, text='- Note about Organize Media -', font='none 11 bold underline', fg='grey', bg=self.colors['main'], width=12, wraplength=220, justify=LEFT)
+        note_label.grid(row=3, columnspan=3, sticky=N + S + E + W, pady=2)
         self.label_var = StringVar()
         self.label_var.set('If have a Movies/TV Shows folder with a name other than "Movies" or "TV Shows", in your media folder, you should rename them. Casing matters!\n\nIf you do not have the folders, they will be created for you.')
-        note_label = Label(left_frame, textvariable=self.label_var, font='none 10 italic', fg='grey', bg=colors['main'], width=12, wraplength=220, justify=LEFT)
-        note_label.grid(row=4, columnspan=2, sticky=N+S+E+W)
+        note_label = Label(self.left_frame, textvariable=self.label_var, font='none 10 italic', fg='grey', bg=self.colors['main'], width=12, wraplength=260, justify=LEFT)
+        note_label.grid(row=4, columnspan=3, sticky=N+S+E+W)
 
         self.progress_label_text = StringVar()
-        self.progress_label_text.set('')
-        progress_label = Label(right_frame, textvariable=self.progress_label_text, font='none 16', fg='grey', bg=colors['main'], justify=LEFT)
-        progress_label.pack(side=TOP, expand=True, anchor=SW)
-        self.close_button = Button(right_bottom_frame, text='Close', command=self.destroy, font='none 14 bold', fg='white', bg='darkgreen')
+        self.progress_label_text.set('\n\n')
+        progress_label = Label(self.right_frame, textvariable=self.progress_label_text, font='none 16', fg='white', bg=self.colors['main'], justify=LEFT)
+        progress_label.pack(side=TOP, anchor=SW)
+        self.close_button = Button(self.right_bottom_frame, text='Close', command=self.destroy, font='none 14 bold', fg='white', bg='darkgreen')
         self.s = Style()
         self.s.theme_use('classic')
-        self.s.configure('blue.Horizontal.TProgressbar', troughcolor=colors['main'], background='darkgreen', thickness=50)
-        self.progress_bar = Progressbar(right_frame, style='blue.Horizontal.TProgressbar', length=800)
+        self.s.configure('blue.Horizontal.TProgressbar', troughcolor=self.colors['main'], background='darkgreen', thickness=50)
+        self.progress_bar = Progressbar(self.right_frame, style='blue.Horizontal.TProgressbar', length=800)
+
+        self.selected_file_header_text = StringVar()
+        self.selected_file_header_text.set('')
+        selected_files_header = Label(self.middle_frame, textvariable=self.selected_file_header_text, anchor=NW, bg=self.colors['main'], fg='white', font='none 12 bold', justify=LEFT)
+        selected_files_header.pack(side=TOP, fill=X)
+        self.selected_file_text = StringVar()
+        self.selected_file_text.set('')
+        selected_files_label = Label(self.middle_frame, textvariable=self.selected_file_text, anchor=NW, bg=self.colors['main'], fg='white', font='none 10', justify=LEFT)
+        selected_files_label.pack(side=TOP, fill=X)
 
     def initcap_file_name(self, string):
         words = re.sub(r'[^a-zA-Z0-9()]', ' ', string).split(' ')
@@ -72,6 +86,66 @@ class Organize(Tk):
         new_string = string.title()
         new_string = '.'.join([new_string, extension])
         return new_string
+
+    def media_files_info(self, folder_path):
+        total_count = 0
+        media = []
+        for path, folders, files in os.walk(folder_path):
+            for file in files:
+                current_file_path = os.path.join(path, file)
+                if file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
+                    total_count += 1
+                    tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', self.initcap_file_name(file))
+                    if tv_show_episode != [] and self.initcap_file_name(file).split(' '+tv_show_episode[0])[0] not in media:
+                        media.append(self.initcap_file_name(file).split(' '+tv_show_episode[0])[0])
+                    elif tv_show_episode == [] and self.initcap_file_name(file) not in media:
+                        media.append(self.initcap_file_name(file))
+        return [total_count, sorted(media)]
+
+    def filter_window(self, dl_path):
+        self.middle_frame.grid_forget()
+        self.filter_file_list = self.media_files_info(dl_path)[-1]
+
+        def upon_select(widget):
+            if widget.var.get():
+                self.filter_file_list.append(widget['text'])
+            else:
+                self.filter_file_list.remove(widget['text'])
+
+        def final_select():
+            self.middle_frame.grid(row=0, column=1, sticky=N+S+E+W, padx=12, pady=12)
+            self.selected_file_header_text.set('Selected Media:\n')
+            self.selected_file_text.set('- ' + '\n- '.join(self.filter_file_list))
+            top.destroy()
+
+        top = Toplevel(bg=self.colors['main'])
+        top.title('Select desired media...')
+
+        label = Label(top, text='TV Shows', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
+        label.pack(fill=X)
+        files_dict = dict()
+        for file in self.filter_file_list:
+            if '.' not in file:
+                files_dict[file] = Checkbutton(top, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
+                files_dict[file].var = BooleanVar(value=True)
+                files_dict[file]['variable'] = files_dict[file].var
+                files_dict[file]['command'] = lambda w=files_dict[file]: upon_select(w)
+                files_dict[file].pack(fill=X)
+
+        Separator(top).pack(fill=X)
+        label = Label(top, text='Movies', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
+        label.pack(fill=X)
+        for file in self.filter_file_list:
+            if '.' in file:
+                files_dict[file] = Checkbutton(top, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
+                files_dict[file].var = BooleanVar(value=True)
+                files_dict[file]['variable'] = files_dict[file].var
+                files_dict[file]['command'] = lambda w=files_dict[file]: upon_select(w)
+                files_dict[file].pack(fill=X)
+
+        Separator(top).pack(fill=X)
+        button = Button(top, text='Select', command=final_select, anchor=SW, bg=self.colors['sub'], fg='white')
+        button.pack(side=BOTTOM, fill=Y, pady=4)
 
 
     def recursively_organize_shows_and_movies(self, dl_path, media_path, delete_folders=True):
@@ -317,14 +391,41 @@ class Organize(Tk):
             tl.start()
             saves.close()
 
+    def media_info(self):
+        try:
+            # If the locations are already saved to a file, open that file
+            saves = open('settings.json', 'r')
+        except FileNotFoundError:
+            # If the locations are not saved, ask for the locations and save them to a file
+            saved_locations = open('settings.json', 'w')
+
+            download_path = filedialog.askdirectory(title='Path to Download folder')
+            media_path = filedialog.askdirectory(title='Path to Media folder')
+            dictionary = '{"downloads": "'+download_path+'", "media": "'+media_path+'"}'
+            saved_locations.write(dictionary)
+            saved_locations.close()
+            # Now open that file
+            saves = open('settings.json', 'r')
+        finally:
+            # Move new files from one location to another
+            paths = saves.read()
+            # self.progress_bar_appear()
+            dl_path = json.loads(paths)['downloads']
+            self.filter_window(dl_path)
+            tl = threading.Thread(target=self.media_files_info, args=(dl_path,))
+            tl.start()
+            saves.close()
+
     def progress_bar_appear(self):
+        self.right_frame.grid(row=0, column=2, sticky=N + S + E + W, padx=12, pady=12)
+        self.right_bottom_frame.pack(side=BOTTOM, fill=BOTH)
         self.progress_bar['value'] = 0
-        self.progress_bar.pack(side=BOTTOM)
-        self.progress_label_text.set('')
+        self.progress_bar.pack(side=TOP)
+        self.progress_label_text.set('\n\n')
         self.close_button.pack_forget()
 
     def progress_complete(self):
-        self.progress_label_text.set('Complete!')
+        self.progress_label_text.set('\nComplete!')
         self.close_button.pack(side=RIGHT, fill=X, anchor=SE, pady=4)
 
 
