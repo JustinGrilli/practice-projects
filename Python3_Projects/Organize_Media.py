@@ -14,6 +14,7 @@ class Organize(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title('Media Organizer 9000')
+        self.iconbitmap('Images/organize_media.ico')
         self.resizable(0, 0)
 
         self.media_extensions = ['mp4', 'mkv', 'avi', 'flv', 'wmv', 'webm', 'm4p', 'mov', 'm4v', 'mpg']
@@ -28,7 +29,13 @@ class Organize(Tk):
         # Frames
         self.left_frame = Frame(self, bg=self.colors['main'])
         self.left_frame.grid(row=0, column=0, sticky=N+S+E+W, padx=2, pady=2)
+
         self.middle_frame = Frame(self, bg=self.colors['main'])
+        self.middle_canvas = Canvas(self.middle_frame, bg=self.colors['main'], bd=0, highlightthickness=0, relief=RIDGE)
+        self.canvas_frame = Frame(self.middle_canvas, bg=self.colors['main'])
+        self.middle_canvas.create_window((0, 0), window=self.canvas_frame, anchor=NW)
+        self.canvas_frame.bind('<Configure>', self.mid_canvas_dim)
+
         self.right_frame = Frame(self, bg=self.colors['main'])
         self.right_bottom_frame = Frame(self.right_frame, bg=self.colors['main'])
 
@@ -76,8 +83,22 @@ class Organize(Tk):
         selected_files_header.pack(side=TOP, fill=X)
         self.selected_file_text = StringVar()
         self.selected_file_text.set('')
-        selected_files_label = Label(self.middle_frame, textvariable=self.selected_file_text, anchor=NW, bg=self.colors['main'], fg='white', font='none 10', justify=LEFT)
+        selected_files_label = Label(self.canvas_frame, textvariable=self.selected_file_text, anchor=NW, bg=self.colors['main'], fg='white', font='none 10', justify=LEFT)
         selected_files_label.pack(side=TOP, fill=X)
+        self.scroll_bar = Scrollbar(self.middle_frame, command=self.middle_canvas.yview)
+        self.middle_canvas.config(yscrollcommand=self.scroll_bar.set)
+        self.update()
+        self.starting_width = self.winfo_width()
+        self.starting_height = self.winfo_height()
+
+        # self.update()
+        # self.geometry(str(self.winfo_reqheight())+'x'+str(self.winfo_reqwidth()))
+
+    def mid_canvas_dim(self, *args):
+        try:
+            self.middle_canvas.configure(scrollregion=self.middle_canvas.bbox("all"), width=self.starting_width, height=self.starting_height)
+        except AttributeError:
+            pass
 
     def initcap_file_name(self, string):
         words = re.sub(r'[^a-zA-Z0-9()]', ' ', string).split(' ')
@@ -112,6 +133,7 @@ class Organize(Tk):
 
     def filter_window(self, dl_path):
         self.middle_frame.grid_forget()
+        self.middle_canvas.pack_forget()
         self.filter_file_list = self.media_files_info(dl_path, [])[-1]
 
         def upon_select(widget):
@@ -122,37 +144,64 @@ class Organize(Tk):
 
         def final_select():
             self.middle_frame.grid(row=0, column=1, sticky=N+S+E+W, padx=12, pady=12)
-            self.selected_file_header_text.set('Selected Media:\n')
+            self.middle_canvas.pack(side=LEFT, fill=Y)
+            self.scroll_bar.pack(side=RIGHT, fill=Y)
+            self.selected_file_header_text.set('Selected Media:')
             self.selected_file_text.set('- ' + '\n- '.join(self.filter_file_list))
             top.destroy()
 
+        def canvas_dim(*args):
+            top.update()
+            w, h = int(top.winfo_screenwidth()/7), int(top.winfo_screenheight()/2)
+            self.top_canvas.configure(scrollregion=self.top_canvas.bbox("all"), width=(w-20), height=(h))
+
         top = Toplevel(bg=self.colors['main'])
         top.title('Select desired media...')
+        top.iconbitmap('images/filter.ico')
+        w, h = int(top.winfo_screenwidth() / 7), int(top.winfo_screenheight() / 2)
+        top.geometry(str(w+2)+'x'+str(h+40))
+        top.resizable(0, 0)
+        top_frame = Frame(top, bg=self.colors['main'])
 
-        label = Label(top, text='TV Shows', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
+        self.top_canvas = Canvas(top_frame, bg=self.colors['main'], bd=0, highlightthickness=0, relief=RIDGE)
+        canv_frame = Frame(self.top_canvas, bg=self.colors['main'])
+        bottom_frame = Frame(top, bg=self.colors['main'])
+        self.top_canvas.create_window((0, 0), window=canv_frame, anchor=NW)
+        canv_frame.bind('<Configure>', canvas_dim)
+        scroll_bar = Scrollbar(top_frame)
+
+        top_frame.pack(side=TOP, fill=BOTH)
+        self.top_canvas.pack(side=LEFT, fill=BOTH)
+        bottom_frame.pack(side=BOTTOM, fill=X)
+        scroll_bar.pack(side=RIGHT, fill=Y)
+
+        scroll_bar.config(command=self.top_canvas.yview)
+        self.top_canvas.config(yscrollcommand=scroll_bar.set)
+
+        label = Label(canv_frame, text='TV Shows', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
         label.pack(fill=X)
         files_dict = dict()
         for file in self.filter_file_list:
             if '.' not in file:
-                files_dict[file] = Checkbutton(top, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
+                files_dict[file] = Checkbutton(canv_frame, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
                 files_dict[file].var = BooleanVar(value=True)
                 files_dict[file]['variable'] = files_dict[file].var
                 files_dict[file]['command'] = lambda w=files_dict[file]: upon_select(w)
                 files_dict[file].pack(fill=X)
 
-        Separator(top).pack(fill=X)
-        label = Label(top, text='Movies', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
+        Separator(canv_frame).pack(fill=X)
+        label = Label(canv_frame, text='Movies', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
         label.pack(fill=X)
         for file in self.filter_file_list:
             if '.' in file:
-                files_dict[file] = Checkbutton(top, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
+                files_dict[file] = Checkbutton(canv_frame, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
                 files_dict[file].var = BooleanVar(value=True)
                 files_dict[file]['variable'] = files_dict[file].var
                 files_dict[file]['command'] = lambda w=files_dict[file]: upon_select(w)
                 files_dict[file].pack(fill=X)
 
-        Separator(top).pack(fill=X)
-        button = Button(top, text='Select', command=final_select, anchor=SW, bg=self.colors['sub'], fg='white')
+        Separator(bottom_frame).pack(fill=X)
+        button = Button(bottom_frame, text='Select', command=final_select, anchor=SW, bg=self.colors['sub'], fg='white')
         button.pack(side=BOTTOM, fill=Y, pady=4)
 
 
