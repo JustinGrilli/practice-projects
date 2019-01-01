@@ -201,7 +201,7 @@ class Organize(Tk):
                 files_dict[file].pack(fill=X)
 
         Separator(bottom_frame).pack(fill=X)
-        button = Button(bottom_frame, text='Select', command=final_select, anchor=SW, bg=self.colors['sub'], fg='white')
+        button = Button(bottom_frame, text='Select', command=final_select, anchor=SW, bg=self.colors['special'], fg='white', font='none 12 bold')
         button.pack(side=BOTTOM, fill=Y, pady=4)
 
 
