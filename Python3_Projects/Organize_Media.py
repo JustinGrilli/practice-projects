@@ -6,6 +6,7 @@ import json
 import re
 from tkinter.ttk import Progressbar, Style
 from PIL import Image, ImageTk
+import threading
 
 
 class Organize(Tk):
@@ -182,6 +183,8 @@ class Organize(Tk):
                     if f in folder:
                         if os.path.exists(os.path.join(dl_path, f)):
                             shutil.rmtree(os.path.join(dl_path, f))
+
+        self.progress_complete()
         return None
 
     def flatten_movies(self, media_path, delete_folders=True):
@@ -220,15 +223,16 @@ class Organize(Tk):
                         if f in folder:
                             if os.path.exists(os.path.join(movies_folder, f)):
                                 shutil.rmtree(os.path.join(movies_folder, f))
+            self.progress_complete()
         return None
 
     def organize_media(self):
         try:
             # If the locations are already saved to a file, open that file
-            saves = open('path_saves.json', 'r')
+            saves = open('settings.json', 'r')
         except FileNotFoundError:
             # If the locations are not saved, ask for the locations and save them to a file
-            saved_locations = open('path_saves.json', 'w')
+            saved_locations = open('settings.json', 'w')
 
             download_path = filedialog.askdirectory(title='Path to Download folder')
             media_path = filedialog.askdirectory(title='Path to Media folder')
@@ -236,21 +240,21 @@ class Organize(Tk):
             saved_locations.write(dictionary)
             saved_locations.close()
             # Now open that file
-            saves = open('path_saves.json', 'r')
+            saves = open('settings.json', 'r')
         finally:
             # Move new files from one location to another
             paths = saves.read()
             dl_path = json.loads(paths)['downloads']
             m_path = json.loads(paths)['media']
             self.progress_bar_appear()
-            self.recursively_organize_shows_and_movies(dl_path, m_path, delete_folders=True)
+            tl = threading.Thread(target=self.recursively_organize_shows_and_movies, args=(dl_path, m_path))
+            tl.start()
             saves.close()
-            self.progress_complete()
 
     def choose_directory(self):
         download_path = filedialog.askdirectory(title='Path to Download folder')
         media_path = filedialog.askdirectory(title='Path to Media folder')
-        saved_locations = open('path_saves.json', 'w')
+        saved_locations = open('settings.json', 'w')
         dictionary = '{"downloads": "' + download_path + '", "media": "' + media_path + '"}'
         saved_locations.write(dictionary)
         saved_locations.close()
@@ -270,10 +274,10 @@ class Organize(Tk):
     def rename_media(self):
         try:
             # If the locations are already saved to a file, open that file
-            saves = open('path_saves.json', 'r')
+            saves = open('settings.json', 'r')
         except FileNotFoundError:
             # If the locations are not saved, ask for the locations and save them to a file
-            saved_locations = open('path_saves.json', 'w')
+            saved_locations = open('settings.json', 'w')
 
             download_path = filedialog.askdirectory(title='Path to Download folder')
             media_path = filedialog.askdirectory(title='Path to Media folder')
@@ -281,7 +285,7 @@ class Organize(Tk):
             saved_locations.write(dictionary)
             saved_locations.close()
             # Now open that file
-            saves = open('path_saves.json', 'r')
+            saves = open('settings.json', 'r')
         finally:
             # Move new files from one location to another
             paths = saves.read()
@@ -292,10 +296,10 @@ class Organize(Tk):
     def flatten_movie_files(self):
         try:
             # If the locations are already saved to a file, open that file
-            saves = open('path_saves.json', 'r')
+            saves = open('settings.json', 'r')
         except FileNotFoundError:
             # If the locations are not saved, ask for the locations and save them to a file
-            saved_locations = open('path_saves.json', 'w')
+            saved_locations = open('settings.json', 'w')
 
             download_path = filedialog.askdirectory(title='Path to Download folder')
             media_path = filedialog.askdirectory(title='Path to Media folder')
@@ -303,15 +307,15 @@ class Organize(Tk):
             saved_locations.write(dictionary)
             saved_locations.close()
             # Now open that file
-            saves = open('path_saves.json', 'r')
+            saves = open('settings.json', 'r')
         finally:
             # Move new files from one location to another
             paths = saves.read()
             self.progress_bar_appear()
             m_path = json.loads(paths)['media']
-            self.flatten_movies(m_path)
+            tl = threading.Thread(target=self.flatten_movies, args=(m_path,))
+            tl.start()
             saves.close()
-            self.progress_complete()
 
     def progress_bar_appear(self):
         self.progress_bar['value'] = 0
