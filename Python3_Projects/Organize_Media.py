@@ -17,6 +17,9 @@ class Organize(Tk):
         self.iconbitmap('Images/organize_media.ico')
         self.resizable(0, 0)
 
+        self.starting_width = self.winfo_width()
+        self.starting_height = self.winfo_height()
+
         self.media_extensions = ['mp4', 'mkv', 'avi', 'flv', 'wmv', 'webm', 'm4p', 'mov', 'm4v', 'mpg']
         self.colors = {
             'main': '#%02x%02x%02x' % (43, 53, 68),
@@ -75,7 +78,7 @@ class Organize(Tk):
         self.s = Style()
         self.s.theme_use('classic')
         self.s.configure('blue.Horizontal.TProgressbar', troughcolor=self.colors['main'], background='darkgreen', thickness=50)
-        self.progress_bar = Progressbar(self.right_frame, style='blue.Horizontal.TProgressbar', length=800)
+        self.progress_bar = Progressbar(self.right_frame, style='blue.Horizontal.TProgressbar', length=500)
 
         self.selected_file_header_text = StringVar()
         self.selected_file_header_text.set('')
@@ -95,10 +98,7 @@ class Organize(Tk):
         # self.geometry(str(self.winfo_reqheight())+'x'+str(self.winfo_reqwidth()))
 
     def mid_canvas_dim(self, *args):
-        try:
-            self.middle_canvas.configure(scrollregion=self.middle_canvas.bbox("all"), width=self.starting_width, height=self.starting_height)
-        except AttributeError:
-            pass
+        self.middle_canvas.configure(scrollregion=self.middle_canvas.bbox("all"), width=self.starting_width, height=self.starting_height)
 
     def initcap_file_name(self, string):
         words = re.sub(r'[^a-zA-Z0-9()]', ' ', string).split(' ')
@@ -147,7 +147,7 @@ class Organize(Tk):
             self.middle_canvas.pack(side=LEFT, fill=Y)
             self.scroll_bar.pack(side=RIGHT, fill=Y)
             self.selected_file_header_text.set('Selected Media:')
-            self.selected_file_text.set('- ' + '\n- '.join(self.filter_file_list))
+            self.selected_file_text.set('+ ' + '\n+ '.join(self.filter_file_list))
             top.destroy()
 
         def canvas_dim(*args):
