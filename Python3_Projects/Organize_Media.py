@@ -152,14 +152,16 @@ class Organize(Tk):
 
         def canvas_dim(*args):
             top.update()
-            w, h = int(top.winfo_screenwidth()/7), int(top.winfo_screenheight()/2)
-            self.top_canvas.configure(scrollregion=self.top_canvas.bbox("all"), width=(w-20), height=(h))
+            # w, h = int(top.winfo_screenwidth()/7), int(top.winfo_screenheight()/2)
+            w, h = self.starting_width, self.starting_height
+            self.top_canvas.configure(scrollregion=self.top_canvas.bbox("all"), width=w, height=h)
 
         top = Toplevel(bg=self.colors['main'])
         top.title('Select desired media...')
         top.iconbitmap('images/filter.ico')
-        w, h = int(top.winfo_screenwidth() / 7), int(top.winfo_screenheight() / 2)
-        top.geometry(str(w+2)+'x'+str(h+40))
+        # w, h = int(top.winfo_screenwidth() / 7), int(top.winfo_screenheight() / 2)
+        w, h = self.starting_width, self.starting_height
+        top.geometry(str(w+20)+'x'+str(h+40))
         top.resizable(0, 0)
         top_frame = Frame(top, bg=self.colors['main'])
 
