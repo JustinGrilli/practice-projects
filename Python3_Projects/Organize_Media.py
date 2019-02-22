@@ -95,10 +95,32 @@ class Organize(Tk):
         self.starting_height = self.winfo_height()
 
     def tv_show_ep(self, file):
+        """ Finds the pattern of the TV Show and number for the season based on the pattern.
+
+        :param file: The file name to extract the tv show episode pattern and season from.
+        :return: The tv show pattern and tv show season number.
+        """
+        bad_nums = ['360', '480', '720', '1080']
+        season = []
         tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', self.initcap_file_name(file))
-        if tv_show_episode == []:
+        if tv_show_episode != []:
+            tv_show_episode = tv_show_episode[0]
+            season = int(re.sub(r'[^0-9]', '', tv_show_episode.lower().split('e')[0]))
+        else:
             tv_show_episode = re.findall(r'\d+[xX]\d+', self.initcap_file_name(file))
-        return tv_show_episode
+            if tv_show_episode != []:
+                tv_show_episode = tv_show_episode[0]
+                season = int(re.sub(r'[^0-9]', '', tv_show_episode.lower().split('x')[0]))
+            else:
+                numbers = re.findall(r'\d+', self.initcap_file_name(file))
+                for num in numbers:
+                    if (len(num) == 3 and num not in bad_nums) or (len(num) == 4 and num[:2] != '20' and num not in bad_nums):
+                        tv_show_episode.append(num)
+                if tv_show_episode != []:
+                    tv_show_episode = tv_show_episode[0]
+                    season = int(re.sub(r'[^0-9]', '', tv_show_episode[:-2]))
+
+        return tv_show_episode, season
 
     def mid_canvas_dim(self, *args):
         self.middle_canvas.configure(scrollregion=self.middle_canvas.bbox("all"), width=self.starting_width, height=self.starting_height)
@@ -118,10 +140,10 @@ class Organize(Tk):
         for path, folders, files in os.walk(folder_path):
             for file in files:
                 current_file_path = os.path.join(path, file)
-                tv_show_episode = self.tv_show_ep(file)
+                tv_show_episode, season = self.tv_show_ep(file)
                 try:
-                    media_file = self.initcap_file_name(file).split(' ' + tv_show_episode[0])[0]
-                except IndexError:
+                    media_file = self.initcap_file_name(file).split(' ' + tv_show_episode)[0]
+                except TypeError:
                     media_file = self.initcap_file_name(file)
                 if filter:
                     if media_file in filtered_media and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
@@ -223,18 +245,17 @@ class Organize(Tk):
                 for file in files:
                     movies_file_path = os.path.join(movies_folder, file)
                     current_file_path = os.path.join(path, file)
-                    tv_show_episode = self.tv_show_ep(file)
+                    tv_show_episode, season = self.tv_show_ep(file)
                     try:
-                        show = self.initcap_file_name(file).split(' ' + tv_show_episode[0])[0]
-                    except IndexError:
+                        show = self.initcap_file_name(file).split(' ' + tv_show_episode)[0]
+                    except TypeError:
                         show = None
                     # Route for TV Shows
                     if show in filtered_media and tv_show_episode != [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
-                        season = int(re.sub(r'[^0-9]', '', tv_show_episode[0].lower().split('e')[0].split('x')[0]))
                         show_folder = os.path.join(media_path, 'TV Shows', show, 'Season ' + str(season))
                         show_file_path = os.path.join(show_folder, file)
                         renamed_file = self.initcap_file_name(file)
-                        renamed_file = renamed_file.split(tv_show_episode[0])[0]+tv_show_episode[0]+'.'+renamed_file.split('.')[-1]
+                        renamed_file = renamed_file.split(tv_show_episode)[0]+tv_show_episode+'.'+renamed_file.split('.')[-1]
                         if os.path.exists(show_folder):
                             shutil.move(current_file_path, show_file_path)
                             os.rename(show_file_path, os.path.join(show_folder, renamed_file))
@@ -268,18 +289,17 @@ class Organize(Tk):
                 for file in files:
                     movies_file_path = os.path.join(movies_folder, file)
                     current_file_path = os.path.join(path, file)
-                    tv_show_episode = self.tv_show_ep(file)
+                    tv_show_episode, season = self.tv_show_ep(file)
                     try:
-                        show = self.initcap_file_name(file).split(' ' + tv_show_episode[0])[0]
-                    except IndexError:
+                        show = self.initcap_file_name(file).split(' ' + tv_show_episode)[0]
+                    except TypeError:
                         show = None
                     # Route for TV Shows
                     if show in filtered_media and tv_show_episode != [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
-                        season = int(re.sub(r'[^0-9]', '', tv_show_episode[0].lower().split('e')[0].split('x')[0]))
                         show_folder = os.path.join(media_path, 'TV Shows', show, 'Season ' + str(season))
                         show_file_path = os.path.join(show_folder, file)
                         renamed_file = self.initcap_file_name(file)
-                        renamed_file = renamed_file.split(tv_show_episode[0])[0]+tv_show_episode[0]+'.'+renamed_file.split('.')[-1]
+                        renamed_file = renamed_file.split(tv_show_episode)[0]+tv_show_episode+'.'+renamed_file.split('.')[-1]
                         if path not in folders_to_delete:
                             folders_to_delete.append(path)
 
@@ -343,7 +363,7 @@ class Organize(Tk):
                     for file in files:
                         movies_file_path = os.path.join(movies_folder, file)
                         current_file_path = os.path.join(path, file)
-                        tv_show_episode = self.tv_show_ep(file)
+                        tv_show_episode, season = self.tv_show_ep(file)
                         # Route for TV Shows
                         if tv_show_episode == [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(current_file_path):
                             if path not in folders_to_delete:
@@ -404,10 +424,10 @@ class Organize(Tk):
         for path, folders, files in os.walk(media_path):
             for file in files:
                 file_path = os.path.join(path, file)
-                tv_show_episode = self.tv_show_ep(file)
+                tv_show_episode, season = self.tv_show_ep(file)
                 if tv_show_episode != [] and file.split('.')[-1] in self.media_extensions and os.path.isfile(file_path):
                     renamed_file = self.initcap_file_name(file)
-                    renamed_file = renamed_file.split(tv_show_episode[0])[0] + tv_show_episode[0] + '.' + renamed_file.split('.')[-1]
+                    renamed_file = renamed_file.split(tv_show_episode)[0] + tv_show_episode + '.' + renamed_file.split('.')[-1]
                     os.rename(file_path, os.path.join(path, renamed_file))
                 elif file.split('.')[-1] in self.media_extensions and os.path.isfile(file_path):
                     os.rename(file_path, os.path.join(path, self.initcap_file_name(file)))
