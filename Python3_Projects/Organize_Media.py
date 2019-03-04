@@ -114,7 +114,7 @@ class Organize(Tk):
             else:
                 numbers = re.findall(r'\d+', self.initcap_file_name(file))
                 for num in numbers:
-                    if (len(num) == 3 and num not in bad_nums) or (len(num) == 4 and num[:2] != '20' and num not in bad_nums):
+                    if (len(num) == 3 and num not in bad_nums) or (len(num) == 4 and num[:2] != '20' and int(num[-2:]) < 30 and num not in bad_nums):
                         tv_show_episode.append(num)
                 if tv_show_episode != []:
                     tv_show_episode = tv_show_episode[0]
