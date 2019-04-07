@@ -1,14 +1,11 @@
+import threading, sys, re, json, shutil, os
 from tkinter import *
-import tkinter.filedialog as filedialog
-import os
-import shutil
-import json
-import re
 from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
-import threading
+
+sys.path.append('settings')
 from general_functions import tv_show_ep, initcap_file_name, rename_all_media_in_directory
-from mo_functions import get_downloads_or_media_path_dict, save_paths_to_json
+from mo_functions import get_downloads_or_media_path, save_paths_to_json
 from mo_settings import media_extensions, required_paths
 
 
@@ -61,7 +58,7 @@ class Organize(Tk):
         directory_button.grid(row=0, column=1, sticky=NW, padx=1, pady=2)
         filter_button = Button(self.left_frame, image=self.filter_image, command=self.media_info, font='none 14 bold', fg='white', bg=self.colors['sub'])
         filter_button.grid(row=0, column=2, sticky=NW, padx=1, pady=2)
-        rename_button = Button(self.left_frame, text='Rename Media', command=rename_all_media_in_directory(get_downloads_or_media_path_dict(path='media')), font='none 14 bold', fg='white', bg=self.colors['sub'], width=14)
+        rename_button = Button(self.left_frame, text='Rename Media', command=self.rename_media, font='none 14 bold', fg='white', bg=self.colors['sub'], width=14)
         rename_button.grid(row=1, column=0, sticky=NW, padx=1, pady=2)
         flatten_button = Button(self.left_frame, text='Flatten Movies', command=self.flatten_movie_files, font='none 14 bold', fg='white', bg=self.colors['sub'], width=14)
         flatten_button.grid(row=2, column=0, sticky=NW, padx=1, pady=2)
@@ -96,6 +93,9 @@ class Organize(Tk):
         self.starting_width = self.winfo_width()
         self.starting_height = self.winfo_height()
 
+    def rename_media(self):
+        rename_all_media_in_directory(get_downloads_or_media_path(path='media'))
+
     def mid_canvas_dim(self, *args):
         self.middle_canvas.configure(scrollregion=self.middle_canvas.bbox("all"), width=self.starting_width, height=self.starting_height)
 
@@ -105,28 +105,43 @@ class Organize(Tk):
         for path, folders, files in os.walk(folder_path):
             for file in files:
                 current_file_path = os.path.join(path, file)
-                tv_show_episode, season = tv_show_ep(file)
-                try:
-                    media_file = initcap_file_name(file).split(' ' + tv_show_episode)[0]
-                except TypeError:
-                    media_file = initcap_file_name(file)
-                if filtered_media != [] and media_file in filtered_media and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
-                    total_count += 1
-                    if media_file not in media:
-                        media.append(media_file)
-                else:
-                    if file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
+                # If its a media file
+                if file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path) and type(file) != list:
+                    # If it's a tv show
+                    tv_show_episode, season = tv_show_ep(file)
+                    if tv_show_episode:
+                        # If the episode is the first part of the file name
+                        if initcap_file_name(file).split(' ')[0] == tv_show_episode:
+                            media_file = initcap_file_name(file).replace(tv_show_episode+' ', '').split('.')[0]
+                        else:
+                            media_file = initcap_file_name(file).split(' ' + tv_show_episode)[0]
+                    else:
+                        media_file = initcap_file_name(file)
+
+                    # If there's a list to filter, filter the list
+                    if filtered_media != []:
+                        if media_file in filtered_media:
+                            total_count += 1
+                            if media_file not in media:
+                                media.append(media_file)
+                    else:
                         total_count += 1
                         if media_file not in media:
                             media.append(media_file)
         return [total_count, sorted(media)]
 
     def filter_window(self, dl_path):
+        """ The filter window that appears to filter the media files to be sorted.
+
+        :param dl_path: The path to the download folder
+        :return:
+        """
         self.middle_frame.grid_forget()
         self.middle_canvas.pack_forget()
         self.filter_file_list = self.media_files_info(folder_path=dl_path)[-1]
 
         def upon_select(widget):
+            # Add or remove files from list when they are toggled
             if widget.var.get():
                 self.filter_file_list.append(widget['text'])
             else:
@@ -171,6 +186,7 @@ class Organize(Tk):
         label = Label(canv_frame, text='TV Shows', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
         label.pack(fill=X)
         files_dict = dict()
+        print(self.filter_file_list)
         for file in self.filter_file_list:
             if '.' not in file:
                 files_dict[file] = Checkbutton(canv_frame, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
@@ -194,7 +210,6 @@ class Organize(Tk):
         button = Button(bottom_frame, text='Select', command=final_select, anchor=SW, bg=self.colors['special'], fg='white', font='none 12 bold')
         button.pack(side=BOTTOM, fill=Y, pady=4)
 
-
     def recursively_organize_shows_and_movies(self, dl_path, media_path, filtered_media, delete_folders=True):
         movies_folder = os.path.join(media_path, 'Movies')
         folders_in_main = [folders for path, folders, files in os.walk(dl_path) if path == dl_path][:][0]
@@ -210,12 +225,16 @@ class Organize(Tk):
                     movies_file_path = os.path.join(movies_folder, file)
                     current_file_path = os.path.join(path, file)
                     tv_show_episode, season = tv_show_ep(file)
-                    try:
-                        show = initcap_file_name(file).split(' ' + tv_show_episode)[0]
-                    except TypeError:
+                    if tv_show_episode:
+                        # If the episode is the first part of the file name
+                        if initcap_file_name(file).split(' ')[0] == tv_show_episode:
+                            show = initcap_file_name(file).replace(tv_show_episode + ' ', '').split('.')[0]
+                        else:
+                            show = initcap_file_name(file).split(' ' + tv_show_episode)[0]
+                    else:
                         show = None
                     # Route for TV Shows
-                    if show in filtered_media and tv_show_episode != [] and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
+                    if show in filtered_media and tv_show_episode and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
                         show_folder = os.path.join(media_path, 'TV Shows', show, 'Season ' + str(season))
                         show_file_path = os.path.join(show_folder, file)
                         renamed_file = initcap_file_name(file)
@@ -254,12 +273,16 @@ class Organize(Tk):
                     movies_file_path = os.path.join(movies_folder, file)
                     current_file_path = os.path.join(path, file)
                     tv_show_episode, season = tv_show_ep(file)
-                    try:
-                        show = initcap_file_name(file).split(' ' + tv_show_episode)[0]
-                    except TypeError:
+                    if tv_show_episode:
+                        # If the episode is the first part of the file name
+                        if initcap_file_name(file).split(' ')[0] == tv_show_episode:
+                            show = initcap_file_name(file).replace(tv_show_episode + ' ', '').split('.')[0]
+                        else:
+                            show = initcap_file_name(file).split(' ' + tv_show_episode)[0]
+                    else:
                         show = None
                     # Route for TV Shows
-                    if show in filtered_media and tv_show_episode != [] and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
+                    if show in filtered_media and tv_show_episode and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
                         show_folder = os.path.join(media_path, 'TV Shows', show, 'Season ' + str(season))
                         show_file_path = os.path.join(show_folder, file)
                         renamed_file = initcap_file_name(file)
@@ -348,8 +371,8 @@ class Organize(Tk):
         return None
 
     def organize_media(self):
-        dl_path = get_downloads_or_media_path_dict('downloads')
-        m_path = get_downloads_or_media_path_dict('media')
+        dl_path = get_downloads_or_media_path('downloads')
+        m_path = get_downloads_or_media_path('media')
         try:
             self.filter_file_list == None
         except AttributeError:
@@ -360,12 +383,12 @@ class Organize(Tk):
 
     def flatten_movie_files(self):
             self.progress_bar_appear()
-            m_path = get_downloads_or_media_path_dict('media')
+            m_path = get_downloads_or_media_path('media')
             tl = threading.Thread(target=self.flatten_movies, args=(m_path,))
             tl.start()
 
     def media_info(self):
-            dl_path = get_downloads_or_media_path_dict('downloads')
+            dl_path = get_downloads_or_media_path('downloads')
             self.filter_window(dl_path)
             tl = threading.Thread(target=self.media_files_info, kwargs={'folder_path': dl_path})
             tl.start()

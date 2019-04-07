@@ -20,16 +20,19 @@ def tv_show_ep(file):
     """
     bad_nums = ['360', '480', '720', '1080', '264']
     season = []
+    # if the tv show has a pattern like s01e01
     tv_show_episode = re.findall(r'[sS]\d+[eE]\d+', initcap_file_name(file))
     if tv_show_episode != []:
         tv_show_episode = tv_show_episode[0]
         season = int(re.sub(r'[^0-9]', '', tv_show_episode.lower().split('e')[0]))
     else:
+        # if the tv show has a pattern like 1x01
         tv_show_episode = re.findall(r'\d+[xX]\d+', initcap_file_name(file))
         if tv_show_episode != []:
             tv_show_episode = tv_show_episode[0]
             season = int(re.sub(r'[^0-9]', '', tv_show_episode.lower().split('x')[0]))
         else:
+            # if the tv show has a pattern like 101
             numbers = re.findall(r'\d+', initcap_file_name(file))
             for num in numbers:
                 if (len(num) == 3 and num not in bad_nums) or \
@@ -38,9 +41,6 @@ def tv_show_ep(file):
             if tv_show_episode != []:
                 tv_show_episode = tv_show_episode[0]
                 season = int(re.sub(r'[^0-9]', '', tv_show_episode[:-2]))
-
-    if tv_show_episode != []:
-        print(f'File: {file}\nEpisode: {tv_show_episode}\nSeason: {season}\n')
 
     return tv_show_episode, season
 
