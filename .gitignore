@@ -25,3 +25,5 @@ yarn-error.log*
 node_modules
 venv
 package-lock.json
+
+Python3_Projects/Organize_Media/settings/settings.json
