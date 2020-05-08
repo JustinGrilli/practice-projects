@@ -1,7 +1,11 @@
 import tkinter.filedialog as filedialog
 import json
 import os
-from .mo_settings import required_paths
+
+
+with open('settings/config.json', 'r') as config:
+    configuration = json.load(config)
+    required_paths = configuration['required_paths']
 
 
 def save_paths_to_json(json_file_name='settings', required_paths=required_paths):

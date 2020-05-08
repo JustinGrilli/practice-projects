@@ -1,7 +1,12 @@
 import re
 import os
+import json
 from datetime import date
-from .mo_settings import media_extensions
+
+
+with open('settings/config.json', 'r') as config:
+    configuration = json.load(config)
+    media_extensions = configuration['media_extensions']
 
 
 def initcap_file_name(string):

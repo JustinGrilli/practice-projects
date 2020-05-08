@@ -1,12 +1,19 @@
-import threading, sys, re, json, shutil, os
+import threading
+import shutil
+import os
+import json
 from tkinter import *
 from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
 
-# sys.path.append('settings')
 from settings.general_functions import tv_show_ep, initcap_file_name, rename_all_media_in_directory
 from settings.mo_functions import get_downloads_or_media_path, save_paths_to_json
-from settings.mo_settings import media_extensions, required_paths
+
+
+with open('settings/config.json', 'r') as config:
+    configuration = json.load(config)
+    media_extensions = configuration['media_extensions']
+    required_paths = configuration['required_paths']
 
 
 class Organize(Tk):
@@ -93,13 +100,8 @@ class Organize(Tk):
         self.starting_width = self.winfo_width()
         self.starting_height = self.winfo_height()
 
-    def rename_media(self):
-        rename_all_media_in_directory(get_downloads_or_media_path(path='media'))
-
-    def mid_canvas_dim(self, *args):
-        self.middle_canvas.configure(scrollregion=self.middle_canvas.bbox("all"), width=self.starting_width, height=self.starting_height)
-
-    def get_show_title(self, tv_show_episode, clean_file_name):
+    @staticmethod
+    def get_show_title(tv_show_episode, clean_file_name):
         if tv_show_episode:
             # If the episode is the first part of the file name
             if clean_file_name.split(' ')[0] == tv_show_episode:
@@ -107,6 +109,13 @@ class Organize(Tk):
             else:
                 return clean_file_name.split(' ' + tv_show_episode)[0]
         return clean_file_name
+
+    @staticmethod
+    def rename_media():
+        rename_all_media_in_directory(get_downloads_or_media_path(path='media'))
+
+    def mid_canvas_dim(self, *args):
+        self.middle_canvas.configure(scrollregion=self.middle_canvas.bbox("all"), width=self.starting_width, height=self.starting_height)
 
     def media_files_info(self, folder_path='', filtered_media=[]):
         total_count = 0
@@ -260,7 +269,6 @@ class Organize(Tk):
 
     def flatten_movies(self, media_path, delete_folders=True):
         movies_folder = os.path.join(media_path, 'Movies')
-        folders_in_main = [folders for path, folders, files in os.walk(movies_folder) if path == movies_folder][:][0]
         folders_to_delete = []
         total_count = 0
         progress_count = 0
@@ -277,23 +285,22 @@ class Organize(Tk):
                     for file in files:
                         movies_file_path = os.path.join(movies_folder, file)
                         current_file_path = os.path.join(path, file)
-                        tv_show_episode, season = tv_show_ep(file)
+                        renamed_file = initcap_file_name(file)
+                        tv_show_episode, season = tv_show_ep(renamed_file)
                         # Route for TV Shows
                         if tv_show_episode == [] and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
                             if path not in folders_to_delete:
                                 folders_to_delete.append(path)
                             shutil.move(current_file_path, movies_file_path)
-                            os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
+                            os.rename(movies_file_path, os.path.join(movies_folder, renamed_file))
                             progress_count += 1
-                            self.progress_label_text.set('Moved:\n'+initcap_file_name(file))
+                            self.progress_label_text.set('Moved:\n'+renamed_file)
                             self.progress_bar['value'] = progress_count
             # Delete folders that contained media files that were moved
             if delete_folders:
-                for f in folders_in_main:
-                    for folder in folders_to_delete:
-                        if f in folder:
-                            if os.path.exists(os.path.join(movies_folder, f)):
-                                shutil.rmtree(os.path.join(movies_folder, f))
+                for folder in folders_to_delete:
+                    if os.path.exists(folder):
+                        shutil.rmtree(folder)
             self.progress_complete()
         return None
 
