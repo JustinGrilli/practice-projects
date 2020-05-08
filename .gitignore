@@ -22,6 +22,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+__pycache__
+__pycache__/*
 node_modules
 venv
 package-lock.json
+
+Python3_Projects/Organize_Media/settings/config.json

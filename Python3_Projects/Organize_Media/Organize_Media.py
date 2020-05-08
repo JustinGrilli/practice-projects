@@ -1,12 +1,19 @@
-import threading, sys, re, json, shutil, os
+import threading
+import shutil
+import os
+import json
 from tkinter import *
 from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
 
-sys.path.append('settings')
-from general_functions import tv_show_ep, initcap_file_name, rename_all_media_in_directory
-from mo_functions import get_downloads_or_media_path, save_paths_to_json
-from mo_settings import media_extensions, required_paths
+from settings.general_functions import tv_show_ep, initcap_file_name, rename_all_media_in_directory
+from settings.mo_functions import get_downloads_or_media_path, save_paths_to_json
+
+
+with open('settings/config.json', 'r') as config:
+    configuration = json.load(config)
+    media_extensions = configuration['media_extensions']
+    required_paths = configuration['required_paths']
 
 
 class Organize(Tk):
@@ -93,7 +100,18 @@ class Organize(Tk):
         self.starting_width = self.winfo_width()
         self.starting_height = self.winfo_height()
 
-    def rename_media(self):
+    @staticmethod
+    def get_show_title(tv_show_episode, clean_file_name):
+        if tv_show_episode:
+            # If the episode is the first part of the file name
+            if clean_file_name.split(' ')[0] == tv_show_episode:
+                return clean_file_name.replace(tv_show_episode + ' ', '').split('.')[0]
+            else:
+                return clean_file_name.split(' ' + tv_show_episode)[0]
+        return clean_file_name
+
+    @staticmethod
+    def rename_media():
         rename_all_media_in_directory(get_downloads_or_media_path(path='media'))
 
     def mid_canvas_dim(self, *args):
@@ -108,18 +126,12 @@ class Organize(Tk):
                 # If its a media file
                 if file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path) and type(file) != list:
                     # If it's a tv show
-                    tv_show_episode, season = tv_show_ep(file)
-                    if tv_show_episode:
-                        # If the episode is the first part of the file name
-                        if initcap_file_name(file).split(' ')[0] == tv_show_episode:
-                            media_file = initcap_file_name(file).replace(tv_show_episode+' ', '').split('.')[0]
-                        else:
-                            media_file = initcap_file_name(file).split(' ' + tv_show_episode)[0]
-                    else:
-                        media_file = initcap_file_name(file)
+                    media_file = initcap_file_name(file)
+                    tv_show_episode, season = tv_show_ep(media_file)
+                    media_file = self.get_show_title(tv_show_episode, media_file)
 
                     # If there's a list to filter, filter the list
-                    if filtered_media != []:
+                    if filtered_media:
                         if media_file in filtered_media:
                             total_count += 1
                             if media_file not in media:
@@ -186,7 +198,6 @@ class Organize(Tk):
         label = Label(canv_frame, text='TV Shows', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
         label.pack(fill=X)
         files_dict = dict()
-        print(self.filter_file_list)
         for file in self.filter_file_list:
             if '.' not in file:
                 files_dict[file] = Checkbutton(canv_frame, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
@@ -212,128 +223,52 @@ class Organize(Tk):
 
     def recursively_organize_shows_and_movies(self, dl_path, media_path, filtered_media, delete_folders=True):
         movies_folder = os.path.join(media_path, 'Movies')
-        folders_in_main = [folders for path, folders, files in os.walk(dl_path) if path == dl_path][:][0]
         folders_to_delete = []
         progress_count = 0
         total_count = self.media_files_info(folder_path=dl_path, filtered_media=filtered_media)[0]
         self.progress_bar['maximum'] = total_count
         self.progress_bar['value'] = progress_count
         for path, folders, files in os.walk(dl_path):
-            if path == dl_path:
-                # Moves Media files in the main folder
-                for file in files:
-                    movies_file_path = os.path.join(movies_folder, file)
-                    current_file_path = os.path.join(path, file)
-                    tv_show_episode, season = tv_show_ep(file)
-                    if tv_show_episode:
-                        # If the episode is the first part of the file name
-                        if initcap_file_name(file).split(' ')[0] == tv_show_episode:
-                            show = initcap_file_name(file).replace(tv_show_episode + ' ', '').split('.')[0]
-                        else:
-                            show = initcap_file_name(file).split(' ' + tv_show_episode)[0]
-                    else:
-                        show = None
+            for file in files:
+                movies_file_path = os.path.join(movies_folder, file)
+                current_file_path = os.path.join(path, file)
+                extension = file.split('.')[-1] if os.path.isfile(current_file_path) else None
+                renamed_file = initcap_file_name(file)
+                tv_show_episode, season = tv_show_ep(renamed_file)
+                show_title = self.get_show_title(tv_show_episode, renamed_file)
+                if extension and extension in media_extensions \
+                        and (show_title in filtered_media or renamed_file in filtered_media):
                     # Route for TV Shows
-                    if show in filtered_media and tv_show_episode and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
-                        show_folder = os.path.join(media_path, 'TV Shows', show, 'Season ' + str(season))
-                        show_file_path = os.path.join(show_folder, file)
-                        renamed_file = initcap_file_name(file)
-                        renamed_file = renamed_file.split(tv_show_episode)[0]+tv_show_episode+'.'+renamed_file.split('.')[-1]
-                        if os.path.exists(show_folder):
-                            shutil.move(current_file_path, show_file_path)
-                            os.rename(show_file_path, os.path.join(show_folder, renamed_file))
-                            self.progress_label_text.set('Moved & Renamed Show:\nFrom: ' + file + '\nTo: ' + renamed_file)
-                            progress_count += 1
-                            self.progress_bar['value'] = progress_count
-                        else:
-                            os.makedirs(show_folder)
-                            shutil.move(current_file_path, show_file_path)
-                            os.rename(show_file_path, os.path.join(show_folder, renamed_file))
-                            self.progress_label_text.set('Moved & Renamed Show:\nFrom: ' + file + '\nTo: ' + renamed_file)
-                            progress_count += 1
-                            self.progress_bar['value'] = progress_count
-                    # Route for Movies
-                    elif initcap_file_name(file) in filtered_media and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
-                        if os.path.exists(movies_folder):
-                            shutil.move(current_file_path, movies_file_path)
-                            os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
-                            self.progress_label_text.set('Moved & Renamed Movie:\nFrom: ' + file + '\nTo: ' + initcap_file_name(file))
-                            progress_count += 1
-                            self.progress_bar['value'] = progress_count
-                        else:
-                            os.makedirs(movies_folder)
-                            shutil.move(current_file_path, movies_file_path)
-                            os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
-                            self.progress_label_text.set('Moved & Renamed Movie:\nFrom: ' + file + '\nTo: ' + initcap_file_name(file))
-                            progress_count += 1
-                            self.progress_bar['value'] = progress_count
-            else:
-                # Moves Media files NOT in the main folder
-                for file in files:
-                    movies_file_path = os.path.join(movies_folder, file)
-                    current_file_path = os.path.join(path, file)
-                    tv_show_episode, season = tv_show_ep(file)
                     if tv_show_episode:
-                        # If the episode is the first part of the file name
-                        if initcap_file_name(file).split(' ')[0] == tv_show_episode:
-                            show = initcap_file_name(file).replace(tv_show_episode + ' ', '').split('.')[0]
-                        else:
-                            show = initcap_file_name(file).split(' ' + tv_show_episode)[0]
-                    else:
-                        show = None
-                    # Route for TV Shows
-                    if show in filtered_media and tv_show_episode and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
-                        show_folder = os.path.join(media_path, 'TV Shows', show, 'Season ' + str(season))
+                        show_folder = os.path.join(media_path, 'TV Shows', show_title, 'Season ' + str(season))
                         show_file_path = os.path.join(show_folder, file)
-                        renamed_file = initcap_file_name(file)
-                        renamed_file = renamed_file.split(tv_show_episode)[0]+tv_show_episode+'.'+renamed_file.split('.')[-1]
-                        if path not in folders_to_delete:
-                            folders_to_delete.append(path)
-
-                        if os.path.exists(show_folder):
-                            shutil.move(current_file_path, show_file_path)
-                            os.rename(show_file_path, os.path.join(show_folder, renamed_file))
-                            self.progress_label_text.set('Moved & Renamed Show:\nFrom: ' + file + '\nTo: ' + renamed_file)
-                            progress_count += 1
-                            self.progress_bar['value'] = progress_count
-                        else:
+                        renamed_file = renamed_file.split(tv_show_episode)[0] + tv_show_episode + '.' + extension
+                        if not os.path.exists(show_folder):
                             os.makedirs(show_folder)
-                            shutil.move(current_file_path, show_file_path)
-                            os.rename(show_file_path, os.path.join(show_folder, renamed_file))
-                            self.progress_label_text.set('Moved & Renamed Show:\nFrom: ' + file + '\nTo: ' + renamed_file)
-                            progress_count += 1
-                            self.progress_bar['value'] = progress_count
+                        shutil.move(current_file_path, show_file_path)
+                        os.rename(show_file_path, os.path.join(show_folder, renamed_file))
+                        self.progress_label_text.set('Moved & Renamed Show:\nFrom: ' + file + '\nTo: ' + renamed_file)
                     # Route for Movies
-                    elif initcap_file_name(file) in filtered_media and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
-                        if path not in folders_to_delete:
-                            folders_to_delete.append(path)
-
-                        if os.path.exists(movies_folder):
-                            shutil.move(current_file_path, movies_file_path)
-                            os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
-                            self.progress_label_text.set('Moved & Renamed Movie:\nFrom: ' + file + '\nTo: ' + initcap_file_name(file))
-                            progress_count += 1
-                            self.progress_bar['value'] = progress_count
-                        else:
+                    else:
+                        if not os.path.exists(movies_folder):
                             os.makedirs(movies_folder)
-                            shutil.move(current_file_path, movies_file_path)
-                            os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
-                            self.progress_label_text.set('Moved & Renamed Movie:\nFrom: ' + file + '\nTo: ' + initcap_file_name(file))
-                            progress_count += 1
-                            self.progress_bar['value'] = progress_count
+                        shutil.move(current_file_path, movies_file_path)
+                        os.rename(movies_file_path, os.path.join(movies_folder, renamed_file))
+                        self.progress_label_text.set('Moved & Renamed Movie:\nFrom: ' + file + '\nTo: ' + renamed_file)
+                    progress_count += 1
+                    self.progress_bar['value'] = progress_count
+                    if path != dl_path and path not in folders_to_delete:
+                        folders_to_delete.append(path)
         # Delete folders that contained media files that were moved
         if delete_folders:
-            for f in folders_in_main:
-                for folder in folders_to_delete:
-                    if os.path.join(dl_path, f) in folder:
-                        if os.path.exists(os.path.join(dl_path, f)):
-                            shutil.rmtree(os.path.join(dl_path, f))
+            for folder in folders_to_delete:
+                if os.path.exists(folder):
+                    shutil.rmtree(folder)
         self.progress_complete()
         return None
 
     def flatten_movies(self, media_path, delete_folders=True):
         movies_folder = os.path.join(media_path, 'Movies')
-        folders_in_main = [folders for path, folders, files in os.walk(movies_folder) if path == movies_folder][:][0]
         folders_to_delete = []
         total_count = 0
         progress_count = 0
@@ -350,23 +285,22 @@ class Organize(Tk):
                     for file in files:
                         movies_file_path = os.path.join(movies_folder, file)
                         current_file_path = os.path.join(path, file)
-                        tv_show_episode, season = tv_show_ep(file)
+                        renamed_file = initcap_file_name(file)
+                        tv_show_episode, season = tv_show_ep(renamed_file)
                         # Route for TV Shows
                         if tv_show_episode == [] and file.split('.')[-1] in media_extensions and os.path.isfile(current_file_path):
                             if path not in folders_to_delete:
                                 folders_to_delete.append(path)
                             shutil.move(current_file_path, movies_file_path)
-                            os.rename(movies_file_path, os.path.join(movies_folder, initcap_file_name(file)))
+                            os.rename(movies_file_path, os.path.join(movies_folder, renamed_file))
                             progress_count += 1
-                            self.progress_label_text.set('Moved:\n'+initcap_file_name(file))
+                            self.progress_label_text.set('Moved:\n'+renamed_file)
                             self.progress_bar['value'] = progress_count
             # Delete folders that contained media files that were moved
             if delete_folders:
-                for f in folders_in_main:
-                    for folder in folders_to_delete:
-                        if f in folder:
-                            if os.path.exists(os.path.join(movies_folder, f)):
-                                shutil.rmtree(os.path.join(movies_folder, f))
+                for folder in folders_to_delete:
+                    if os.path.exists(folder):
+                        shutil.rmtree(folder)
             self.progress_complete()
         return None
 
