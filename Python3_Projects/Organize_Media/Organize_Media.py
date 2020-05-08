@@ -34,6 +34,7 @@ class Organize(Tk):
             'alt': 'white'
         }
         self.configure(bg=self.colors['main'])
+        self.filter_file_list = None
 
         # Frames
         self.left_frame = Frame(self, bg=self.colors['main'])
@@ -231,7 +232,7 @@ class Organize(Tk):
         # Generate TV Show checklist
         create_checklist(canv_frame, title='TV Shows', files=[file for file in self.filter_file_list if '.' not in file])
         # Add a separator
-        Separator(canv_frame).pack(fill=X)
+        Separator(canv_frame).pack(fill=X, pady=8)
         # Generate Movie Checklist
         create_checklist(canv_frame, title='Movies', files=[file for file in self.filter_file_list if '.' in file])
 
@@ -325,10 +326,9 @@ class Organize(Tk):
     def organize_media(self):
         dl_path = get_downloads_or_media_path('downloads')
         m_path = get_downloads_or_media_path('media')
-        try:
-            self.filter_file_list == None
-        except AttributeError:
-            self.filter_file_list = self.media_files_info(folder_path=dl_path)
+        # If the filter file list has not been created, it will create it with all media files in the download location
+        if not self.filter_file_list:
+            self.filter_file_list = self.media_files_info(folder_path=dl_path)[-1]
         self.progress_bar_appear()
         tl = threading.Thread(target=self.recursively_organize_shows_and_movies, args=(dl_path, m_path, self.filter_file_list))
         tl.start()
