@@ -155,9 +155,22 @@ class Organize(Tk):
         def upon_select(widget):
             # Add or remove files from list when they are toggled
             if widget.var.get():
-                self.filter_file_list.append(widget['text'])
+                if widget['text'] not in self.filter_file_list:
+                    self.filter_file_list.append(widget['text'])
             else:
-                self.filter_file_list.remove(widget['text'])
+                if widget['text'] in self.filter_file_list:
+                    self.filter_file_list.remove(widget['text'])
+
+        def toggle_all(x):
+            button, files_dict = x
+            for file, widget in files_dict.items():
+                widget.var = BooleanVar(value=False if button.cget('text') == '[   ]' else True)
+                widget['variable'] = widget.var
+                upon_select(widget)
+            if button.cget('text') == '[   ]':
+                button['text'] = '[ X ]'
+            else:
+                button['text'] = '[   ]'
 
         def final_select():
             self.middle_frame.grid(row=0, column=1, sticky=N+S+E+W, padx=12, pady=12)
@@ -171,6 +184,26 @@ class Organize(Tk):
             top.update()
             w, h = self.starting_width, self.starting_height
             self.top_canvas.configure(scrollregion=self.top_canvas.bbox("all"), width=w, height=h)
+
+        def create_checklist(frame, title, files):
+            title_frame = Frame(frame, bg=self.colors['main'])
+            title_frame.pack(fill=X)
+            label = Label(title_frame, text=title, font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white',
+                          justify=LEFT)
+            label.pack(side=LEFT, fill=X)
+            dictionary = dict()
+            for file in files:
+                dictionary[file] = Checkbutton(frame, text=file, onvalue=True, offvalue=False, anchor=NW,
+                                         bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
+                dictionary[file].var = BooleanVar(value=True)
+                dictionary[file]['variable'] = dictionary[file].var
+                dictionary[file]['command'] = lambda w=dictionary[file]: upon_select(w)
+                dictionary[file].pack(fill=X)
+
+            toggle_all_button = Button(title_frame, text='[   ]', font='none 10', anchor=NW,
+                                       bg=self.colors['main'], fg='white', justify=LEFT)
+            toggle_all_button['command'] = lambda d=(toggle_all_button, dictionary): toggle_all(d)
+            toggle_all_button.pack(side=RIGHT)
 
         top = Toplevel(bg=self.colors['main'])
         top.title('Select desired media...')
@@ -195,27 +228,12 @@ class Organize(Tk):
         scroll_bar.config(command=self.top_canvas.yview)
         self.top_canvas.config(yscrollcommand=scroll_bar.set)
 
-        label = Label(canv_frame, text='TV Shows', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
-        label.pack(fill=X)
-        files_dict = dict()
-        for file in self.filter_file_list:
-            if '.' not in file:
-                files_dict[file] = Checkbutton(canv_frame, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
-                files_dict[file].var = BooleanVar(value=True)
-                files_dict[file]['variable'] = files_dict[file].var
-                files_dict[file]['command'] = lambda w=files_dict[file]: upon_select(w)
-                files_dict[file].pack(fill=X)
-
+        # Generate TV Show checklist
+        create_checklist(canv_frame, title='TV Shows', files=[file for file in self.filter_file_list if '.' not in file])
+        # Add a separator
         Separator(canv_frame).pack(fill=X)
-        label = Label(canv_frame, text='Movies', font='none 12 bold', anchor=NW, bg=self.colors['main'], fg='white', justify=LEFT)
-        label.pack(fill=X)
-        for file in self.filter_file_list:
-            if '.' in file:
-                files_dict[file] = Checkbutton(canv_frame, text=file, onvalue=True, offvalue=False, anchor=NW, bg=self.colors['main'], fg='white', selectcolor=self.colors['main'])
-                files_dict[file].var = BooleanVar(value=True)
-                files_dict[file]['variable'] = files_dict[file].var
-                files_dict[file]['command'] = lambda w=files_dict[file]: upon_select(w)
-                files_dict[file].pack(fill=X)
+        # Generate Movie Checklist
+        create_checklist(canv_frame, title='Movies', files=[file for file in self.filter_file_list if '.' in file])
 
         Separator(bottom_frame).pack(fill=X)
         button = Button(bottom_frame, text='Select', command=final_select, anchor=SW, bg=self.colors['special'], fg='white', font='none 12 bold')
