@@ -20,14 +20,15 @@ def initcap_file_name(string):
 
 
 def tv_show_ep(file):
-    """ Finds the pattern of the TV Show and number for the season based on the pattern.
+    """ Finds the pattern of the TV Show, and number for the season and episode based on the pattern.
 
     :param file: The file name to extract the tv show episode pattern and season from.
-    :return: The tv show pattern and tv show season number.
+    :return: The tv show pattern, tv show season number, and episode number.
     """
     bad_nums = ['360', '480', '720', '1080', '264']
     tv_show_episode = []
     season = []
+    episode = []
     # if the tv show has a pattern like...
     patterns = [r'[sS]\d{1,2}[eE]\d{1,2}',  # s1e1 or s01e01
                 r'\d{1,2}[xX]\d{1,2}',  # 1x01 or 10x01
@@ -41,16 +42,18 @@ def tv_show_ep(file):
             if patterns.index(pattern) != 2:
                 tv_show_episode = matches[0]
                 season = int(re.findall(r'\d+', tv_show_episode)[0])
+                episode = int(re.findall(r'\d+', tv_show_episode)[-1])
             else:
                 matches = [num for num in matches
                            if int(num[-2:]) < 30 and num not in bad_nums
                            and (int(num) < current_year-30 or int(num) > current_year)]
                 if matches:
                     tv_show_episode = matches[0]
-                    season = int(re.sub(r'[^0-9]', '', tv_show_episode[:-2]))
+                    season = int(tv_show_episode[:-2])
+                    episode = int(tv_show_episode[-2:])
             continue
 
-    return tv_show_episode, season
+    return tv_show_episode, season, episode
 
 
 def rename_all_media_in_directory(media_path, media_extensions=media_extensions):
