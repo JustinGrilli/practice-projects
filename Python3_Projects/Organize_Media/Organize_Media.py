@@ -99,7 +99,7 @@ class Organize(Tk):
 
         # Frames
         self.left_frame = Frame(self, bg=self.colors['main'])
-        self.left_frame.grid(row=0, column=0, sticky=N+S+E+W, padx=2, pady=2)
+        self.left_frame.grid(row=0, column=0, sticky=N+S+E+W, padx=14, pady=14)
         self.status_bar = Label(self, text='\n', font='none 10 italic', bg=self.colors['main'], fg=self.colors['alt'], relief=SUNKEN)
         self.status_bar.grid(row=1, column=0, columnspan=3, sticky=N+S+E+W, padx=2, pady=2)
 
@@ -113,13 +113,23 @@ class Organize(Tk):
         self.right_bottom_frame = Frame(self.right_frame, bg=self.colors['main'])
 
         # Images
-        image_width, image_height = 35, 35
+        image_width, image_height = 64, 64
+        organize_media_image = Image.open('Images/organize_media.png')
+        organize_media_image = organize_media_image.resize((image_width, image_height), Image.ANTIALIAS)
+        self.organize_media_image = ImageTk.PhotoImage(organize_media_image)
         dir_image = Image.open('Images/red_dir.png')
         dir_image = dir_image.resize((image_width, image_height), Image.ANTIALIAS)
         self.directory_image = ImageTk.PhotoImage(dir_image)
-        f_image = Image.open('Images/filter.png')
-        f_image = f_image.resize((image_width, image_height), Image.ANTIALIAS)
-        self.filter_image = ImageTk.PhotoImage(f_image)
+        filter_image = Image.open('Images/filter.png')
+        filter_image = filter_image.resize((image_width, image_height), Image.ANTIALIAS)
+        self.filter_image = ImageTk.PhotoImage(filter_image)
+        rename_image = Image.open('Images/rename.png')
+        rename_image = rename_image.resize((image_width, image_height), Image.ANTIALIAS)
+        self.rename_image = ImageTk.PhotoImage(rename_image)
+        flatten_image = Image.open('Images/flatten.png')
+        flatten_image = flatten_image.resize((image_width, image_height), Image.ANTIALIAS)
+        self.flatten_image = ImageTk.PhotoImage(flatten_image)
+        image_width, image_height = 32, 32
         deselect_image = Image.open('Images/deselect.png')
         deselect_image = deselect_image.resize((image_width, image_height), Image.ANTIALIAS)
         self.deselect_image = ImageTk.PhotoImage(deselect_image)
@@ -132,21 +142,31 @@ class Organize(Tk):
                     'If you do not have the folders, they will be created for you.'
 
         # Buttons
-        organize_button = Button(self.left_frame, text='Organize Media', command=self.organize_media,
-                                 font='none 14 bold', cursor="hand2", fg=self.colors['alt'], bg=self.colors['special'], width=14)
-        organize_button.grid(row=0, column=0, sticky=NW, padx=1, pady=2)
+        organize_button = Button(self.left_frame, image=self.organize_media_image, command=self.organize_media,
+                                 cursor="hand2", bg=self.colors['main'], relief=FLAT)
+        Label(self.left_frame, text='Organize', font='none 10 bold', bg=self.colors['main'], fg=self.colors['special']
+              ).grid(row=1, column=0, sticky=N, padx=1, pady=2)
+        organize_button.grid(row=0, column=0, sticky=N, padx=1, pady=4)
         directory_button = Button(self.left_frame, image=self.directory_image, command=save_paths_to_json,
                                   cursor="hand2", bg=self.colors['main'], relief=FLAT)
-        directory_button.grid(row=0, column=1, sticky=NW, padx=1, pady=2)
+        Label(self.left_frame, text='Locate Media', font='none 10 bold', bg=self.colors['main'], fg=self.colors['special']
+              ).grid(row=1, column=1, sticky=N, padx=1, pady=2)
+        directory_button.grid(row=0, column=1, sticky=N, padx=1, pady=4)
         filter_button = Button(self.left_frame, image=self.filter_image, command=self.start_filter_window,
                                cursor="hand2", bg=self.colors['main'], relief=FLAT)
-        filter_button.grid(row=0, column=2, sticky=NW, padx=1, pady=2)
-        rename_button = Button(self.left_frame, text='Rename Media', command=self.rename_media, font='none 14 bold',
-                               fg=self.colors['alt'], bg=self.colors['sub'], cursor="hand2", width=14)
-        rename_button.grid(row=1, column=0, sticky=NW, padx=1, pady=2)
-        flatten_button = Button(self.left_frame, text='Flatten Movies', command=self.flatten_movie_files,
-                                font='none 14 bold', cursor="hand2", fg=self.colors['alt'], bg=self.colors['sub'], width=14)
-        flatten_button.grid(row=2, column=0, sticky=NW, padx=1, pady=2)
+        Label(self.left_frame, text='Filter', font='none 10 bold', bg=self.colors['main'], fg=self.colors['special']
+              ).grid(row=1, column=2, sticky=N, padx=1, pady=2)
+        filter_button.grid(row=0, column=2, sticky=N, padx=1, pady=4)
+        rename_button = Button(self.left_frame, image=self.rename_image, command=self.rename_media, relief=FLAT,
+                               bg=self.colors['main'], cursor="hand2")
+        Label(self.left_frame, text='Rename', font='none 10 bold', bg=self.colors['main'], fg=self.colors['special']
+              ).grid(row=3, column=0, sticky=N, padx=1, pady=2)
+        rename_button.grid(row=2, column=0, sticky=N, padx=1, pady=4)
+        flatten_button = Button(self.left_frame, image=self.flatten_image, command=self.flatten_movie_files,
+                                cursor="hand2", bg=self.colors['main'], relief=FLAT)
+        Label(self.left_frame, text='Flatten', font='none 10 bold', bg=self.colors['main'], fg=self.colors['special']
+              ).grid(row=3, column=1, sticky=N, padx=1, pady=2)
+        flatten_button.grid(row=2, column=1, sticky=N, padx=1, pady=4)
 
         # Tooltips
         CreateToolTip(organize_button, f'Organize your media into Movies/TV Shows folders:\n\n{note_text}',
@@ -273,7 +293,7 @@ class Organize(Tk):
                         'genres': self.imdb_info[title]['info']['genres'],
                         'path': current_file_path}
 
-        self.status_bar['text'] = f'\n...'
+        self.status_bar['text'] = f'\n'
         self.status_bar.update()
         return {t: media_dict[t] for t in sorted(file_list)}
 
@@ -384,7 +404,7 @@ class Organize(Tk):
 
                 toggle = BooleanVar(value=False)
                 toggle_all_button = Button(media_type_frame, image=self.deselect_image, text='deselect', anchor=NW,
-                                           cursor='hand2', bg=self.colors['special'], justify=LEFT)
+                                           cursor='hand2', relief=FLAT, bg=self.colors['main'], justify=LEFT)
                 toggle_all_button['command'] = lambda d=(toggle_all_button, dictionary, toggle): toggle_all(d)
                 toggle_all_button.pack(side=RIGHT)
 
