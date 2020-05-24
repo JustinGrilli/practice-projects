@@ -14,7 +14,5 @@
   "required_paths": [
     "downloads",
     "media"
-  ],
-  "downloads": "C:/Users/HOVER/Documents/MEDIA_TEST/Downloads",
-  "media": "C:/Users/HOVER/Documents/MEDIA_TEST/Media"
+  ]
 }
