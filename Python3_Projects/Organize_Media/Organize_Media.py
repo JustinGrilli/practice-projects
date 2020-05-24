@@ -100,7 +100,8 @@ class Organize(Tk):
         # Frames
         self.left_frame = Frame(self, bg=self.colors['main'])
         self.left_frame.grid(row=0, column=0, sticky=N+S+E+W, padx=14, pady=14)
-        self.status_bar = Label(self, text='\n', font='none 10 italic', bg=self.colors['main'], fg=self.colors['alt'], relief=SUNKEN)
+        self.status_bar = Label(self, text='\n', font='none 10 italic', bg=self.colors['sub'],
+                                fg=self.colors['alt'], relief=SUNKEN)
         self.status_bar.grid(row=1, column=0, columnspan=3, sticky=N+S+E+W, padx=2, pady=2)
 
         self.middle_frame = Label(self, bg=self.colors['main'], relief=SUNKEN)
@@ -193,7 +194,7 @@ class Organize(Tk):
         self.s.configure('blue.Horizontal.TProgressbar', troughcolor=self.colors['main'], background='darkgreen', thickness=50)
         self.progress_bar = Progressbar(self.right_frame, style='blue.Horizontal.TProgressbar', length=500)
 
-        self.selected_files_header = Label(self.middle_frame, text='Selected Media', anchor=NW, bg=self.colors['main'],
+        self.selected_files_header = Label(self.middle_frame, text='Selected Media', anchor=N, bg=self.colors['main'],
                                            fg=self.colors['alt'], relief=RAISED, font='none 12 bold')
         self.selected_files_header.pack(side=TOP, fill=X)
         self.selected_files_label = Label(self.canvas_frame, text='', anchor=NW, bg=self.colors['sub'], fg=self.colors['alt'],
