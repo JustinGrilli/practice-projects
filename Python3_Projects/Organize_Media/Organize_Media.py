@@ -114,7 +114,7 @@ class Organize(Tk):
 
         # Images
         image_width, image_height = 35, 35
-        dir_image = Image.open('Images/dir.png')
+        dir_image = Image.open('Images/red_dir.png')
         dir_image = dir_image.resize((image_width, image_height), Image.ANTIALIAS)
         self.directory_image = ImageTk.PhotoImage(dir_image)
         f_image = Image.open('Images/filter.png')
