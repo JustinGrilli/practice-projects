@@ -1,12 +1,6 @@
 import re
 import os
-import json
 from datetime import date
-
-
-with open('settings/config.json', 'r') as config:
-    configuration = json.load(config)
-    media_extensions = configuration['media_extensions']
 
 
 def initcap_file_name(string):
@@ -56,24 +50,16 @@ def tv_show_ep(file):
     return tv_show_episode, season, episode
 
 
-def rename_all_media_in_directory(media_path, media_extensions=media_extensions):
+def rename_all_media_in_directory(media_info):
     """ Renames all of the media files in the path
 
-    :param media_path: Path to the files to rename
-    :param media_extensions: A list of acceptable media extentions
+    :param media_info: Dict of all files to rename
     :return: None
     """
-    for path, folders, files in os.walk(media_path):
-        for file in files:
-            file_path = os.path.join(path, file)
-            tv_show_episode, season = tv_show_ep(file)
-            renamed_file = initcap_file_name(file)
-            # If it is a media file
-            if file.split('.')[-1] in media_extensions and os.path.isfile(file_path):
-                # If it's a TV show episode
-                if tv_show_episode != []:
-                    # Remove extract crap after the episode in name -- i.e. family.guy.s01e01.XXX420JUSTBLAZE.crap.mp4
-                    renamed_file = renamed_file.split(tv_show_episode)[0] + tv_show_episode + '.' + renamed_file.split('.')[-1]
-                os.rename(file_path, os.path.join(path, renamed_file))
+    for file, info in media_info.items():
+        file_folder = os.path.dirname(info['path'])
+        renamed_file_path = os.path.join(file_folder, info['file_name'] + file.split('.')[-1])
+        if not os.path.exists(renamed_file_path):
+            os.rename(info['path'], renamed_file_path)
     return None
 
