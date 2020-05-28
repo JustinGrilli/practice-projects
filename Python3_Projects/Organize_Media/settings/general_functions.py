@@ -24,19 +24,21 @@ def tv_show_ep(file):
     season = []
     episode = []
     # if the tv show has a pattern like...
-    patterns = [r'[sS]\d{1,2}[eE]\d{1,2}',  # s1e1 or s01e01
-                r'\d{1,2}[xX]\d{1,2}',  # 1x01 or 10x01
-                r'[._\- ](\d{3,4})[._\- ]'  # 101 or 1001
+    patterns = [r's\d{1,2}e\d{1,2}',  # s1e1 or s01e01
+                r'\d{1,2}x\d{1,2}',  # 1x01 or 10x01
+                # Season 1 Episode 1 or Season 01 Episode 01
+                r'(season[^\w\d]\d{1,2}[^\w\d]episode[^\w\d]\d{1,2})[^\d]?',
+                r'[^\w\d]*(\d{3,4})[^\w\d]*'  # 101 or 1001
                 ]
     current_year = date.today().year
     for pattern in patterns:
-        matches = re.findall(pattern, file)
+        matches = re.findall(pattern, file, re.IGNORECASE)
         # If the pattern returns matches
         if matches:
-            if patterns.index(pattern) != 2:
+            if patterns.index(pattern) != 3:
                 tv_show_episode = matches[0]
-                season = int(re.findall(r'\d+', tv_show_episode)[0])
-                episode = int(re.findall(r'\d+', tv_show_episode)[-1])
+                season, episode = [int(x) for x in re.findall(r'\d+', tv_show_episode)]
+                return tv_show_episode, season, episode
             else:
                 matches = [num for num in matches
                            if int(num[-2:]) < 30 and num not in bad_nums
@@ -45,7 +47,7 @@ def tv_show_ep(file):
                     tv_show_episode = matches[0]
                     season = int(tv_show_episode[:-2])
                     episode = int(tv_show_episode[-2:])
-            continue
+                    return tv_show_episode, season, episode
 
     return tv_show_episode, season, episode
 
