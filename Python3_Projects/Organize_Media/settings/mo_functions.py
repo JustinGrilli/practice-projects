@@ -11,6 +11,8 @@ def save_paths_to_json():
     for item in required_paths:
         path = filedialog.askdirectory(title=f'Path to {item.title()} folder')
         config[item] = path
+        if not config[item]:
+            del config[item]
 
     with open('settings/config.json', 'w') as n:
         json.dump(config, n, indent=2)
