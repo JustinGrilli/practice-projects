@@ -9,12 +9,11 @@
     "m4p",
     "mov",
     "m4v",
-    "mpg"
+    "mpg",
+    "3gp"
   ],
   "required_paths": [
     "downloads",
     "media"
-  ],
-  "downloads": "E:/Downloads",
-  "media": "E:/"
+  ]
 }
