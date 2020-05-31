@@ -7,6 +7,7 @@ from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
 from imdb import IMDb
 from copy import deepcopy
+import encodings.idna
 
 from settings.general_functions import tv_show_ep, initcap_file_name, rename_all_media_in_directory
 from settings.mo_functions import get_downloads_or_media_path, save_paths_to_json
@@ -85,7 +86,7 @@ class Organize(Tk):
 
         self.config(bg=self.colors['main'])
 
-        with open('settings/config.json', 'r') as config:
+        with open('settings/config.json', 'r', encoding='utf-8') as config:
             self.configuration = json.load(config)
             self.media_extensions = self.configuration['media_extensions']
 
@@ -326,7 +327,7 @@ class Organize(Tk):
 
     def on_first_locate_media(self, widgets):
         save_paths_to_json()
-        with open('settings/config.json', 'r') as config:
+        with open('settings/config.json', 'r', encoding='utf-8') as config:
             self.configuration = json.load(config)
         if 'downloads' in self.configuration:
             for w in widgets:
@@ -383,42 +384,51 @@ class Organize(Tk):
         return library
 
     def append_imdb_info(self, db, title, kind, year):
-        # Open temp cache for this title
-        with open(f'settings/TEMP_{title}.json', 'r') as cache:
-            temp = json.load(cache)
-        possible_titles = [x for x in db.search_movie(title, results=1)
-                           if (not year or x['year'] == year) and x['kind'] == kind]
-        if not possible_titles:
+        try:
+            # Open temp cache for this title
+            with open(f'settings/TEMP_{title}.json', 'r', encoding='utf-8') as cache:
+                temp = json.load(cache)
             possible_titles = [x for x in db.search_movie(title, results=1)
-                               if x['kind'] == kind]
-        if not possible_titles:
-            possible_titles = [x for x in db.search_movie(title, results=1) if x['kind'] in ['tv series', 'movie']]
+                               if (not year or x['year'] == year) and x['kind'] == kind]
+            if not possible_titles:
+                possible_titles = [x for x in db.search_movie(title, results=1)
+                                   if x['kind'] == kind]
+            if not possible_titles:
+                possible_titles = [x for x in db.search_movie(title, results=1) if x['kind'] in ['tv series', 'movie']]
 
-        if possible_titles:
-            imdb_info = db.get_movie(possible_titles[0].movieID)
-        else:
-            imdb_info = None
+            if possible_titles:
+                imdb_info = db.get_movie(possible_titles[0].movieID)
+            else:
+                imdb_info = None
 
-        if imdb_info:
-            temp[str(title)]['info'] = {'long imdb title': imdb_info['long imdb title'],
-                                        'genres': imdb_info['genres']}
-        else:
-            temp[str(title)]['info'] = None
+            if imdb_info:
+                temp[str(title)]['info'] = {'long imdb title': imdb_info['long imdb title'],
+                                            'genres': imdb_info['genres']}
+            else:
+                temp[str(title)]['info'] = None
 
-        if possible_titles and possible_titles[0]['kind'] == 'tv series':
-            temp[str(title)]['episodes'] = {
-                k: {key: value['title'] for key, value in v.items()}
-                for k, v in db.get_movie_episodes(possible_titles[0].movieID)['data']['episodes'].items()}
+            if possible_titles and possible_titles[0]['kind'] == 'tv series':
+                temp[str(title)]['episodes'] = {
+                    k: {key: value['title'] for key, value in v.items()}
+                    for k, v in db.get_movie_episodes(possible_titles[0].movieID)['data']['episodes'].items()}
 
-        else:
-            temp[str(title)]['episodes'] = None
+            else:
+                temp[str(title)]['episodes'] = None
 
-        # Save info gathered from IMDb to temp cached file
-        with open(f'settings/TEMP_{title}.json', 'w') as cache:
-            json.dump(temp, cache)
-        # Update progress
-        self.s.configure(style=self.style, text=f'Gathered info from IMDb...\n{kind.title()}: {title}\n')
-        self.progress_bar['value'] += 1
+            # Save info gathered from IMDb to temp cached file
+            with open(f'settings/TEMP_{title}.json', 'w', encoding='utf-8') as cache:
+                json.dump(temp, cache)
+            # Update progress
+            self.s.configure(style=self.style, text=f'Gathered info from IMDb...\n{kind.title()}: {title}\n')
+        except Exception as e:
+            error = f'{title}:\n{e}'
+            top = Toplevel(self, bg=self.colors['main'])
+            Label(top, text=error, bg=self.colors['main'], fg=self.colors['font'], wraplength=400).pack()
+            Button(top, text='Okay', cursor='hand2', command=top.destroy,
+                   bg=self.colors['special'], fg=self.colors['font']).pack(side=BOTTOM)
+            self.wait_window(top)
+        finally:
+            self.progress_bar['value'] += 1
 
         # If this is the final task
         if self.progress_bar['value'] == self.progress_bar['maximum']:
@@ -524,7 +534,7 @@ class Organize(Tk):
             return 'No Media'
 
         if not os.path.exists(self.library):
-            with open(self.library, 'w') as cache_file:
+            with open(self.library, 'w', encoding='utf-8') as cache_file:
                 json.dump({}, cache_file)
         # Read the library
         with open(self.library, 'r') as cache_file:
@@ -971,7 +981,7 @@ class Organize(Tk):
 
     def locate_media(self):
         save_paths_to_json()
-        with open('settings/config.json', 'r') as config:
+        with open('settings/config.json', 'r', encoding='utf-8') as config:
             self.configuration = json.load(config)
         if "downloads" in self.configuration:
             self.buttons_config['Select Media']['button'].pack()
