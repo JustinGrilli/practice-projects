@@ -824,12 +824,12 @@ class Organize(Tk):
 
         def upon_select(widget):
             if widget['button'].var.get():
-                if widget['todo'] not in final_todo_list:
-                    final_todo_list.append(widget['todo'])
+                if widget['todo'] not in self.final_todo_list:
+                    self.final_todo_list.append(widget['todo'])
                     widget['button']['bg'] = self.colors['alt']
             else:
-                if widget['todo'] in final_todo_list:
-                    final_todo_list.remove(widget['todo'])
+                if widget['todo'] in self.final_todo_list:
+                    self.final_todo_list.remove(widget['todo'])
                     widget['button']['bg'] = self.colors['main']
 
         def on_submit():
