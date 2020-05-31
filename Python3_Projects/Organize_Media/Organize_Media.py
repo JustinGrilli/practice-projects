@@ -7,7 +7,6 @@ from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
 from imdb import IMDb
 from copy import deepcopy
-from pprint import pprint
 
 from settings.general_functions import tv_show_ep, initcap_file_name, rename_all_media_in_directory
 from settings.mo_functions import get_downloads_or_media_path, save_paths_to_json
@@ -75,7 +74,6 @@ class Organize(Tk):
         Tk.__init__(self)
         self.title('Media Organizer 9000')
         self.iconbitmap('Images/organize_media.ico')
-        self.geometry(f'{int(self.winfo_screenwidth()*0.8)}x{int(self.winfo_screenheight()*0.8)}')
 
         self.colors = {
             'main': '#%02x%02x%02x' % (20, 20, 20),
@@ -84,10 +82,16 @@ class Organize(Tk):
             'alt': '#%02x%02x%02x' % (60, 111, 194),
             'font': '#%02x%02x%02x' % (255, 255, 255)
         }
+
+        self.config(bg=self.colors['main'])
+
         with open('settings/config.json', 'r') as config:
             self.configuration = json.load(config)
             self.media_extensions = self.configuration['media_extensions']
 
+        self.on_startup()
+
+        self.geometry(f'{int(self.winfo_screenwidth()*0.8)}x{int(self.winfo_screenheight()*0.8)}')
         self.configure(bg=self.colors['main'])
         ''' Filter media will contain a dictionary like:
             {path: {file_name: name, title: title, kind: kind, ...}}'''
@@ -169,7 +173,7 @@ class Organize(Tk):
             self.buttons_config[label_text]['button'] = button
             # Button label
             label = Label(padding_frame, text=label_text, font='none 10 bold',
-                  bg=self.colors['main'], fg=self.colors['font'])
+                          bg=self.colors['main'], fg=self.colors['font'])
             label.pack(fill=X)
             self.buttons_config[label_text]['label'] = label
             # Button tooltip
@@ -319,6 +323,26 @@ class Organize(Tk):
                                                                    "year": file_info['year'], "kind": file_info['kind']}
 
         return missing_titles
+
+    def on_first_locate_media(self, widgets):
+        save_paths_to_json()
+        with open('settings/config.json', 'r') as config:
+            self.configuration = json.load(config)
+        if 'downloads' in self.configuration:
+            for w in widgets:
+                w.destroy()
+
+    def on_startup(self):
+        if 'downloads' not in self.configuration:
+            with Image.open(f'Images/dir.png') as img:
+                img_o = img.resize((94, 94), Image.ANTIALIAS)
+                img_o = ImageTk.PhotoImage(img_o)
+            lbl = Label(self, text='Locate Media', bg=self.colors['main'], fg=self.colors['font'], font='none 20 bold')
+            b = Button(self, image=img_o, bg=self.colors['main'], relief=FLAT, cursor='hand2')
+            b.config(command=lambda x=(b, lbl): self.on_first_locate_media(x))
+            b.pack()
+            lbl.pack()
+            self.wait_window(b)
 
     def on_window_adjust(self, event):
         """ Handles resizing progress bar, when the app is resized """
@@ -497,7 +521,7 @@ class Organize(Tk):
         if not files_info:
             self.progress_bar_appear()
             self.progress_complete('\nNo Media Detected...\n')
-            return None
+            return 'No Media'
 
         if not os.path.exists(self.library):
             with open(self.library, 'w') as cache_file:
@@ -661,9 +685,6 @@ class Organize(Tk):
                     self.toggle_all_buttons[kind].pack(side=RIGHT, anchor=NW)
 
         def final_select():
-            # Reset tree
-            for item in self.canvas_frame.children.values():
-                item.pack_forget()
             # Create tree
             inner_frame = Frame(self.canvas_frame, bg=self.colors['sub'])
             inner_frame.pack(fill=BOTH, expand=True)
@@ -890,7 +911,10 @@ class Organize(Tk):
             - The filter window will have two possible columns; One of downloads and one for existing media
             - Once files are selected, a button will appear to start organizing
         """
-        # POPUP: Checklist of actions
+        # Reset Selected Media
+        for item in self.canvas_frame.children.values():
+            item.pack_forget()
+
         options = self.todo_window()
         if options:
             paths = []
@@ -902,9 +926,11 @@ class Organize(Tk):
                 else:
                     paths.append(get_downloads_or_media_path(option))
 
-            self.media_files_info(folder_paths=paths)
-            # Button Appears: Organize
-        self.organize_button_appear()
+            outcome = self.media_files_info(folder_paths=paths)
+            if outcome != 'No Media':
+                self.organize_button_appear()
+            else:
+                self.organize_button_disappear()
 
     def on_press_organize_media(self):
         """ Start organizing media """
@@ -914,6 +940,10 @@ class Organize(Tk):
     def organize_button_appear(self):
         self.buttons_config['Organize']['button'].pack()
         self.buttons_config['Organize']['label'].pack()
+
+    def organize_button_disappear(self):
+        self.buttons_config['Organize']['button'].pack_forget()
+        self.buttons_config['Organize']['label'].pack_forget()
 
     def progress_bar_appear(self):
         self.toggle_buttons_enabled()
