@@ -146,8 +146,6 @@ class Organize(Tk):
             'deselect': {'image': 'deselect.png', 'image_size': (24, 24)},
             'select': {'image': 'select.png', 'image_size': (24, 24)},
             'arrow': {'image': 'arrow.png', 'image_size': (24, 24)}
-            # 'expand': {'image': 'expand2.png', 'image_size': (30, 30)},
-            # 'collapse': {'image': 'collapse2.png', 'image_size': (30, 30)}
         }
         for label_text, cfg in self.image_config.items():
             with Image.open(f'Images/{cfg["image"]}') as img:
