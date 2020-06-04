@@ -379,8 +379,11 @@ class Organize(Tk):
                 if i['top_folder_title']:
                     file_info[folder_path][file_path]['kind'] = top_folder_dict[i['top_folder_title']]['kind']
                     file_info[folder_path][file_path]['year'] = top_folder_dict[i['top_folder_title']]['year']
-                    if not file_info[folder_path][file_path]['season']:
+                    if not file_info[folder_path][file_path]['season'] \
+                            and file_info[folder_path][file_path]['kind'] == 'TV Show':
                         file_info[folder_path][file_path]['season'] = -1
+                        file_info[folder_path][file_path]['renamed_file_name'] = initcap_file_name(i['file_name']
+                                                                                                   ).split('.')[0]
                     if top_folder_dict[i['top_folder_title']]['num_unique_titles'] > 1:
                         file_info[folder_path][file_path]['title'] = i['top_folder_title']
         del top_folder_dict
