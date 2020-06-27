@@ -15,5 +15,7 @@
   "required_paths": [
     "downloads",
     "media"
-  ]
+  ],
+  "downloads": "E:/Downloads",
+  "media": "E:/"
 }

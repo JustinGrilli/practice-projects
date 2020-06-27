@@ -5,7 +5,6 @@ import json
 from tkinter import *
 from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
-from imdb import IMDb
 from copy import deepcopy
 import encodings.idna
 
