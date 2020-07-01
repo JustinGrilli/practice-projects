@@ -74,7 +74,7 @@ class Organize(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title('Media Organizer')
-        self.iconbitmap('Images/organize_media.ico')
+        # self.iconbitmap('Images/organize_media.ico')
 
         self.colors = {
             'main': '#%02x%02x%02x' % (20, 20, 20),

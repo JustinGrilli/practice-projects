@@ -7,7 +7,9 @@ from collapsible_frame import CollapsibleFrame
 
 class CheckList(Frame):
     """ Creates a series of checklists based on a dictionary.
-        Assumes the lowest level of the dictionary is the checklist.
+        The first level of Keys int the dictionary are a column (and the title of that column).
+        Each level of the dictionary adds a sub-section.
+        The lowest level of the dictionary is the checklist.
 
     Dictionary Sample:
     {
@@ -94,73 +96,8 @@ class CheckList(Frame):
             self.all_children(w, callback)
         return callback
 
-    def get_mapped_parent_objects(self, col_frame, button):
-
-        def get_clean_path(objects):
-            obs = dict()
-            for obj in objects:
-                fixed_path = []
-                for w in str(obj).split('.'):
-                    if w and w not in fixed_path:
-                        fixed_path.append(w)
-                obs[obj] = fixed_path
-            return obs
-
-        def map_obs_to_frame(obj_dict):
-            mapping = dict()
-            for obj, path in obj_dict['frame'].items():
-                for o, p in obj_dict['button'].items():
-                    for item in p:
-                        if item not in path:
-                            path.append(item)
-                    if sorted(p) == sorted(path):
-                        if obj not in mapping:
-                            mapping[obj] = {o: p}
-                        else:
-                            mapping[obj][o] = p
-            return mapping
-
-        def replace_obj_path_with_indicator(mapping, button_path):
-            for fobj, objs in mapping.items():
-                for obj, path in objs.items():
-                    for i in button_path:
-                        if i not in path:
-                            path.append(i)
-                    objs[obj] = sorted(path) == sorted(button_path)
-                mapping[fobj] = objs
-            return mapping
-
-        parent_callback = []
-        parent_objects = [obj for obj in self.all_children(col_frame, parent_callback)
-                          if type(obj) in (Frame, Button) and str(button).split('.') > str(obj).split('.')]
-
-        objs = get_clean_path(parent_objects)
-        obj_by_kind = {'button': {obj: l for obj, l in objs.items() if type(obj) == Button and obj['text'] == 'toggle'},
-                       'frame': {obj: l for obj, l in objs.items() if type(obj) == Frame}}
-
-        obj_mapping = map_obs_to_frame(obj_by_kind)
-
-        b_path = []
-        for w in str(button).split('.'):
-            if w and w not in b_path:
-                b_path.append(w)
-
-        obj_mapping = replace_obj_path_with_indicator(obj_mapping, b_path)
-
-        obj_mapping = {frame_obj: [obj for obj, same in objs.items() if same]
-                       for frame_obj, objs in obj_mapping.items()}
-
-        # Remove empty lists
-        temp = {k: v for k, v in obj_mapping.items()}
-        for obj, info in obj_mapping.items():
-            if not info:
-                del temp[obj]
-        obj_mapping = temp
-
-        return obj_mapping
-
     def toggle_all(self, x):
-        col_frame, frame, button, parent_frames = x
+        col_frame, frame, button, toggle_buttons = x
         child_callback = []
         deselect_image = self.image_config['deselect']['image_obj']
         select_image = self.image_config['select']['image_obj']
@@ -181,14 +118,13 @@ class CheckList(Frame):
             button['image'] = select_image
             for b in button_children:
                 b['image'] = select_image
-
-        print(parent_frames)
-        for frame in parent_frames:
-            child_callback = []
-            off_check_button_children = []
-            for obj in self.all_children(frame, child_callback):
-                if type(obj) == Checkbutton and not obj.var.get() and obj not in off_check_button_children:
-                    off_check_button_children.append(obj)
+        print(toggle_buttons)
+        # for frame in parent_frames:
+        #     child_callback = []
+        #     off_check_button_children = []
+        #     for obj in self.all_children(frame, child_callback):
+        #         if type(obj) == Checkbutton and not obj.var.get() and obj not in off_check_button_children:
+        #             off_check_button_children.append(obj)
 
     def create_checklist_button(self, frame, name, font, dict_path):
         cbutton = Checkbutton(frame, text=name, fg=self.fg, onvalue=True,
@@ -202,30 +138,29 @@ class CheckList(Frame):
 
     def create_section_frame(self, frame, col_frame, **kwargs):
         """ Create the section frame for a given section """
-        frames = kwargs.pop('frames', None)
         title = kwargs.pop('title', None)
         font = kwargs.pop('font', None)
         padx = kwargs.pop('padx', None)
         pady = kwargs.pop('pady', None)
+        toggle_buttons = kwargs.pop('toggle_buttons', [])
 
         section_frame = Frame(frame, bg=self.bg, name=title.lower())
         section_frame.pack(side=TOP, fill=X, padx=padx, anchor=NW)
-        if not frames:
-            frames = [section_frame]
 
         f = CollapsibleFrame(section_frame, bg=self.bg, title=title, font=font)
         section_bottom_frame = Frame(f.collapse_frame, bd=2, bg=self.bg)
         toggle_button = Button(f.top_frame, image=self.image_config['deselect']['image_obj'], bg=self.bg, relief=FLAT)
         toggle_button['text'] = 'toggle'
-        toggle_button['command'] = lambda x=(col_frame, section_bottom_frame, toggle_button, frames): self.toggle_all(x)
+        toggle_buttons.append(toggle_button)
+        toggle_button['command'] = lambda x=(col_frame, section_bottom_frame, toggle_button, toggle_buttons): self.toggle_all(x)
         toggle_button.pack(side=LEFT)
 
         section_bottom_frame.pack(side=TOP, fill=X, padx=padx, pady=pady, anchor=NW)
 
-        return section_bottom_frame, section_frame
+        return section_bottom_frame
 
-    def construct_sections(self, frame, font, outer_frame=None, column=None, section=None, checklist_dict=None,
-                           path=None, frames=None, level=0):
+    def construct_sections(self, frame, font, column=None, section=None, checklist_dict=None,
+                           path=None, level=0, toggle_buttons=None):
         """ Constructs all sections for a given dictionary.
             Will continue creating sections until the value is not a dictionary. """
 
@@ -237,18 +172,18 @@ class CheckList(Frame):
             if len(path) >= level + 1:
                 path = path[:level + 1]
                 path.pop(level)
-                frames = frames[:level]
-                frames.pop(level-1)
+                toggle_buttons = toggle_buttons[:level + 1]
+                toggle_buttons.pop(level)
             path.append(sub_section)
-            frames.append(outer_frame)
 
             if isinstance(checklist_dict[section][sub_section], dict):
-                section_frame, of = self.create_section_frame(frame, title=sub_section, font=font,
-                                                              padx=(10, 0), col_frame=frame, frames=frames)
-                self.construct_sections(frame=section_frame, outer_frame=of, frames=frames, font=font, column=column,
+                section_frame = self.create_section_frame(frame, title=sub_section, font=font, padx=(10, 0),
+                                                          col_frame=frame, toggle_buttons=toggle_buttons)
+                self.construct_sections(frame=section_frame, font=font, column=column,
                                         section=sub_section, checklist_dict=checklist_dict[section],
-                                        path=path, level=level)
+                                        path=path, level=level, toggle_buttons=toggle_buttons)
             else:
+                toggle_buttons.append(None)
                 self.create_checklist_button(frame, name=checklist_dict[section][sub_section], font=font,
                                              dict_path=path)
 
@@ -257,16 +192,30 @@ class CheckList(Frame):
             Assumes the first key in the dict is the column name """
         temp = deepcopy(checklist_dict)
         self.check_button_dict = dict()
+        num_cols = 0
         for column in sorted(list(temp.keys())):
+            num_cols += 1
             if isinstance(temp[column], dict):
+                toggle_buttons = []
                 c_frame = Frame(frame)
                 c_frame.pack(side=LEFT, anchor=NW)
-                column_frame, outer_frame = self.create_section_frame(c_frame, title=column, font=self.column_font,
-                                                                      col_frame=c_frame)
-                self.construct_sections(frame=column_frame, outer_frame=outer_frame, frames=[outer_frame], font=self.column_font, column=column,
-                                        section=column, checklist_dict=temp, path=[column])
+                column_frame = self.create_section_frame(c_frame, title=column, font=self.column_font,
+                                                         col_frame=c_frame, toggle_buttons=toggle_buttons)
+                self.construct_sections(frame=column_frame, font=self.column_font, column=column, section=column,
+                                        checklist_dict=temp, path=[column], toggle_buttons=toggle_buttons)
             else:
                 raise Exception(f'Not a proper dictionary. Expected {column} to have a dictionary.')
+        # Adjust Width and Height of each column
+        self.update()
+        col_frames = [c for c in frame.winfo_children() if type(c) == Frame]
+        max_width = max([c.winfo_width() for c in col_frames])
+        max_height = max([c.winfo_height() for c in col_frames])
+        max_width = max_width if max_width < int(self.winfo_screenwidth()/num_cols) \
+            else int(self.winfo_screenwidth()/num_cols)
+        max_height = max_height if max_height < self.winfo_screenheight() else self.winfo_screenheight()
+        for c in col_frames:
+            c.pack_propagate(False)
+            c.config(width=max_width, height=max_height)
 
 
 if __name__ == '__main__':
@@ -293,6 +242,7 @@ if __name__ == '__main__':
             'Checkbox_1': 'Check 1'}
     }
     app = Tk()
+    app.title('Exmaple Checklist')
     checklist = CheckList(app, dictionary=dictionary,
                           bg='white', fg='black', highlight_color='light blue')
     checklist.pack()
