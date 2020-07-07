@@ -29,10 +29,10 @@ def tv_show_ep_from_file_name(file):
     episode = None
     # Search through the file name for the following patterns
     patterns = [
-        # s1e1 or s01e01
-        r'[^\w\d](s\d{1,2}e\d{1,2})$|'
-        r'^(s\d{1,2}e\d{1,2})[^\w\d]|'
-        r'[^\w\d](s\d{1,2}e\d{1,2})[^\w\d]',
+        # s1e1 or s01e01 or s01e01e02
+        r'[^\w\d](s\d{1,2}e\d{1,2}e?\d{0,2})$|'
+        r'^(s\d{1,2}e\d{1,2}e?\d{0,2})[^\w\d]|'
+        r'[^\w\d](s\d{1,2}e\d{1,2}e?\d{0,2})[^\w\d]',
         # s1 e1 or s01 e01
         r'[^\w\d](s\d{1,2}[^\w\d]e\d{1,2})$|'
         r'^(s\d{1,2}[^\w\d]e\d{1,2})[^\w\d]|'
@@ -57,8 +57,9 @@ def tv_show_ep_from_file_name(file):
         if matches:
             if patterns.index(pattern) != 4:
                 tv_show_episode = [x for x in matches[0] if x][0]
-                season, episode = [int(x) for x in re.findall(r'\d+', tv_show_episode)]
-                return tv_show_episode, season, episode
+                nums = [int(x) for x in re.findall(r'\d+', tv_show_episode)]
+                # tv_ep, season, episode(s)
+                return tv_show_episode, nums[0], nums[1:] if len(nums) > 2 else nums[1]
             else:
                 matches = [num for num in matches[0]
                            if num and int(num[-2:]) < 30 and num[-2:] != '00' and num not in bad_nums
@@ -145,10 +146,8 @@ def get_media_title(tv_show_episode, file_name):
                            r'[a-z:\- ]+[0-9]?[^\d]\([a-z]+\)[^\d]|'
                            r'[a-z:\- ]+[0-9]?[^\d]|[0-9]+[^\w\d]?'
                            r')', clean_file_name, re.IGNORECASE)
-        year = re.findall(r'19\d\d|20\d\d', clean_file_name)
         title = re.sub(r'[^a-zA-Z0-9\-]', ' ', title[0]).strip() if title else None
-        new_file_name = f'{title} ({year[0]})' if year else title if title else None
-        return new_file_name
+        return title
 
 
 def rename_all_media_in_directory(media_info):

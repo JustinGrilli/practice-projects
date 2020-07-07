@@ -7,10 +7,12 @@ from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
 from copy import deepcopy
 import encodings.idna
+import sys
 
 from settings.general_functions import tv_show_ep_from_file_name, tv_show_ep_from_folder_structure, \
     initcap_file_name, rename_all_media_in_directory, get_media_title
 from settings.mo_functions import get_downloads_or_media_path, save_paths_to_json
+from components.checklist import CheckList
 
 
 class CreateToolTip(object):
@@ -87,13 +89,13 @@ class Organize(Tk):
 
         font_default = 'Constantia'
         self.fonts = {
-            'xxsmall': (font_default, 11),
-            'xsmall': (font_default, 12),
-            'small': (font_default, 13),
-            'medium': (font_default, 14),
-            'large': (font_default, 18),
-            'xlarge': (font_default, 22),
-            'xxlarge': (font_default, 40),
+            'xxsmall': (font_default, 11, 'normal'),
+            'xsmall': (font_default, 12, 'normal'),
+            'small': (font_default, 13, 'normal'),
+            'medium': (font_default, 14, 'normal'),
+            'large': (font_default, 18, 'normal'),
+            'xlarge': (font_default, 22, 'normal'),
+            'xxlarge': (font_default, 40, 'normal'),
         }
 
         self.config(bg=self.colors['main'])
@@ -108,7 +110,6 @@ class Organize(Tk):
         self.configure(bg=self.colors['main'])
         ''' Filter media will contain a dictionary like:
             {path: {file_name: name, title: title, kind: kind, ...}}'''
-        self.filtered_media = {}
         self.all_media_info = {}
         self.imdb_info = {}
         self.disable_buttons = False
@@ -135,7 +136,6 @@ class Organize(Tk):
         x_scroll_bar.pack(side=BOTTOM, fill=X)
         self.middle_canvas.pack(side=LEFT, fill=BOTH, expand=True, ipadx=4)
         self.bind_all("<MouseWheel>", self._on_mousewheel)
-
         self.image_config = {
             # Used by the buttons on the left of the main app
             'Locate Media': {'image': 'dir.png', 'image_size': (64, 64)},
@@ -150,6 +150,8 @@ class Organize(Tk):
             with Image.open(f'Images/{cfg["image"]}') as img:
                 image = img.resize(self.image_config[label_text]['image_size'], Image.ANTIALIAS)
                 self.image_config[label_text]['image_obj'] = ImageTk.PhotoImage(image)
+
+        self.image_config = {k: v['image_obj'] for k, v in self.image_config.items()}
 
         note_text = 'If you have a Movies/TV Shows folder with a name other than "Movies" or "TV Shows",' \
                     ' in your media folder, you should rename them. Casing matters!\n\n' \
@@ -172,9 +174,11 @@ class Organize(Tk):
             padding_frame = Frame(self.left_frame, bg=self.colors['main'])
             padding_frame.pack(side=TOP, padx=10, pady=10, fill=X)
             # Button
-            button = Button(padding_frame, image=self.image_config[label_text]['image_obj'], command=cfg['command'],
-                            cursor="hand2", bg=self.colors['main'], relief=FLAT, anchor=CENTER)
-            button.pack(fill=X)
+            button = Button(padding_frame, image=self.image_config[label_text], command=cfg['command'],
+                            activebackground=self.colors['sub'], activeforeground=self.colors['font'],
+                            bg=self.colors['main'], cursor="hand2", highlightthickness=0, bd=0, relief=FLAT,
+                            anchor=CENTER)
+            button.pack()
             self.buttons_config[label_text]['button'] = button
             # Button label
             label = Label(padding_frame, text=label_text, font=self.fonts['xsmall'],
@@ -255,107 +259,26 @@ class Organize(Tk):
         x, y = self.winfo_pointerxy()
         canvas = self.winfo_containing(x, y)
         widget_path = str(canvas.master)
-        if widget_path == '.' or widget_path.startswith('.!canvas2') or widget_path.startswith('.filterwindow'):
+        if widget_path == '.' or widget_path.startswith('.!canvas2') or widget_path.startswith('.checklist'):
             self.middle_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
     def get_media_info_from_paths(self, paths):
         """ Gets all media information from media files in the given paths
 
+        Output sample:
+            '/USER/Downloads': {
+                'TV Shows': {'House': {'Season 1': {'C:/USER/Downloads/house.s01e01.avi': House - S01E01'},
+                                       'Season 2': {'C:/USER/Downloads/house.s02e01.avi': House - S02E01'}}}
+                'Movies': {'C:/USER/Downloads/thor.avi': Thor'}
+                }
+
         :param paths: A list of paths to media files
         :return: A dictionary of information about each file
         """
-        self.progress_bar_appear()
-        self.progress_bar['maximum'] = len([file for path in paths
-                                            for x, y, files in os.walk(path)
-                                            for file in files
-                                            if file.split('.')[-1] in self.media_extensions])
-        self.progress_bar['value'] = 0
-        self.s.configure(style=self.style, text='Getting media info...')
-        file_info = {}
-        # Get a list of files to gather info for, and extract info from the local file
-        for folder_path in paths:
-            file_info[folder_path] = {}
-            for path, folders, files in sorted(os.walk(folder_path)):
-                for file in sorted(files):
-                    current_file_path = os.path.join(path, file)
-                    extension = file.split('.')[-1]
-                    # If its a media file
-                    if extension in self.media_extensions and os.path.isfile(current_file_path):
-                        renamed_file = initcap_file_name(file)
-                        file_folder_path = os.path.dirname(current_file_path)
-                        bottom_folder = os.path.basename(file_folder_path)
-                        # Split the file's path by the folder_path to get the folders inside of the main folder
-                        if folder_path != file_folder_path:
-                            split_path = [x for x in path.split(folder_path) if x]
-                            # This is just making sure the string doesn't start with a slash
-                            top_folder = split_path[-1] if split_path[-1][0] not in ['\\', '/'] \
-                                else split_path[-1][1:]
-                            top_folder = top_folder.split('\\')[0].split('/')[0]
-                            top_folder_title = str(get_media_title(None,
-                                                                   initcap_file_name(top_folder.replace('.', ' ')))
-                                                   ).title()
-                        else:
-                            bottom_folder = None
-                            top_folder_title = None
 
-                        # Use the Season / Episode extracted based on the path,
-                        # if it could not be extracted from the file name
-                        tv_show_episode, season, episode = tv_show_ep_from_file_name(renamed_file)
-                        s, e = tv_show_ep_from_folder_structure(current_file_path)
-                        t = None
-                        if not season and s:
-                            season = s
-                            t = top_folder_title
-                        if not episode and e:
-                            episode = e
-                            t = top_folder_title
-
-                        # Set the kind and season based on the season/episode extracted
-                        if tv_show_episode or (season or season == 0) or (episode or episode == 0):
-                            kind = 'TV Show'
-                            # Assume it is the first season if there is no season extracted,
-                            # but an episode was extracted, and there is a top folder
-                            if not (season or season == 0) and (episode or episode == 0) and t:
-                                season = 1
-                            # If the folder containing the show has 'extras' in the name,
-                            # then it is safe to assume that this is an extra episode
-                            if 'extras' in str(bottom_folder).lower():
-                                season = -1  # Extras are identified as season -1
-                            # Assume it is a movie if it extracted only an episode; i.e. Star Wars Episode 1
-                            elif not (season or season == 0) and (episode or episode == 0) and not t:
-                                kind = 'Movie'
-                        else:
-                            kind = 'Movie'
-
-                        title = get_media_title(tv_show_episode, renamed_file)
-                        years = re.findall(r'20\d\d|19\d\d', file)
-                        year = int(years[0]) if years else None
-
-                        # Set the title for the Show/Movie based the show/season/episode info extracted
-                        if kind == 'TV Show':
-                            if (season or season == 0) and season != -1 and (episode or episode == 0):
-                                title = top_folder_title if top_folder_title else title
-                                renamed_file_name = f'{title} - ' \
-                                                    f'S{ "0" + str(season) if season < 10 else season}' \
-                                                    f'E{ "0" + str(episode) if episode < 10 else episode}'
-                            else:
-                                renamed_file_name = renamed_file.split('.')[0]
-                        else:
-                            renamed_file_name = title
-
-                        file_info[folder_path][current_file_path] = {
-                            'title': title, 'renamed_file_name': renamed_file_name, 'file_name': file,
-                            'file_path': current_file_path, 'top_folder_title': top_folder_title,
-                            'kind': kind, 'year': year, 'season': season, 'episode': episode}
-                        self.progress_bar['value'] += 1
-                        self.s.configure(style=self.style,
-                                         text=f'Got info for {file}\nIn the {folder_path} directory\n')
-            if not file_info[folder_path]:
-                del file_info[folder_path]
-
-        top_folder_dict = {}
-        for folder_path, info in file_info.items():
-            for file_path, i in info.items():
+        def update_dict(dictionary):
+            top_folder_dict = {}
+            for file_path, i in dictionary.items():
                 if i['top_folder_title']:
                     if i['top_folder_title'] not in top_folder_dict:
                         top_folder_dict[i['top_folder_title']] = {'title_list': [i['title']],
@@ -369,38 +292,150 @@ class Organize(Tk):
                         if i['year']:
                             top_folder_dict[i['top_folder_title']]['year'] = i['year']
 
-        for top_folder, info in top_folder_dict.items():
-            top_folder_dict[top_folder]['num_unique_titles'] = len(info['title_list'])
-        for folder_path, info in file_info.items():
-            for file_path, i in info.items():
+            for top_folder, info in top_folder_dict.items():
+                top_folder_dict[top_folder]['num_unique_titles'] = len(info['title_list'])
+            for file_path, i in dictionary.items():
                 if i['top_folder_title']:
-                    file_info[folder_path][file_path]['kind'] = top_folder_dict[i['top_folder_title']]['kind']
-                    file_info[folder_path][file_path]['year'] = top_folder_dict[i['top_folder_title']]['year']
-                    if not file_info[folder_path][file_path]['season'] \
-                            and file_info[folder_path][file_path]['kind'] == 'TV Show':
-                        file_info[folder_path][file_path]['season'] = -1
-                        file_info[folder_path][file_path]['renamed_file_name'] = initcap_file_name(i['file_name']
-                                                                                                   ).split('.')[0]
+                    dictionary[file_path]['kind'] = top_folder_dict[i['top_folder_title']]['kind']
+                    dictionary[file_path]['year'] = top_folder_dict[i['top_folder_title']]['year']
+                    if not dictionary[file_path]['season'] \
+                            and dictionary[file_path]['kind'] == 'TV Show':
+                        dictionary[file_path]['season'] = -1
+                        dictionary[file_path]['renamed_file_name'] = initcap_file_name(os.path.basename(file_path)
+                                                                                       ).split('.')[0]
                     if top_folder_dict[i['top_folder_title']]['num_unique_titles'] > 1:
-                        file_info[folder_path][file_path]['title'] = i['top_folder_title']
-        del top_folder_dict
+                        dictionary[file_path]['title'] = i['top_folder_title']
+            del top_folder_dict
+
+        def extract_info():
+            file_info = {}
+            for folder_path in paths:
+                file_info[folder_path] = {}
+                for path, folders, files in sorted(os.walk(folder_path)):
+                    for file in sorted(files):
+                        file_path = os.path.join(path, file)
+                        extension = file.split('.')[-1]
+                        # If its a media file
+                        if extension in self.media_extensions and os.path.isfile(file_path):
+                            renamed_file = initcap_file_name(file)
+                            file_folder_path = os.path.dirname(file_path)
+                            bottom_folder = os.path.basename(file_folder_path)
+                            # Split the file's path by the folder_path to get the folders inside of the main folder
+                            if folder_path != file_folder_path:
+                                split_path = [x for x in path.split(folder_path) if x]
+                                # This is just making sure the string doesn't start with a slash
+                                top_folder = split_path[-1] if split_path[-1][0] not in ['\\', '/'] \
+                                    else split_path[-1][1:]
+                                top_folder = top_folder.split('\\')[0].split('/')[0]
+                                top_folder_title = str(get_media_title(None,
+                                                                       initcap_file_name(top_folder.replace('.', ' ')))
+                                                       ).title()
+                            else:
+                                bottom_folder = None
+                                top_folder_title = None
+
+                            # Use the Season / Episode extracted based on the path,
+                            # if it could not be extracted from the file name
+                            tv_show_episode, season, episode = tv_show_ep_from_file_name(renamed_file)
+                            s, e = tv_show_ep_from_folder_structure(file_path)
+                            season = season or s
+                            episode = episode or e
+
+                            # Set the kind and season based on the season/episode extracted
+                            if (season or season == 0) or (episode or episode == 0):
+                                kind = 'TV Show'
+                                # Assume it is the first season if there is no season extracted,
+                                # but an episode was extracted, and there is a top folder
+                                if not (season or season == 0) and (episode or episode == 0) and top_folder_title:
+                                    season = 1
+                                # If the folder containing the show has 'extras' in the name,
+                                # then it is safe to assume that this is an extra episode
+                                if 'extras' in str(bottom_folder).lower():
+                                    season = -1  # Extras are identified as season -1
+                                # Assume it is a movie if it extracted only an episode; i.e. Star Wars Episode 1
+                                elif not (season or season == 0) and (episode or episode == 0) and not top_folder_title:
+                                    kind = 'Movie'
+                            else:
+                                kind = 'Movie'
+
+                            title = get_media_title(tv_show_episode, renamed_file)
+                            years = re.findall(r'20\d\d|19\d\d', file)
+                            year = int(years[0]) if years else None
+                            title_w_year = f'{title} ({year})' if year else title
+
+                            # Set the title for the Show/Movie based the show/season/episode info extracted
+                            if kind == 'TV Show':
+                                if (season or season == 0) and season != -1 and (episode or episode == 0):
+                                    e_str = ''
+                                    episode = episode if isinstance(episode, list) else [episode]
+                                    for e in episode:
+                                        e_str += f'E{"0" + str(e) if e < 10 else e}'
+                                    title = top_folder_title if top_folder_title else title
+                                    renamed_file_name = f'{title} - ' \
+                                                        f'S{"0" + str(season) if season < 10 else season}' + e_str
+                                else:
+                                    renamed_file_name = renamed_file.split('.')[0]
+                            else:
+                                renamed_file_name = title_w_year
+
+                            file_info[folder_path][file_path] = {'kind': kind, 'year': year,
+                                                                 'title': title_w_year, 'season': season,
+                                                                 'top_folder_title': top_folder_title,
+                                                                 'renamed_file': f'{renamed_file_name}.{extension}'}
+                            self.progress_bar['value'] += 1
+                            self.s.configure(style=self.style,
+                                             text=f'Got info for {file}\nIn the {folder_path} directory\n')
+                if not file_info[folder_path]:
+                    del file_info[folder_path]
+
+                update_dict(file_info[folder_path])
+            return file_info
+
+        def convert_dict(dictionary):
+            converted_dict = {}
+            for folder, file in dictionary.items():
+                converted_dict[folder] = {'TV Shows': {}, 'Movies': {}}
+                for file_path, i in file.items():
+                    alias = i['renamed_file']
+                    title = i['title']
+                    season = 'Extras' if i['season'] == -1 else f"Season {i['season']}"
+                    if i['kind'] == 'TV Show':
+                        if title not in converted_dict[folder]['TV Shows']:
+                            converted_dict[folder]['TV Shows'][title] = {season: {file_path: alias}}
+                        elif season not in converted_dict[folder]['TV Shows'][title]:
+                            converted_dict[folder]['TV Shows'][title][season] = {file_path: alias}
+                        elif file_path not in converted_dict[folder]['TV Shows'][title][season]:
+                            converted_dict[folder]['TV Shows'][title][season][file_path] = alias
+                    if i['kind'] == 'Movie':
+                        converted_dict[folder]['Movies'][file_path] = alias
+            return converted_dict
+
+        def remove_empty_items(dictionary, new_dict):
+            for key, value in dictionary.items():
+                if value and isinstance(value, dict):
+                    new_dict[key] = {}
+                    remove_empty_items(dictionary[key], new_dict[key])
+                elif value:
+                    new_dict[key] = value
+
+        self.progress_bar_appear()
+        self.progress_bar['maximum'] = len([file for path in paths
+                                            for x, y, files in os.walk(path)
+                                            for file in files
+                                            if file.split('.')[-1] in self.media_extensions])
+        self.progress_bar['value'] = 0
+        self.s.configure(style=self.style, text='Getting media info...')
+        # Gets info from media files
+        file_info = extract_info()
+        # Converts the dictionary to be compatible with checklist
+        file_info = convert_dict(file_info)
+        file_info_new = {}
+        remove_empty_items(file_info, file_info_new)
         self.progress_complete('Gathered Media!')
-        return file_info
+        return file_info_new
 
     def media_files_info(self, folder_paths=[]):
         """ Gets information about each media file in a path, from IMDb.
-
-        Output sample:
-            'C:/USER/Downloads': {
-                'C:/USER/Downloads/house.s01e01.avi': {
-                    'title': 'House (2004)',
-                    'title': 'House',
-                    'renamed_file_name': 'House - S01E01 - Pilot',
-                    'kind': 'TV Show',
-                    'season': 1,
-                    'episode': 1,
-                    'genres': ['Drama', 'Comedy'],
-                    'file_name': 'house.s01e01.avi'}}
 
         :param folder_paths: The path to your media files
         :return: A dictionary of information about each file
@@ -413,206 +448,69 @@ class Organize(Tk):
             return 'No Media'
 
         else:
-            self.filter_window(self.all_media_info)
-
-    def filter_window(self, all_media):
-        """ The filter window that appears to filter the media files to be sorted.
-
-        :param all_media: The dictionary of all the media to filter
-        :return: Filtered media
-        """
-        self.filtered_media = deepcopy(all_media)
-
-        def upon_select(widget):
-            d = widget['destination']
-            fp = widget['file_path']
-            # Add or remove files from list when they are toggled
-            if widget['button'].var.get():
-                if fp not in self.filtered_media[d]:
-                    self.filtered_media[d][fp] = all_media[d][fp]
-                    widget['button']['bg'] = self.colors['sub']
-            else:
-                if fp in self.filtered_media[d]:
-                    del self.filtered_media[d][fp]
-                    widget['button']['bg'] = self.colors['main']
-
-        def toggle_all(x):
-            button, kind, files_dict = x
-            deselect_image = self.image_config['deselect']['image_obj']
-            select_image = self.image_config['select']['image_obj']
-            # Toggle each item in the dictionary based on the toggle
-            toggle = True if str(button['image']) == str(select_image) else False
-            for file, widget in files_dict.items():
-                widget['button'].var = BooleanVar(value=toggle)
-                widget['button']['variable'] = widget['button'].var
-                upon_select(widget)
-            if toggle:
-                button['image'] = deselect_image
-                if self.toggle_all_buttons[kind] == button:
-                    for title, b in self.toggle_title_buttons[kind].items():
-                        b['image'] = deselect_image
-            else:
-                button['image'] = select_image
-                if self.toggle_all_buttons[kind] == button:
-                    for title, b in self.toggle_title_buttons[kind].items():
-                        b['image'] = select_image
-
-            if self.toggle_all_buttons[kind] != button:
-                off_title_buttons = [str(btn['image']) for t, btn in self.toggle_title_buttons[kind].items()
-                                     if str(btn['image']) == str(select_image)]
-                if off_title_buttons:
-                    self.toggle_all_buttons[kind]['image'] = select_image
-                else:
-                    self.toggle_all_buttons[kind]['image'] = deselect_image
-
-        def collapse_show(checklist_frame):
-            if checklist_frame.winfo_viewable():
-                checklist_frame.pack_forget()
-            else:
-                checklist_frame.pack(fill=X)
-
-        def create_checklist(frame, files):
-            kind_mapping = {'TV Show': 'TV Shows', 'Movie': 'Movies'}
-            self.toggle_all_buttons = {k: {} for k in kind_mapping.keys()}
-            self.toggle_title_buttons = {k: {} for k in kind_mapping.keys()}
-            for folder_path, info in files.items():
-                destination_frame = Frame(frame, bg=self.colors['main'], bd=1, relief=RIDGE)
-                destination_frame.pack(side=LEFT, padx=4, pady=4, anchor=N)
-                destination_title = Label(destination_frame, text=folder_path, anchor=NW, justify=LEFT,
-                                          bg=self.colors['main'], fg=self.colors['font'], font=self.fonts['medium'])
-                destination_title.pack(side=TOP, fill=X, anchor=W)
-                Separator(destination_frame).pack(side=TOP, fill=X)
-                sections = sorted(list(set([i['kind'] for f, i in info.items()])), reverse=True)
-                for kind in sections:
-                    kind_dict = dict()
-                    if sections.index(kind) > 0:
-                        # Add a separator between shows and movies
-                        Separator(destination_frame).pack(fill=X, pady=8)
-                    media_type_frame = Frame(destination_frame, bg=self.colors['main'])
-                    media_type_frame.pack(side=TOP, fill=X, anchor=NW)
-                    # Toggle everything for each 'Kind'
-                    self.toggle_all_buttons[kind] = Button(media_type_frame, cursor='hand2',
-                                                           image=self.image_config['deselect']['image_obj'],
-                                                           relief=FLAT, bg=self.colors['main'])
-                    self.toggle_all_buttons[kind].pack(side=LEFT, anchor=NW)
-                    media_type_label = Label(media_type_frame, text=kind_mapping[kind], font=self.fonts['small'], anchor=NW,
-                                             width=50, bg=self.colors['main'], fg=self.colors['font'], justify=LEFT)
-                    media_type_label.pack(side=LEFT, fill=X)
-                    media_content_frame = Frame(destination_frame, bg=self.colors['main'], bd=2, relief=SUNKEN)
-                    media_content_frame.pack(side=TOP, fill=X, anchor=NW)
-                    if kind == 'Movie':
-                        movie_frame = Frame(destination_frame, bg=self.colors['main'], bd=2, relief=SUNKEN)
-                        movie_frame.pack(side=TOP, fill=X, anchor=NW)
-                    for t in sorted(list(set([v['title'] for k, v in info.items() if v['kind'] == kind]))):
-                        dictionary = dict()
-                        if kind == 'TV Show':
-                            show_frame = Frame(media_content_frame, bg=self.colors['main'])
-                            show_frame.pack(side=TOP, fill=X, anchor=NW)
-                            show_title_frame = Frame(show_frame, bg=self.colors['special'])
-                            show_title_frame.pack(side=TOP, fill=X, anchor=NW)
-                            # Toggle everything for each TV Show title
-                            self.toggle_title_buttons[kind][t] = Button(show_title_frame,
-                                                                        image=self.image_config['deselect']['image_obj'],
-                                                                        text='deselect', cursor='hand2', relief=FLAT,
-                                                                        bg=self.colors['main'])
-                            self.toggle_title_buttons[kind][t].pack(side=LEFT, fill=Y)
-                            show_title_button = Button(show_title_frame, text=t, cursor='hand2',
-                                                       font=self.fonts['small'], anchor=W, bd=2, relief=RAISED,
-                                                       bg=self.colors['main'], fg=self.colors['font'],
-                                                       justify=LEFT)
-                            show_title_button.pack(side=LEFT, fill=X, expand=True, anchor=W, padx=1, pady=1)
-                            show_checklist_frame = Frame(show_frame, bg=self.colors['main'], bd=2, relief=SUNKEN)
-                            show_checklist_frame.pack(side=TOP, fill=X, anchor=NW)
-                            show_title_button['command'] = lambda x=show_checklist_frame: collapse_show(x)
-                            show_checklist_frame.pack_forget()
-                            season_frames = {}
-                            try:
-                                for s in sorted(list(set([v['season'] for k, v in info.items() if v['title'] == t]))):
-                                    season_frames[s] = Frame(show_checklist_frame, bg=self.colors['main'])
-                                    season_frames[s].pack(side=TOP, fill=X, anchor=NW)
-                                    season = 'Season ' + str(s) if s != -1 else 'Extras'
-                                    season_label = Label(season_frames[s], text=season, font=self.fonts['small'],
-                                                         bg=self.colors['alt'], fg=self.colors['font'])
-                                    season_label.pack(side=TOP, fill=X, padx=1, pady=1)
-                            except Exception as e:
-                                print(t)
-                                print([v['season'] for k, v in info.items() if v['title'] == t])
-                                raise Exception(e)
-
-                        for file_path, i in {f: i for f, i in info.items() if i['title'] == t}.items():
-                            dictionary[file_path] = i
-                            if kind == 'TV Show':
-                                dictionary[file_path]['button'] = Checkbutton(season_frames[i['season']])
-                            else:
-                                dictionary[file_path]['button'] = Checkbutton(movie_frame)
-                            dictionary[file_path]['button'].config(text=i['renamed_file_name'], fg=self.colors['font'],
-                                                                   onvalue=True, offvalue=False, anchor=NW,
-                                                                   bg=self.colors['sub'], font=self.fonts['xsmall'],
-                                                                   selectcolor=self.colors['main'])
-                            dictionary[file_path]['button'].var = BooleanVar(value=True)
-                            dictionary[file_path]['button']['variable'] = dictionary[file_path]['button'].var
-                            dictionary[file_path]['button']['command'] = lambda w=dictionary[file_path]: upon_select(w)
-                            dictionary[file_path]['button'].pack(side=TOP, fill=X, anchor=NW, pady=1, padx=1)
-                            dictionary[file_path]['destination'] = folder_path
-                            kind_dict[file_path] = dictionary[file_path]
-                        if kind == 'TV Show':
-                            self.toggle_title_buttons[kind][t]['command'] = lambda d=(self.toggle_title_buttons[kind][t]
-                                                                                      , kind, dictionary): toggle_all(d)
-                    self.toggle_all_buttons[kind]['command'] = lambda d=(self.toggle_all_buttons[kind], kind,
-                                                                         kind_dict): toggle_all(d)
-
-        main_frame = Frame(self.canvas_frame, bg=self.colors['sub'], name='filterwindow')
-        main_frame.pack(fill=BOTH)
-        create_checklist(main_frame, files=all_media)
+            checklist = CheckList(self.canvas_frame, dictionary=self.all_media_info, font=self.fonts['large'],
+                                  toggle_config=self.image_config, toggle_type='image',
+                                  bg=self.colors['main'], fg=self.colors['font'],
+                                  highlight_color=self.colors['sub'], border_color=self.colors['special'])
 
     def recursively_organize_shows_and_movies(self, delete_folders=True):
+
+        def inc_max_progress(d):
+            """ Helper callback function to increment the max progress bar value for each file """
+            for k, v in d.items():
+                if not isinstance(v, dict):
+                    self.progress_bar['maximum'] += 1
+                else:
+                    inc_max_progress(d[k])
+
+        def move_files(d, path=[], level=0):
+            """ Callback function to moves the files """
+            level += 1
+            for k, v in d.items():
+                if not isinstance(v, dict):
+                    skip = False
+                    output_path = os.path.join(media_path, *path)
+                    if not os.path.exists(output_path):
+                        os.makedirs(output_path)
+                    move_path = os.path.join(output_path, os.path.basename(k))
+                    rename_path = os.path.join(output_path, v)
+                    if not os.path.exists(move_path) and not os.path.exists(rename_path):
+                        # Move to the new location
+                        shutil.move(k, move_path)
+                        # Then rename the file
+                        os.rename(move_path, rename_path)
+                        status_message = f'Moved & Renamed:\nFrom: {k}\nTo: {rename_path}'
+                    elif os.path.exists(move_path) and not os.path.exists(rename_path):
+                        # Then rename the file
+                        os.rename(move_path, rename_path)
+                        status_message = f'Renamed:\nFrom: {k}\nTo: {rename_path}'
+                    else:
+                        skip = True
+                        status_message = f'Skipping: {k}\nFile exists {rename_path}'
+
+                    self.progress_bar['value'] += 1
+                    self.s.configure(style=self.style, text=status_message)
+
+                    # Add the moved file's folder path to the list of folders to delete
+                    if k != dl_path and k != media_path and k != output_path and not skip \
+                            and os.path.dirname(k) not in folders_to_delete:
+                        folders_to_delete.append(os.path.dirname(k))
+                else:
+                    if len(path) >= level:
+                        path = path[:level-1]
+                    path.append(k)
+                    move_files(d[k], path=path, level=level)
+
         dl_path = get_downloads_or_media_path('downloads')
         media_path = get_downloads_or_media_path('media')
         folders_to_delete = []
-        self.progress_bar_appear()
-        self.progress_bar['maximum'] = len(self.filtered_media.keys())
+        self.progress_bar['maximum'] = 0
         self.progress_bar['value'] = 0
+        inc_max_progress(self.all_media_info)
+        self.progress_bar_appear()
 
-        for folder_path, i in self.filtered_media.items():
-            for file_path, info in i.items():
-                path = os.path.dirname(file_path)
-                file = os.path.basename(file_path)
-                extension = file.split('.')[-1]
-                skip = False
-                # Route for TV Shows
-                if info['kind'] == 'TV Show':
-                    season_folder = 'Extras' if info["season"] == -1 else f'Season {info["season"]}'
-                    output_folder = os.path.join(media_path, 'TV Shows', info['title'], season_folder)
-                # Route for Movies
-                else:
-                    output_folder = os.path.join(media_path, 'Movies')
-                output_path = os.path.join(output_folder, file)
-                renamed_file = info['renamed_file_name'] + '.' + extension
-                renamed_file_path = os.path.join(output_folder, renamed_file)
-                # Create output folder if it does not exist
-                if not os.path.exists(output_folder):
-                    os.makedirs(output_folder)
-                # Move and then rename file
-                if not os.path.exists(output_path) and not os.path.exists(renamed_file_path):
-                    shutil.move(file_path, output_path)
-                    os.rename(output_path, renamed_file_path)
-                    status_message = f'Moved & Renamed {info["kind"].title()}:\nFrom: {file}\nTo: {renamed_file}'
-                    # Update status and increment progress bar to show that the file has moved
-
-                elif not os.path.exists(renamed_file_path):
-                    os.rename(output_path, renamed_file_path)
-                    # Update status and increment progress bar to show that the file has moved
-                    status_message = f'File exists in {output_folder},' \
-                                     f' Renamed {info["kind"].title()}:\nFrom: {file}\nTo: {renamed_file}'
-                else:
-                    skip = True
-                    status_message = f'Skipping: {file}\nFile exists in {output_folder}:\n{renamed_file_path}'
-                self.progress_bar['value'] += 1
-                self.s.configure(style=self.style, text=status_message)
-                # Add the moved file's folder path to the list of folders to delete
-                if path != dl_path and path != media_path and path != os.path.dirname(output_path) \
-                        and path not in folders_to_delete and not skip:
-                    folders_to_delete.append(path)
+        for folder_path, i in self.all_media_info.items():
+            move_files(i)
 
         # Delete folders that contained media files that were moved
         if delete_folders:
@@ -711,7 +609,7 @@ class Organize(Tk):
 
     def organize_button_appear(self):
         self.buttons_config['Organize']['button'].pack()
-        self.buttons_config['Organize']['label'].pack()
+        self.buttons_config['Organize']['label'].pack(fill=X)
 
     def organize_button_disappear(self):
         self.buttons_config['Organize']['button'].pack_forget()
