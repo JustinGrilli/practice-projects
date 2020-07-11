@@ -276,37 +276,6 @@ class Organize(Tk):
         :return: A dictionary of information about each file
         """
 
-        def update_dict(dictionary):
-            top_folder_dict = {}
-            for file_path, i in dictionary.items():
-                if i['top_folder_title']:
-                    if i['top_folder_title'] not in top_folder_dict:
-                        top_folder_dict[i['top_folder_title']] = {'title_list': [i['title']],
-                                                                  'kind': i['kind'],
-                                                                  'year': i['year']}
-                    elif i['top_folder_title'] in top_folder_dict:
-                        if i['title'] not in top_folder_dict[i['top_folder_title']]['title_list']:
-                            top_folder_dict[i['top_folder_title']]['title_list'].append(i['title'])
-                        if i['kind'] == 'TV Show':
-                            top_folder_dict[i['top_folder_title']]['kind'] = i['kind']
-                        if i['year']:
-                            top_folder_dict[i['top_folder_title']]['year'] = i['year']
-
-            for top_folder, info in top_folder_dict.items():
-                top_folder_dict[top_folder]['num_unique_titles'] = len(info['title_list'])
-            for file_path, i in dictionary.items():
-                if i['top_folder_title']:
-                    dictionary[file_path]['kind'] = top_folder_dict[i['top_folder_title']]['kind']
-                    dictionary[file_path]['year'] = top_folder_dict[i['top_folder_title']]['year']
-                    if not dictionary[file_path]['season'] \
-                            and dictionary[file_path]['kind'] == 'TV Show':
-                        dictionary[file_path]['season'] = -1
-                        dictionary[file_path]['renamed_file_name'] = initcap_file_name(os.path.basename(file_path)
-                                                                                       ).split('.')[0]
-                    if top_folder_dict[i['top_folder_title']]['num_unique_titles'] > 1:
-                        dictionary[file_path]['title'] = i['top_folder_title']
-            del top_folder_dict
-
         def extract_info():
             file_info = {}
             for folder_path in paths:
@@ -370,7 +339,7 @@ class Organize(Tk):
                                     episode = episode if isinstance(episode, list) else [episode]
                                     for e in episode:
                                         e_str += f'E{"0" + str(e) if e < 10 else e}'
-                                    title = top_folder_title if top_folder_title else title
+                                    title = top_folder_title if not tv_show_episode else title
                                     renamed_file_name = f'{title} - ' \
                                                         f'S{"0" + str(season) if season < 10 else season}' + e_str
                                 else:
@@ -390,6 +359,37 @@ class Organize(Tk):
 
                 update_dict(file_info[folder_path])
             return file_info
+
+        def update_dict(dictionary):
+            top_folder_dict = {}
+            for file_path, i in dictionary.items():
+                if i['top_folder_title']:
+                    if i['top_folder_title'] not in top_folder_dict:
+                        top_folder_dict[i['top_folder_title']] = {'title_list': [i['title']],
+                                                                  'kind': i['kind'],
+                                                                  'year': i['year']}
+                    elif i['top_folder_title'] in top_folder_dict:
+                        if i['title'] not in top_folder_dict[i['top_folder_title']]['title_list']:
+                            top_folder_dict[i['top_folder_title']]['title_list'].append(i['title'])
+                        if i['kind'] == 'TV Show':
+                            top_folder_dict[i['top_folder_title']]['kind'] = i['kind']
+                        if i['year']:
+                            top_folder_dict[i['top_folder_title']]['year'] = i['year']
+
+            for top_folder, info in top_folder_dict.items():
+                top_folder_dict[top_folder]['num_unique_titles'] = len(info['title_list'])
+            for file_path, i in dictionary.items():
+                if i['top_folder_title']:
+                    dictionary[file_path]['kind'] = top_folder_dict[i['top_folder_title']]['kind']
+                    dictionary[file_path]['year'] = top_folder_dict[i['top_folder_title']]['year']
+                    if not dictionary[file_path]['season'] \
+                            and dictionary[file_path]['kind'] == 'TV Show':
+                        dictionary[file_path]['season'] = -1
+                        dictionary[file_path]['renamed_file_name'] = initcap_file_name(os.path.basename(file_path)
+                                                                                       ).split('.')[0]
+                    if top_folder_dict[i['top_folder_title']]['num_unique_titles'] > 1:
+                        dictionary[file_path]['title'] = i['top_folder_title']
+            del top_folder_dict
 
         def convert_dict(dictionary):
             converted_dict = {}
@@ -463,43 +463,44 @@ class Organize(Tk):
                 else:
                     inc_max_progress(d[k])
 
-        def move_files(d, path=[], level=0):
+        def move_files(file_dict, path=[], level=0):
             """ Callback function to moves the files """
             level += 1
-            for k, v in d.items():
-                if not isinstance(v, dict):
-                    skip = False
+            for file_path, new_file_name in file_dict.items():
+                file_folder = os.path.dirname(file_path)
+                if not isinstance(new_file_name, dict):
+                    delete = False
                     output_path = os.path.join(media_path, *path)
                     if not os.path.exists(output_path):
                         os.makedirs(output_path)
-                    move_path = os.path.join(output_path, os.path.basename(k))
-                    rename_path = os.path.join(output_path, v)
+                    move_path = os.path.join(output_path, os.path.basename(file_path))
+                    rename_path = os.path.join(output_path, new_file_name)
                     if not os.path.exists(move_path) and not os.path.exists(rename_path):
                         # Move to the new location
-                        shutil.move(k, move_path)
+                        shutil.move(file_path, move_path)
                         # Then rename the file
                         os.rename(move_path, rename_path)
-                        status_message = f'Moved & Renamed:\nFrom: {k}\nTo: {rename_path}'
+                        status_message = f'Moved & Renamed:\nFrom: {file_path}\nTo: {rename_path}'
+                        delete = True
                     elif os.path.exists(move_path) and not os.path.exists(rename_path):
                         # Then rename the file
                         os.rename(move_path, rename_path)
-                        status_message = f'Renamed:\nFrom: {k}\nTo: {rename_path}'
+                        status_message = f'Renamed:\nFrom: {file_path}\nTo: {rename_path}'
                     else:
-                        skip = True
-                        status_message = f'Skipping: {k}\nFile exists {rename_path}'
+                        status_message = f'Skipping: {file_path}\nFile exists {rename_path}'
 
                     self.progress_bar['value'] += 1
                     self.s.configure(style=self.style, text=status_message)
 
                     # Add the moved file's folder path to the list of folders to delete
-                    if k != dl_path and k != media_path and k != output_path and not skip \
-                            and os.path.dirname(k) not in folders_to_delete:
-                        folders_to_delete.append(os.path.dirname(k))
+                    if file_folder != dl_path and file_folder != media_path and file_folder != output_path and delete \
+                            and file_folder not in folders_to_delete:
+                        folders_to_delete.append(file_folder)
                 else:
                     if len(path) >= level:
                         path = path[:level-1]
-                    path.append(k)
-                    move_files(d[k], path=path, level=level)
+                    path.append(file_path)
+                    move_files(file_dict[file_path], path=path, level=level)
 
         dl_path = get_downloads_or_media_path('downloads')
         media_path = get_downloads_or_media_path('media')
