@@ -3,7 +3,7 @@ import shutil
 import os
 import json
 from tkinter import *
-from tkinter.ttk import Progressbar, Style, Separator
+from tkinter.ttk import Progressbar, Style
 from PIL import Image, ImageTk
 from copy import deepcopy
 import encodings.idna
@@ -13,62 +13,8 @@ from settings.general_functions import tv_show_ep_from_file_name, tv_show_ep_fro
     initcap_file_name, rename_all_media_in_directory, get_media_title
 from settings.mo_functions import get_downloads_or_media_path, save_paths_to_json
 from components.checklist import CheckList
-
-
-class CreateToolTip(object):
-    """
-    create a tooltip for a given widget
-    """
-    def __init__(self, widget, text='widget info', bg='#ffffff', fg='#000000'):
-        self.waittime = 500     #miliseconds
-        self.wraplength = 180   #pixels
-        self.widget = widget
-        self.text = text
-        self.bg = bg
-        self.fg = fg
-        self.widget.bind("<Enter>", self.enter)
-        self.widget.bind("<Leave>", self.leave)
-        self.widget.bind("<ButtonPress>", self.leave)
-        self.id = None
-        self.tw = None
-
-    def enter(self, event=None):
-        self.schedule()
-
-    def leave(self, event=None):
-        self.unschedule()
-        self.hidetip()
-
-    def schedule(self):
-        self.unschedule()
-        self.id = self.widget.after(self.waittime, self.showtip)
-
-    def unschedule(self):
-        id = self.id
-        self.id = None
-        if id:
-            self.widget.after_cancel(id)
-
-    def showtip(self, event=None):
-        x = y = 0
-        x, y, cx, cy = self.widget.bbox("insert")
-        x += self.widget.winfo_rootx() + 25
-        y += self.widget.winfo_rooty() + 20
-        # creates a toplevel window
-        self.tw = Toplevel(self.widget)
-        # Leaves only the label and removes the app window
-        self.tw.wm_overrideredirect(True)
-        self.tw.wm_geometry("+%d+%d" % (x, y))
-        label = Label(self.tw, text=self.text, justify='left',
-                      background=self.bg, foreground=self.fg, relief='solid', borderwidth=1,
-                      wraplength=self.wraplength)
-        label.pack(ipadx=1)
-
-    def hidetip(self):
-        tw = self.tw
-        self.tw = None
-        if tw:
-            tw.destroy()
+from components.tooltip import CreateToolTip
+from components.menu_bar import MenuBar
 
 
 class Organize(Tk):
@@ -119,18 +65,19 @@ class Organize(Tk):
         self.starting_height = self.winfo_height()
 
         # Frames
-        self.left_frame = Frame(self, bg=self.colors['main'])
-        self.status_bar = Canvas(self, bg=self.colors['sub'], bd=0, highlightthickness=0,
+        self.main_frame = Frame(self, bg=self.colors['main'], bd=1, relief=RIDGE, name='main_frame')
+        self.left_frame = Frame(self.main_frame, bg=self.colors['main'], bd=1, relief=RIDGE)
+        self.status_bar = Canvas(self.main_frame, bg=self.colors['main'], bd=0, highlightthickness=0,
                                  width=self.starting_width, height=0, relief=SUNKEN)
         self.status_bar.pack(side=BOTTOM, fill=X)
         self.left_frame.pack(side=LEFT, fill=Y, ipadx=14, ipady=14)
 
-        self.middle_canvas = Canvas(self, bg=self.colors['sub'], bd=2, highlightthickness=0, relief=SUNKEN)
-        self.canvas_frame = Frame(self.middle_canvas, bg=self.colors['sub'])
+        self.middle_canvas = Canvas(self.main_frame, bg=self.colors['main'], highlightthickness=0)
+        self.canvas_frame = Frame(self.middle_canvas, bg=self.colors['main'])
         self.bind('<Configure>', self.mid_canvas_dim)
         self.middle_canvas.create_window((0, 0), window=self.canvas_frame, anchor=NW)
-        y_scroll_bar = Scrollbar(self, command=self.middle_canvas.yview, orient=VERTICAL)
-        x_scroll_bar = Scrollbar(self, command=self.middle_canvas.xview, orient=HORIZONTAL)
+        y_scroll_bar = Scrollbar(self.main_frame, command=self.middle_canvas.yview, orient=VERTICAL)
+        x_scroll_bar = Scrollbar(self.main_frame, command=self.middle_canvas.xview, orient=HORIZONTAL)
         self.middle_canvas.config(yscrollcommand=y_scroll_bar.set, xscrollcommand=x_scroll_bar.set)
         y_scroll_bar.pack(side=RIGHT, fill=Y)
         x_scroll_bar.pack(side=BOTTOM, fill=X)
@@ -138,7 +85,7 @@ class Organize(Tk):
         self.bind_all("<MouseWheel>", self._on_mousewheel)
         self.image_config = {
             # Used by the buttons on the left of the main app
-            'Locate Media': {'image': 'dir.png', 'image_size': (64, 64)},
+            'Locate Media': {'image': 'dir.png', 'image_size': (36, 36)},
             'Select Media': {'image': 'filter.png', 'image_size': (64, 64)},
             'Organize': {'image': 'organize_media.png', 'image_size': (64, 64)},
             # Used later by the filter window
@@ -157,11 +104,17 @@ class Organize(Tk):
                     ' in your media folder, you should rename them. Casing matters!\n\n' \
                     'If you do not have the folders, they will be created for you.'
 
+        # Menu
+        menu = MenuBar(self, font=self.fonts['small'], bg=self.colors['main'], fg=self.colors['font'],
+                       activebackground=self.colors['alt'], activeforeground=self.colors['font'])
+        tab = menu.add_menu_tab(text='File')
+        tab.add_menu_item(text='Locate Media', image=self.image_config['Locate Media'], command=self.locate_media)
+        tab.add_separator()
+        tab.add_menu_item(text='Exit', command=self.quit)
+        self.main_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
+
         # Buttons
         self.buttons_config = {
-            'Locate Media': {'command': self.locate_media,
-                             'tooltip': 'Select your downloads folder and media folder; Your media folder will contain'
-                                        ' your "Movies" and "TV Shows" folders'},
             'Select Media': {'command': self.on_press_select_media,
                              'tooltip': 'Gathers a list of media files from your downloads folder, and'
                                         ' allows you to filter which files to organize'},
@@ -257,9 +210,9 @@ class Organize(Tk):
 
     def _on_mousewheel(self, event):
         x, y = self.winfo_pointerxy()
-        canvas = self.winfo_containing(x, y)
-        widget_path = str(canvas.master)
-        if widget_path == '.' or widget_path.startswith('.!canvas2') or widget_path.startswith('.checklist'):
+        widget = self.winfo_containing(x, y)
+        widget_path = str(widget)
+        if widget_path.startswith('.main_frame.!canvas2'):
             self.middle_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
     def get_media_info_from_paths(self, paths):
@@ -434,25 +387,6 @@ class Organize(Tk):
         self.progress_complete('Gathered Media!')
         return file_info_new
 
-    def media_files_info(self, folder_paths=[]):
-        """ Gets information about each media file in a path, from IMDb.
-
-        :param folder_paths: The path to your media files
-        :return: A dictionary of information about each file
-        """
-        self.all_media_info = self.get_media_info_from_paths(folder_paths)
-
-        if not self.all_media_info:
-            self.progress_bar_appear()
-            self.progress_complete('\nNo Media Detected...\n')
-            return 'No Media'
-
-        else:
-            checklist = CheckList(self.canvas_frame, dictionary=self.all_media_info, font=self.fonts['large'],
-                                  toggle_config=self.image_config, toggle_type='image',
-                                  bg=self.colors['main'], fg=self.colors['font'],
-                                  highlight_color=self.colors['sub'], border_color=self.colors['special'])
-
     def recursively_organize_shows_and_movies(self, delete_folders=True):
 
         def inc_max_progress(d):
@@ -538,8 +472,8 @@ class Organize(Tk):
             submit_button.destroy()
             main_frame.destroy()
 
-        main_frame = Frame(self.canvas_frame, bg=self.colors['main'], bd=1, relief=RAISED)
-        main_frame.pack(padx=8, pady=90)
+        main_frame = Frame(self.canvas_frame, bg=self.colors['sub'], bd=1, relief=RIDGE)
+        main_frame.pack(padx=8, pady=8)
         self.toggle_buttons_enabled()
 
         self.final_todo_list = []
@@ -549,24 +483,29 @@ class Organize(Tk):
             'media': 'Movies and TV Shows'
         }
         Label(main_frame, text='Which folders would you like to organize?', font=self.fonts['medium'],
-              bg=self.colors['main'], fg=self.colors['font']).pack(side=TOP, fill=X, ipady=20, ipadx=20)
+              bg=self.colors['sub'], fg=self.colors['font']).pack(side=TOP, fill=X, ipady=20, ipadx=20)
 
-        options_frame = Frame(main_frame, bg=self.colors['main'], bd=2, relief=SUNKEN)
-        options_frame.pack(side=TOP)
+        outer_options_frame = Frame(main_frame, bg=self.colors['main'], bd=1, relief=RIDGE)
+        outer_options_frame.pack(side=TOP)
+        options_frame = Frame(outer_options_frame, bg=self.colors['main'])
+        options_frame.pack(padx=6, pady=6)
 
         dictionary = dict()
         for i, desc in todo_list.items():
             dictionary[i] = {'button': Checkbutton(options_frame, text=desc, onvalue=True, offvalue=False,
-                                                   font=self.fonts['xsmall'],
-                                                   anchor=NW, bg=self.colors['alt'], fg=self.colors['font'],
+                                                   activebackground=self.colors['alt'],
+                                                   activeforeground=self.colors['font'],
+                                                   anchor=W, cursor='hand2', font=self.fonts['xsmall'],
+                                                   bg=self.colors['alt'], fg=self.colors['font'],
                                                    selectcolor=self.colors['main'])}
             dictionary[i]['button'].var = BooleanVar(value=True)
             self.final_todo_list.append(i)
             dictionary[i]['button']['variable'] = dictionary[i]['button'].var
             dictionary[i]['button']['command'] = lambda w=dictionary[i]: upon_select(w)
-            dictionary[i]['button'].pack(side=TOP, fill=X, padx=1, pady=1)
+            dictionary[i]['button'].pack(fill=X, padx=1, pady=1)
             dictionary[i]['todo'] = i
-        submit_button = Button(main_frame, text='Select', command=on_submit, font=self.fonts['small'],
+        submit_button = Button(main_frame, text='Select', command=on_submit, font=self.fonts['small'], cursor='hand2',
+                               activebackground=self.colors['special'], activeforeground=self.colors['font'],
                                bg=self.colors['special'], fg=self.colors['font'])
         submit_button.pack(side=BOTTOM, pady=20)
         self.wait_window(main_frame)
@@ -597,11 +536,18 @@ class Organize(Tk):
                 else:
                     paths.append(get_downloads_or_media_path(option))
 
-            outcome = self.media_files_info(folder_paths=paths)
-            if outcome != 'No Media':
-                self.organize_button_appear()
-            else:
+            self.all_media_info = self.get_media_info_from_paths(paths)
+
+            if not self.all_media_info:
+                self.progress_bar_appear()
+                self.progress_complete('\nNo Media Detected...\n')
                 self.organize_button_disappear()
+            else:
+                CheckList(self.canvas_frame, dictionary=self.all_media_info, toggle_config=self.image_config,
+                          toggle_type='image', font=self.fonts['large'],
+                          bg=self.colors['main'], fg=self.colors['font'],
+                          highlight_color=self.colors['sub'], border_color=self.colors['special'])
+                self.organize_button_appear()
 
     def on_press_organize_media(self):
         """ Start organizing media """
@@ -626,7 +572,7 @@ class Organize(Tk):
 
     def progress_complete(self, message):
         self.toggle_buttons_enabled()
-        self.progress_bar['value'] = 0
+        self.progress_bar['value'] = self.progress_bar['maximum']
         self.s.configure(style=self.style, text=message)
 
     def toggle_buttons_enabled(self):

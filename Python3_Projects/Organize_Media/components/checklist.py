@@ -188,7 +188,7 @@ class CheckList(Frame):
         level += 1
         if level > self.deepest_level:
             self.deepest_level = level
-        font = (font[0], font[1] - 2, font[2])
+        font = (font[0], font[1] - 1, font[2])
         for sub_section in sorted([k for k in checklist_dict[section].keys()]):
             # Adjust path for the section based on the level of the dictionary
             if len(path) >= level + 1:
@@ -228,7 +228,7 @@ class CheckList(Frame):
                 raise Exception(f'Not a proper dictionary. Expected {column} to have a dictionary.')
         # Pack the Check Buttons
         for ch in self.check_button_dict.keys():
-            ch['font'] = (self.font[0], self.font[1] - (self.deepest_level * 2), self.font[2])
+            ch['font'] = (self.font[0], self.font[1] - self.deepest_level, self.font[2])
             ch.pack(side=TOP, fill=X, anchor=NW, pady=1, padx=(indent, 0))
 
 
