@@ -1,17 +1,21 @@
 import threading
 import shutil
 import os
-import json
+import re
+import yaml
 from tkinter import *
 from tkinter.ttk import Progressbar, Style, Separator
 from PIL import Image, ImageTk
-from imdb import IMDb
 from copy import deepcopy
-import encodings.idna
 
-from settings.general_functions import tv_show_ep_from_file_name, tv_show_ep_from_folder_structure, \
-    initcap_file_name, rename_all_media_in_directory, get_media_title
-from settings.mo_functions import get_downloads_or_media_path, save_paths_to_json
+from functionality.general_functions import tv_show_ep_from_file_name, tv_show_ep_from_folder_structure, \
+    initcap_file_name, get_media_title
+from functionality.mo_functions import get_user_set_path, save_paths
+
+
+SETTINGS_PATH = 'settings/config.yaml'
+with open('functionality/settings.yaml') as settings_config_yml:
+    CONFIG = yaml.safe_load(settings_config_yml)
 
 
 class CreateToolTip(object):
@@ -74,39 +78,16 @@ class Organize(Tk):
 
     def __init__(self):
         Tk.__init__(self)
-        self.title('Media Organizer')
+        with open(SETTINGS_PATH) as file:
+            self.settings = yaml.safe_load(file)
+        self.title(CONFIG['title'])
         self.iconbitmap('Images/organize_media.ico')
-
-        self.colors = {
-            'main': '#%02x%02x%02x' % (20, 20, 20),
-            'sub': '#%02x%02x%02x' % (35, 35, 35),
-            'special': '#%02x%02x%02x' % (92, 15, 128),
-            'special_alt': '#%02x%02x%02x' % (180, 53, 240),
-            'alt': '#%02x%02x%02x' % (60, 111, 194),
-            'font': '#%02x%02x%02x' % (255, 255, 255)
-        }
-
-        font_default = 'Constantia'
-        self.fonts = {
-            'xxsmall': (font_default, 11),
-            'xsmall': (font_default, 12),
-            'small': (font_default, 13),
-            'medium': (font_default, 14),
-            'large': (font_default, 18),
-            'xlarge': (font_default, 22),
-            'xxlarge': (font_default, 40),
-        }
-
-        self.config(bg=self.colors['main'])
-
-        with open('settings/config.json', 'r', encoding='utf-8') as config:
-            self.configuration = json.load(config)
-            self.media_extensions = self.configuration['media_extensions']
+        self.config(bg=CONFIG['colors']['main'])
 
         self.on_startup()
 
         self.geometry(f'{int(self.winfo_screenwidth()*0.8)}x{int(self.winfo_screenheight()*0.8)}')
-        self.configure(bg=self.colors['main'])
+        self.configure(bg=CONFIG['colors']['main'])
         ''' Filter media will contain a dictionary like:
             {path: {file_name: name, title: title, kind: kind, ...}}'''
         self.filtered_media = {}
@@ -119,14 +100,14 @@ class Organize(Tk):
         self.starting_height = self.winfo_height()
 
         # Frames
-        self.left_frame = Frame(self, bg=self.colors['main'])
-        self.status_bar = Canvas(self, bg=self.colors['sub'], bd=0, highlightthickness=0,
+        self.left_frame = Frame(self, bg=CONFIG['colors']['main'])
+        self.status_bar = Canvas(self, bg=CONFIG['colors']['sub'], bd=0, highlightthickness=0,
                                  width=self.starting_width, height=0, relief=SUNKEN)
         self.status_bar.pack(side=BOTTOM, fill=X)
         self.left_frame.pack(side=LEFT, fill=Y, ipadx=14, ipady=14)
 
-        self.middle_canvas = Canvas(self, bg=self.colors['sub'], bd=2, highlightthickness=0, relief=SUNKEN)
-        self.canvas_frame = Frame(self.middle_canvas, bg=self.colors['sub'])
+        self.middle_canvas = Canvas(self, bg=CONFIG['colors']['sub'], bd=2, highlightthickness=0, relief=SUNKEN)
+        self.canvas_frame = Frame(self.middle_canvas, bg=CONFIG['colors']['sub'])
         self.bind('<Configure>', self.mid_canvas_dim)
         self.middle_canvas.create_window((0, 0), window=self.canvas_frame, anchor=NW)
         y_scroll_bar = Scrollbar(self, command=self.middle_canvas.yview, orient=VERTICAL)
@@ -170,20 +151,20 @@ class Organize(Tk):
         # Create a button for each button in the config
         for label_text, cfg in self.buttons_config.items():
             # Put each button in a frame for padding purposes
-            padding_frame = Frame(self.left_frame, bg=self.colors['main'])
+            padding_frame = Frame(self.left_frame, bg=CONFIG['colors']['main'])
             padding_frame.pack(side=TOP, padx=10, pady=10, fill=X)
             # Button
             button = Button(padding_frame, image=self.image_config[label_text]['image_obj'], command=cfg['command'],
-                            cursor="hand2", bg=self.colors['main'], relief=FLAT, anchor=CENTER)
+                            cursor="hand2", bg=CONFIG['colors']['main'], relief=FLAT, anchor=CENTER)
             button.pack(fill=X)
             self.buttons_config[label_text]['button'] = button
             # Button label
-            label = Label(padding_frame, text=label_text, font=self.fonts['xsmall'],
-                          bg=self.colors['main'], fg=self.colors['font'])
+            label = Label(padding_frame, text=label_text, font=CONFIG['fonts']['xsmall'],
+                          bg=CONFIG['colors']['main'], fg=CONFIG['colors']['font'])
             label.pack(fill=X)
             self.buttons_config[label_text]['label'] = label
             # Button tooltip
-            CreateToolTip(button, cfg['tooltip'], bg=self.colors['main'], fg=self.colors['font'])
+            CreateToolTip(button, cfg['tooltip'], bg=CONFIG['colors']['main'], fg=CONFIG['colors']['font'])
 
         # Progress Bar
         self.s = Style()
@@ -197,9 +178,9 @@ class Organize(Tk):
                          'sticky': 'nsew'}),
                        ('Horizontal.Progressbar.label', {'sticky': ''})])
         # Set initial progress bar text
-        self.s.configure(self.style, text='\n\n', troughcolor=self.colors['sub'],
-                         background=self.colors['special'], foreground=self.colors['font'],
-                         font=self.fonts['xsmall'], thickness=45)
+        self.s.configure(self.style, text='\n\n', troughcolor=CONFIG['colors']['sub'],
+                         background=CONFIG['colors']['special'], foreground=CONFIG['colors']['font'],
+                         font=CONFIG['fonts']['xsmall'], thickness=45)
 
         w = self.winfo_width()
         self.progress_bar = Progressbar(self.status_bar, style=self.style, length=w-8)
@@ -209,30 +190,28 @@ class Organize(Tk):
 
         self.buttons_config['Organize']['button'].pack_forget()
         self.buttons_config['Organize']['label'].pack_forget()
-        if 'downloads' not in self.configuration:
+        if not self.settings['paths'].get('downloads'):
             self.buttons_config['Select Media']['button'].pack_forget()
             self.buttons_config['Select Media']['label'].pack_forget()
 
     def on_first_locate_media(self, widgets):
-        save_paths_to_json()
-        with open('settings/config.json', 'r', encoding='utf-8') as config:
-            self.configuration = json.load(config)
-        if 'downloads' in self.configuration:
+        self.settings = save_paths(SETTINGS_PATH)
+        if self.settings['paths'].get('downloads'):
             for w in widgets:
                 w.destroy()
 
     def on_startup(self):
-        if 'downloads' not in self.configuration:
+        if not self.settings['paths'].get('downloads'):
             with Image.open(f'Images/dir.png') as img:
                 img_o = img.resize((94, 94), Image.ANTIALIAS)
                 img_o = ImageTk.PhotoImage(img_o)
 
-            frame = Frame(self, bg=self.colors['main'])
-            lbl1 = Label(frame, text='Sup,', bg=self.colors['main'], fg=self.colors['alt'],
-                         font=self.fonts['xxlarge'])
+            frame = Frame(self, bg=CONFIG['colors']['main'])
+            lbl1 = Label(frame, text='Sup,', bg=CONFIG['colors']['main'], fg=CONFIG['colors']['alt'],
+                         font=CONFIG['fonts']['xxlarge'])
             lbl2 = Label(frame, text='Start by locating your media', wraplength=450,
-                         bg=self.colors['main'], fg='#%02x%02x%02x' % (180, 53, 240), font=self.fonts['xlarge'])
-            b = Button(frame, image=img_o, bg=self.colors['main'], relief=RAISED, cursor='hand2')
+                         bg=CONFIG['colors']['main'], fg='#%02x%02x%02x' % (180, 53, 240), font=CONFIG['fonts']['xlarge'])
+            b = Button(frame, image=img_o, bg=CONFIG['colors']['main'], relief=RAISED, cursor='hand2')
             b.config(command=lambda x=(lbl1, frame, b): self.on_first_locate_media(x))
 
             frame.pack(ipadx=20)
@@ -269,7 +248,7 @@ class Organize(Tk):
         self.progress_bar['maximum'] = len([file for path in paths
                                             for x, y, files in os.walk(path)
                                             for file in files
-                                            if file.split('.')[-1] in self.media_extensions])
+                                            if file.split('.')[-1] in self.settings['media_extensions']])
         self.progress_bar['value'] = 0
         self.s.configure(style=self.style, text='Getting media info...')
         file_info = {}
@@ -281,7 +260,7 @@ class Organize(Tk):
                     current_file_path = os.path.join(path, file)
                     extension = file.split('.')[-1]
                     # If its a media file
-                    if extension in self.media_extensions and os.path.isfile(current_file_path):
+                    if extension in self.settings['media_extensions'] and os.path.isfile(current_file_path):
                         renamed_file = initcap_file_name(file)
                         file_folder_path = os.path.dirname(current_file_path)
                         bottom_folder = os.path.basename(file_folder_path)
@@ -431,11 +410,11 @@ class Organize(Tk):
             if widget['button'].var.get():
                 if fp not in self.filtered_media[d]:
                     self.filtered_media[d][fp] = all_media[d][fp]
-                    widget['button']['bg'] = self.colors['sub']
+                    widget['button']['bg'] = CONFIG['colors']['sub']
             else:
                 if fp in self.filtered_media[d]:
                     del self.filtered_media[d][fp]
-                    widget['button']['bg'] = self.colors['main']
+                    widget['button']['bg'] = CONFIG['colors']['main']
 
         def toggle_all(x):
             button, kind, files_dict = x
@@ -477,10 +456,10 @@ class Organize(Tk):
             self.toggle_all_buttons = {k: {} for k in kind_mapping.keys()}
             self.toggle_title_buttons = {k: {} for k in kind_mapping.keys()}
             for folder_path, info in files.items():
-                destination_frame = Frame(frame, bg=self.colors['main'], bd=1, relief=RIDGE)
+                destination_frame = Frame(frame, bg=CONFIG['colors']['main'], bd=1, relief=RIDGE)
                 destination_frame.pack(side=LEFT, padx=4, pady=4, anchor=N)
                 destination_title = Label(destination_frame, text=folder_path, anchor=NW, justify=LEFT,
-                                          bg=self.colors['main'], fg=self.colors['font'], font=self.fonts['medium'])
+                                          bg=CONFIG['colors']['main'], fg=CONFIG['colors']['font'], font=CONFIG['fonts']['medium'])
                 destination_title.pack(side=TOP, fill=X, anchor=W)
                 Separator(destination_frame).pack(side=TOP, fill=X)
                 sections = sorted(list(set([i['kind'] for f, i in info.items()])), reverse=True)
@@ -489,51 +468,51 @@ class Organize(Tk):
                     if sections.index(kind) > 0:
                         # Add a separator between shows and movies
                         Separator(destination_frame).pack(fill=X, pady=8)
-                    media_type_frame = Frame(destination_frame, bg=self.colors['main'])
+                    media_type_frame = Frame(destination_frame, bg=CONFIG['colors']['main'])
                     media_type_frame.pack(side=TOP, fill=X, anchor=NW)
                     # Toggle everything for each 'Kind'
                     self.toggle_all_buttons[kind] = Button(media_type_frame, cursor='hand2',
                                                            image=self.image_config['deselect']['image_obj'],
-                                                           relief=FLAT, bg=self.colors['main'])
+                                                           relief=FLAT, bg=CONFIG['colors']['main'])
                     self.toggle_all_buttons[kind].pack(side=LEFT, anchor=NW)
-                    media_type_label = Label(media_type_frame, text=kind_mapping[kind], font=self.fonts['small'], anchor=NW,
-                                             width=50, bg=self.colors['main'], fg=self.colors['font'], justify=LEFT)
+                    media_type_label = Label(media_type_frame, text=kind_mapping[kind], font=CONFIG['fonts']['small'], anchor=NW,
+                                             width=50, bg=CONFIG['colors']['main'], fg=CONFIG['colors']['font'], justify=LEFT)
                     media_type_label.pack(side=LEFT, fill=X)
-                    media_content_frame = Frame(destination_frame, bg=self.colors['main'], bd=2, relief=SUNKEN)
+                    media_content_frame = Frame(destination_frame, bg=CONFIG['colors']['main'], bd=2, relief=SUNKEN)
                     media_content_frame.pack(side=TOP, fill=X, anchor=NW)
                     if kind == 'Movie':
-                        movie_frame = Frame(destination_frame, bg=self.colors['main'], bd=2, relief=SUNKEN)
+                        movie_frame = Frame(destination_frame, bg=CONFIG['colors']['main'], bd=2, relief=SUNKEN)
                         movie_frame.pack(side=TOP, fill=X, anchor=NW)
                     for t in sorted(list(set([v['title'] for k, v in info.items() if v['kind'] == kind]))):
                         dictionary = dict()
                         if kind == 'TV Show':
-                            show_frame = Frame(media_content_frame, bg=self.colors['main'])
+                            show_frame = Frame(media_content_frame, bg=CONFIG['colors']['main'])
                             show_frame.pack(side=TOP, fill=X, anchor=NW)
-                            show_title_frame = Frame(show_frame, bg=self.colors['special'])
+                            show_title_frame = Frame(show_frame, bg=CONFIG['colors']['special'])
                             show_title_frame.pack(side=TOP, fill=X, anchor=NW)
                             # Toggle everything for each TV Show title
                             self.toggle_title_buttons[kind][t] = Button(show_title_frame,
                                                                         image=self.image_config['deselect']['image_obj'],
                                                                         text='deselect', cursor='hand2', relief=FLAT,
-                                                                        bg=self.colors['main'])
+                                                                        bg=CONFIG['colors']['main'])
                             self.toggle_title_buttons[kind][t].pack(side=LEFT, fill=Y)
                             show_title_button = Button(show_title_frame, text=t, cursor='hand2',
-                                                       font=self.fonts['small'], anchor=W, bd=2, relief=RAISED,
-                                                       bg=self.colors['main'], fg=self.colors['font'],
+                                                       font=CONFIG['fonts']['small'], anchor=W, bd=2, relief=RAISED,
+                                                       bg=CONFIG['colors']['main'], fg=CONFIG['colors']['font'],
                                                        justify=LEFT)
                             show_title_button.pack(side=LEFT, fill=X, expand=True, anchor=W, padx=1, pady=1)
-                            show_checklist_frame = Frame(show_frame, bg=self.colors['main'], bd=2, relief=SUNKEN)
+                            show_checklist_frame = Frame(show_frame, bg=CONFIG['colors']['main'], bd=2, relief=SUNKEN)
                             show_checklist_frame.pack(side=TOP, fill=X, anchor=NW)
                             show_title_button['command'] = lambda x=show_checklist_frame: collapse_show(x)
                             show_checklist_frame.pack_forget()
                             season_frames = {}
                             try:
                                 for s in sorted(list(set([v['season'] for k, v in info.items() if v['title'] == t]))):
-                                    season_frames[s] = Frame(show_checklist_frame, bg=self.colors['main'])
+                                    season_frames[s] = Frame(show_checklist_frame, bg=CONFIG['colors']['main'])
                                     season_frames[s].pack(side=TOP, fill=X, anchor=NW)
                                     season = 'Season ' + str(s) if s != -1 else 'Extras'
-                                    season_label = Label(season_frames[s], text=season, font=self.fonts['small'],
-                                                         bg=self.colors['alt'], fg=self.colors['font'])
+                                    season_label = Label(season_frames[s], text=season, font=CONFIG['fonts']['small'],
+                                                         bg=CONFIG['colors']['alt'], fg=CONFIG['colors']['font'])
                                     season_label.pack(side=TOP, fill=X, padx=1, pady=1)
                             except Exception as e:
                                 print(t)
@@ -546,10 +525,10 @@ class Organize(Tk):
                                 dictionary[file_path]['button'] = Checkbutton(season_frames[i['season']])
                             else:
                                 dictionary[file_path]['button'] = Checkbutton(movie_frame)
-                            dictionary[file_path]['button'].config(text=i['renamed_file_name'], fg=self.colors['font'],
+                            dictionary[file_path]['button'].config(text=i['renamed_file_name'], fg=CONFIG['colors']['font'],
                                                                    onvalue=True, offvalue=False, anchor=NW,
-                                                                   bg=self.colors['sub'], font=self.fonts['xsmall'],
-                                                                   selectcolor=self.colors['main'])
+                                                                   bg=CONFIG['colors']['sub'], font=CONFIG['fonts']['xsmall'],
+                                                                   selectcolor=CONFIG['colors']['main'])
                             dictionary[file_path]['button'].var = BooleanVar(value=True)
                             dictionary[file_path]['button']['variable'] = dictionary[file_path]['button'].var
                             dictionary[file_path]['button']['command'] = lambda w=dictionary[file_path]: upon_select(w)
@@ -562,13 +541,13 @@ class Organize(Tk):
                     self.toggle_all_buttons[kind]['command'] = lambda d=(self.toggle_all_buttons[kind], kind,
                                                                          kind_dict): toggle_all(d)
 
-        main_frame = Frame(self.canvas_frame, bg=self.colors['sub'], name='filterwindow')
+        main_frame = Frame(self.canvas_frame, bg=CONFIG['colors']['sub'], name='filterwindow')
         main_frame.pack(fill=BOTH)
         create_checklist(main_frame, files=all_media)
 
     def recursively_organize_shows_and_movies(self, delete_folders=True):
-        dl_path = get_downloads_or_media_path('downloads')
-        media_path = get_downloads_or_media_path('media')
+        dl_path = get_user_set_path(SETTINGS_PATH, 'downloads')
+        media_path = get_user_set_path(SETTINGS_PATH, 'media')
         folders_to_delete = []
         self.progress_bar_appear()
         self.progress_bar['maximum'] = len(self.filtered_media.keys())
@@ -629,18 +608,18 @@ class Organize(Tk):
             if widget['button'].var.get():
                 if widget['todo'] not in self.final_todo_list:
                     self.final_todo_list.append(widget['todo'])
-                    widget['button']['bg'] = self.colors['alt']
+                    widget['button']['bg'] = CONFIG['colors']['alt']
             else:
                 if widget['todo'] in self.final_todo_list:
                     self.final_todo_list.remove(widget['todo'])
-                    widget['button']['bg'] = self.colors['main']
+                    widget['button']['bg'] = CONFIG['colors']['main']
 
         def on_submit():
             self.toggle_buttons_enabled()
             submit_button.destroy()
             main_frame.destroy()
 
-        main_frame = Frame(self.canvas_frame, bg=self.colors['main'], bd=1, relief=RAISED)
+        main_frame = Frame(self.canvas_frame, bg=CONFIG['colors']['main'], bd=1, relief=RAISED)
         main_frame.pack(padx=8, pady=90)
         self.toggle_buttons_enabled()
 
@@ -650,26 +629,26 @@ class Organize(Tk):
             'downloads': 'Downloads',
             'media': 'Movies and TV Shows'
         }
-        Label(main_frame, text='Which folders would you like to organize?', font=self.fonts['medium'],
-              bg=self.colors['main'], fg=self.colors['font']).pack(side=TOP, fill=X, ipady=20, ipadx=20)
+        Label(main_frame, text='Which folders would you like to organize?', font=CONFIG['fonts']['medium'],
+              bg=CONFIG['colors']['main'], fg=CONFIG['colors']['font']).pack(side=TOP, fill=X, ipady=20, ipadx=20)
 
-        options_frame = Frame(main_frame, bg=self.colors['main'], bd=2, relief=SUNKEN)
+        options_frame = Frame(main_frame, bg=CONFIG['colors']['main'], bd=2, relief=SUNKEN)
         options_frame.pack(side=TOP)
 
         dictionary = dict()
         for i, desc in todo_list.items():
             dictionary[i] = {'button': Checkbutton(options_frame, text=desc, onvalue=True, offvalue=False,
-                                                   font=self.fonts['xsmall'],
-                                                   anchor=NW, bg=self.colors['alt'], fg=self.colors['font'],
-                                                   selectcolor=self.colors['main'])}
+                                                   font=CONFIG['fonts']['xsmall'],
+                                                   anchor=NW, bg=CONFIG['colors']['alt'], fg=CONFIG['colors']['font'],
+                                                   selectcolor=CONFIG['colors']['main'])}
             dictionary[i]['button'].var = BooleanVar(value=True)
             self.final_todo_list.append(i)
             dictionary[i]['button']['variable'] = dictionary[i]['button'].var
             dictionary[i]['button']['command'] = lambda w=dictionary[i]: upon_select(w)
             dictionary[i]['button'].pack(side=TOP, fill=X, padx=1, pady=1)
             dictionary[i]['todo'] = i
-        submit_button = Button(main_frame, text='Select', command=on_submit, font=self.fonts['small'],
-                               bg=self.colors['special'], fg=self.colors['font'])
+        submit_button = Button(main_frame, text='Select', command=on_submit, font=CONFIG['fonts']['small'],
+                               bg=CONFIG['colors']['special'], fg=CONFIG['colors']['font'])
         submit_button.pack(side=BOTTOM, pady=20)
         self.wait_window(main_frame)
         return self.final_todo_list
@@ -693,11 +672,11 @@ class Organize(Tk):
             paths = []
             for option in options:
                 if option == 'media':
-                    path = get_downloads_or_media_path(option)
+                    path = get_user_set_path(SETTINGS_PATH, option)
                     paths.append(os.path.join(path, 'TV Shows'))
                     paths.append(os.path.join(path, 'Movies'))
                 else:
-                    paths.append(get_downloads_or_media_path(option))
+                    paths.append(get_user_set_path(SETTINGS_PATH, option))
 
             outcome = self.media_files_info(folder_paths=paths)
             if outcome != 'No Media':
@@ -743,10 +722,8 @@ class Organize(Tk):
             self.disable_buttons = True
 
     def locate_media(self):
-        save_paths_to_json()
-        with open('settings/config.json', 'r', encoding='utf-8') as config:
-            self.configuration = json.load(config)
-        if "downloads" in self.configuration:
+        self.settings = save_paths(SETTINGS_PATH)
+        if self.settings['paths'].get('downloads'):
             self.buttons_config['Select Media']['button'].pack()
             self.buttons_config['Select Media']['label'].pack()
 
