@@ -1,5 +1,5 @@
 import re
-from settings.general_functions import initcap_file_name
+from Python3_Projects.Organize_Media.functionality.general_functions import initcap_file_name
 
 clean_file_name = 'x-factor (1999)'
 clean_file_name = initcap_file_name(clean_file_name)
